@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class ListPostResponse {
+public class ListAllPostResponse {
 
     private int count;
 

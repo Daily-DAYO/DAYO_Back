@@ -15,12 +15,12 @@ public class Image extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Post post;
+    private String originalFilename;
 
-    private String saveFileName;
+    private String storeFileName;
 
-    private String uploadFileName;
-
-
+    public Image(String originalFilename, String storeFileName) {
+        this.originalFilename = originalFilename;
+        this.storeFileName = storeFileName;
+    }
 }

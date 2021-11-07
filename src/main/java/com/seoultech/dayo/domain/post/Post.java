@@ -27,12 +27,26 @@ public class Post extends BaseTimeEntity {
 
     private String thumbnailImage;
 
-    @OneToMany(mappedBy = "post")
-    private List<Image> images = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+    @OneToMany
+    @JoinColumn(name = "post_id")
+    private List<Image> images;
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
     private List<Heart> hearts = new ArrayList<>();
+
+    public Post(Member member, String contents, String thumbnailImage, Category category, List<Image> images) {
+        this.member = member;
+        this.contents = contents;
+        this.thumbnailImage = thumbnailImage;
+        this.category = category;
+        this.images = images;
+    }
+
+    protected Post() { }
 }

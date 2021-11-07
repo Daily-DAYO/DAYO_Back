@@ -15,3 +15,6 @@ spring:
 
 logging.level:
   org.hibernate.type : trace
+
+file:
+  dir: C:\Users\jdyj\DAYO\src\main\resources\images\

@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Entity
 @Getter
-public class Member implements UserDetails {
+public class Member {
 
     @Id
     private String id;
@@ -32,8 +32,6 @@ public class Member implements UserDetails {
 
     private String profileImg;
 
-    private String role;
-
     public Member(String name, String email, String profileImg) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
@@ -42,47 +40,4 @@ public class Member implements UserDetails {
     }
 
     protected Member() {}
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        ArrayList<GrantedAuthority> auth = new ArrayList<>();
-        auth.add(new SimpleGrantedAuthority(this.role));
-        return auth;
-    }
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }
