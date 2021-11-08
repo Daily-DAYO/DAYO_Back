@@ -5,6 +5,7 @@ import com.seoultech.dayo.domain.Image.service.ImageService;
 import com.seoultech.dayo.domain.post.controller.dto.request.CreatePostRequest;
 import com.seoultech.dayo.domain.post.controller.dto.response.CreatePostResponse;
 import com.seoultech.dayo.domain.post.controller.dto.response.ListAllPostResponse;
+import com.seoultech.dayo.domain.post.controller.dto.response.ListCategoryPostResponse;
 import com.seoultech.dayo.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,12 @@ public class PostController {
     public ResponseEntity<ListAllPostResponse> listAllPost() {
         return ResponseEntity.ok()
                 .body(postService.listPostAll());
+    }
+
+    @GetMapping("/{category}")
+    public ResponseEntity<ListCategoryPostResponse> listPostByCategory(@PathVariable String category) {
+        return ResponseEntity.ok()
+                .body(postService.listPostByCategory(category));
     }
 
     @PostMapping
