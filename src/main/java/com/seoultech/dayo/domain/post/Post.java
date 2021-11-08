@@ -7,6 +7,7 @@ import com.seoultech.dayo.domain.comment.Comment;
 import com.seoultech.dayo.domain.heart.Heart;
 import com.seoultech.dayo.domain.member.Member;
 import lombok.Getter;
+import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,8 +28,13 @@ public class Post extends BaseTimeEntity {
 
     private String thumbnailImage;
 
+    @NonNull
     @Enumerated(EnumType.STRING)
     private Category category;
+
+    @NonNull
+    @Enumerated(EnumType.STRING)
+    private Privacy privacy;
 
     @OneToMany
     @JoinColumn(name = "post_id")
@@ -40,11 +46,12 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post")
     private List<Heart> hearts = new ArrayList<>();
 
-    public Post(Member member, String contents, String thumbnailImage, Category category, List<Image> images) {
+    public Post(Member member, String contents, String thumbnailImage, Category category, Privacy privacy, List<Image> images) {
         this.member = member;
         this.contents = contents;
         this.thumbnailImage = thumbnailImage;
         this.category = category;
+        this.privacy = privacy;
         this.images = images;
     }
 

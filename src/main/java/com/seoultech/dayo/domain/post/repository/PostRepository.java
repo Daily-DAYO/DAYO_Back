@@ -9,7 +9,10 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    List<Post> findAllByCategory(Category category);
+    @Query("select p from Post p join fetch p.member where p.category = :category")
+    List<Post> findAllByCategoryUsingJoin(Category category);
 
+    @Query("select p from Post p join fetch p.member where not p.privacy = 'ONLY_ME'")
+    List<Post> findAllByUsingJoin();
 
 }

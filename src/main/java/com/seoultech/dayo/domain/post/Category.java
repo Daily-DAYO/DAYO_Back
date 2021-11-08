@@ -6,7 +6,7 @@ public enum Category {
     STUDY_PLANNER,
     POCKET_BOOK,
     SIX_DIARY,
-    GOOD_NOTE
-
+    GOOD_NOTE,
+    ETC
 
 }

@@ -9,6 +9,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PostDto {
 
+    private Long id;
+
     private String thumbnailImage;
 
     private String nickname;
@@ -20,7 +22,7 @@ public class PostDto {
     private Integer commentCount;
 
     public static PostDto from(Post post) {
-        return new PostDto(post.getThumbnailImage(), post.getMember().getName(), post.getMember().getProfileImg(), post.getHearts().size(), post.getComments().size());
+        return new PostDto(post.getId(), post.getThumbnailImage(), post.getMember().getName(), post.getMember().getProfileImg(), post.getHearts().size(), post.getComments().size());
     }
 
 }

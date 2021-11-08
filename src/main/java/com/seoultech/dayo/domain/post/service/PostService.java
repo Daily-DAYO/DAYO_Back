@@ -30,22 +30,20 @@ public class PostService {
     private final PostRepository postRepository;
     private final ImageService imageService;
 
-    @Cacheable(value = "test")
+    @Cacheable(value = "all")
     public ListAllPostResponse listPostAll() {
 
-        List<Post> postList = postRepository.findAll();
+        List<Post> postList = postRepository.findAllByUsingJoin();
         List<PostDto> collect = postList.stream()
                 .map(PostDto::from)
                 .collect(toList());
-
-//        Collections.sort(collect,);
 
         return new ListAllPostResponse(postList.size(), collect);
     }
 
     public ListCategoryPostResponse listPostByCategory(String category) {
 
-        List<Post> postList = postRepository.findAllByCategory(Category.valueOf(category));
+        List<Post> postList = postRepository.findAllByCategoryUsingJoin(Category.valueOf(category));
         List<PostDto> collect = postList.stream()
                 .map(PostDto::from)
                 .collect(toList());

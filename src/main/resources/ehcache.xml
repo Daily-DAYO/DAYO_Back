@@ -19,12 +19,12 @@
             memoryStoreEvictionPolicy="LRU"
     />
 
-    <cache name="test"
+    <cache name="all"
            maxElementsInMemory="10"
            eternal="false"
            overflowToDisk="false"
            timeToIdleSeconds="300"
-           timeToLiveSeconds="60"
+           timeToLiveSeconds="300"
            memoryStoreEvictionPolicy="LRU" />
 
 </ehcache>
