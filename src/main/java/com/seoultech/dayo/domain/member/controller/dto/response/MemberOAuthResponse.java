@@ -1,4 +1,4 @@
-package com.seoultech.dayo.dto.member;
+package com.seoultech.dayo.domain.member.controller.dto.response;
 
 import com.seoultech.dayo.domain.member.Member;
 import lombok.AllArgsConstructor;

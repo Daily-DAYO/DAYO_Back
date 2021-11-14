@@ -1,7 +1,8 @@
-package com.seoultech.dayo.domain.member;
+package com.seoultech.dayo.domain.member.controller;
 
-import com.seoultech.dayo.dto.member.MemberOAuthRequest;
-import com.seoultech.dayo.dto.member.MemberOAuthResponse;
+import com.seoultech.dayo.domain.member.service.MemberService;
+import com.seoultech.dayo.domain.member.controller.dto.request.MemberOAuthRequest;
+import com.seoultech.dayo.domain.member.controller.dto.response.MemberOAuthResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

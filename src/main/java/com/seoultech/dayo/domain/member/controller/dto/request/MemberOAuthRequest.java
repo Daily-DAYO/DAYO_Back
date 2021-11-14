@@ -1,4 +1,4 @@
-package com.seoultech.dayo.dto.member;
+package com.seoultech.dayo.domain.member.controller.dto.request;
 
 import lombok.Getter;
 

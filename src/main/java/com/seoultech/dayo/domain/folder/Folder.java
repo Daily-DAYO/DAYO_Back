@@ -23,6 +23,16 @@ public class Folder {
 
     @OneToMany
     @JoinColumn(name = "folder_id")
-    private List<Post> post = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
+    public void addPost(Post post) {
+        posts.add(post);
+    }
+
+    public Folder(@NonNull String name, String subheading) {
+        this.name = name;
+        this.subheading = subheading;
+    }
+
+    protected Folder() {}
 }

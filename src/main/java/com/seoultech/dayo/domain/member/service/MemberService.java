@@ -1,10 +1,12 @@
-package com.seoultech.dayo.domain.member;
+package com.seoultech.dayo.domain.member.service;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.seoultech.dayo.dto.member.MemberOAuthRequest;
-import com.seoultech.dayo.dto.member.MemberOAuthResponse;
+import com.seoultech.dayo.domain.member.Member;
+import com.seoultech.dayo.domain.member.controller.dto.request.MemberOAuthRequest;
+import com.seoultech.dayo.domain.member.controller.dto.response.MemberOAuthResponse;
+import com.seoultech.dayo.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;

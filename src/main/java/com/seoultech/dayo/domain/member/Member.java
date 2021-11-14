@@ -2,11 +2,8 @@ package com.seoultech.dayo.domain.member;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
+import com.seoultech.dayo.domain.folder.Folder;
 import lombok.Getter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.sql.Array;
@@ -31,6 +28,14 @@ public class Member {
     private String password;
 
     private String profileImg;
+
+    @OneToMany
+    @JoinColumn(name = "member_id")
+    private List<Folder> folders = new ArrayList<>();
+
+    public void addFolder(Folder folder) {
+        folders.add(folder);
+    }
 
     public Member(String name, String email, String profileImg) {
         this.id = UUID.randomUUID().toString();

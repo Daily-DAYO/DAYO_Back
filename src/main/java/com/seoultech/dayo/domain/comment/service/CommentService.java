@@ -1,10 +1,12 @@
-package com.seoultech.dayo.domain.comment;
+package com.seoultech.dayo.domain.comment.service;
 
 
+import com.seoultech.dayo.domain.comment.Comment;
+import com.seoultech.dayo.domain.comment.repository.CommentRepository;
 import com.seoultech.dayo.domain.comment.controller.request.CreateCommentRequest;
 import com.seoultech.dayo.domain.comment.controller.response.CreateCommentResponse;
 import com.seoultech.dayo.domain.member.Member;
-import com.seoultech.dayo.domain.member.MemberRepository;
+import com.seoultech.dayo.domain.member.repository.MemberRepository;
 import com.seoultech.dayo.domain.post.Post;
 import com.seoultech.dayo.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;

@@ -14,9 +14,5 @@ spring:
         default_batch_fetch_size: 1000
     show-sql: true
 
-
-logging.level:
-  org.hibernate.type : trace
-
 file:
   dir: C:\Users\jdyj\DAYO\src\main\resources\images\
