@@ -1,5 +1,6 @@
 package com.seoultech.dayo.domain.folder;
 
+import com.seoultech.dayo.domain.Image.Image;
 import com.seoultech.dayo.domain.post.Post;
 import lombok.Getter;
 import lombok.NonNull;
@@ -21,17 +22,16 @@ public class Folder {
 
     private String subheading;
 
-    @OneToMany
-    @JoinColumn(name = "folder_id")
+    @OneToOne
+    private Image thumbnailImage;
+
+    @OneToMany(mappedBy = "folder")
     private List<Post> posts = new ArrayList<>();
 
-    public void addPost(Post post) {
-        posts.add(post);
-    }
-
-    public Folder(@NonNull String name, String subheading) {
+    public Folder(@NonNull String name, String subheading, Image thumbnailImage) {
         this.name = name;
         this.subheading = subheading;
+        this.thumbnailImage = thumbnailImage;
     }
 
     protected Folder() {}

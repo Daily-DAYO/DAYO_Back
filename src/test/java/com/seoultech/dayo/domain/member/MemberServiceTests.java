@@ -1,5 +1,6 @@
 package com.seoultech.dayo.domain.member;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.*;
@@ -13,7 +14,6 @@ class MemberServiceTests {
 
     @Test
     public void RestTemplate_성공_테스트() {
-
 
         String apiUrl = "https://kapi.kakao.com/v2/user/me";
 
@@ -50,4 +50,5 @@ class MemberServiceTests {
             System.out.println(e);
         }
     }
+
 }

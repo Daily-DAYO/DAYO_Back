@@ -7,6 +7,9 @@ import com.seoultech.dayo.domain.folder.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,9 +19,9 @@ public class FolderController {
     private final FolderService folderService;
 
     @PostMapping
-    public ResponseEntity<CreateFolderResponse> createFolder(CreateFolderRequest request) {
+    public ResponseEntity<CreateFolderResponse> createFolder(MultipartHttpServletRequest servletRequest) throws IOException {
         return ResponseEntity.ok()
-                    .body(folderService.createFolder(request));
+                    .body(folderService.createFolder(servletRequest));
     }
 
     @GetMapping("/{memberId}")

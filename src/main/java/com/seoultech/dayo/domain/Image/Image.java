@@ -23,4 +23,6 @@ public class Image extends BaseTimeEntity {
         this.originalFilename = originalFilename;
         this.storeFileName = storeFileName;
     }
+
+    protected Image() {}
 }

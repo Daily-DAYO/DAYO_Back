@@ -41,4 +41,6 @@ public class PostHashtag {
         protected Key() {}
     }
 
+    protected PostHashtag() {}
+
 }

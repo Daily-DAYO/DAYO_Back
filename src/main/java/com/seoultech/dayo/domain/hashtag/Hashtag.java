@@ -10,12 +10,14 @@ import java.util.List;
 
 @Entity
 @Getter
+@Table(indexes = @Index(name = "i_tag", columnList = "tag"))
 public class Hashtag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String tag;
 
     @OneToMany(mappedBy = "hashtag")

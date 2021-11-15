@@ -4,6 +4,7 @@ package com.seoultech.dayo.domain.post;
 import com.seoultech.dayo.domain.BaseTimeEntity;
 import com.seoultech.dayo.domain.Image.Image;
 import com.seoultech.dayo.domain.comment.Comment;
+import com.seoultech.dayo.domain.folder.Folder;
 import com.seoultech.dayo.domain.hashtag.Hashtag;
 import com.seoultech.dayo.domain.heart.Heart;
 import com.seoultech.dayo.domain.member.Member;
@@ -39,6 +40,9 @@ public class Post extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Privacy privacy;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Folder folder;
+
     @OneToMany
     @JoinColumn(name = "post_id")
     private List<Image> images;
@@ -51,6 +55,11 @@ public class Post extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "post")
     private List<PostHashtag> postHashtags = new ArrayList<>();
+
+    public void addFolder(Folder folder) {
+        this.folder = folder;
+        folder.getPosts().add(this);
+    }
 
     @Builder
     public Post(Member member, String contents, String thumbnailImage, Category category, Privacy privacy, List<Image> images) {

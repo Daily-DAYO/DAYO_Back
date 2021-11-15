@@ -30,7 +30,7 @@ public class CreatePostRequest {
     private List<String> tags;
 
     public Post toEntity(Folder folder, Member member, List<Image> images) {
-        return Post.builder()
+        Post post = Post.builder()
                 .member(member)
                 .contents(contents)
                 .thumbnailImage(images.get(0).getStoreFileName())
@@ -38,6 +38,8 @@ public class CreatePostRequest {
                 .privacy(Privacy.valueOf(privacy))
                 .images(images)
                 .build();
+        post.addFolder(folder);
+        return post;
     }
 
 }

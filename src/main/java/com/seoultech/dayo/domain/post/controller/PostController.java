@@ -34,9 +34,9 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<CreatePostResponse> createPost(@RequestBody CreatePostRequest request, MultipartHttpServletRequest servletRequest) throws IOException {
+    public ResponseEntity<CreatePostResponse> createPost(MultipartHttpServletRequest servletRequest) throws IOException {
         return ResponseEntity.ok()
-                .body(postService.createPost(request, servletRequest));
+                .body(postService.createPost(servletRequest));
     }
 
 
