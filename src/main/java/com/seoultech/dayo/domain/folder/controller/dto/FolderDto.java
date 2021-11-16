@@ -2,6 +2,7 @@ package com.seoultech.dayo.domain.folder.controller.dto;
 
 import com.seoultech.dayo.domain.folder.Folder;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter

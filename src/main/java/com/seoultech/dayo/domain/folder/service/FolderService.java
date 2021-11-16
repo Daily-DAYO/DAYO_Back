@@ -11,7 +11,6 @@ import com.seoultech.dayo.domain.folder.controller.dto.response.ListAllFolderRes
 import com.seoultech.dayo.domain.folder.repository.FolderRepository;
 import com.seoultech.dayo.domain.member.Member;
 import com.seoultech.dayo.domain.member.repository.MemberRepository;
-import com.seoultech.dayo.exception.NotExistFolderException;
 import com.seoultech.dayo.exception.NotExistMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,7 +56,7 @@ public class FolderService {
 
     public ListAllFolderResponse listAllFolder(String memberId) {
         Optional<Member> memberOptional = memberRepository.findMemberByIdWithJoin(memberId);
-        Member member = memberOptional.orElseThrow(NotExistFolderException::new);
+        Member member = memberOptional.orElseThrow(NotExistMemberException::new);
         List<Folder> folders = member.getFolders();
         List<FolderDto> collect = folders.stream()
                 .map(FolderDto::from)

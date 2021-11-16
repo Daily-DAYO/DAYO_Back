@@ -35,5 +35,4 @@ public class Comment extends BaseTimeEntity {
 
     protected Comment() {}
 
-
 }
