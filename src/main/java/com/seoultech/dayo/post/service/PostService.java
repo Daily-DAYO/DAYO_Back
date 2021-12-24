@@ -24,6 +24,7 @@ import com.seoultech.dayo.exception.NotExistMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -66,11 +67,11 @@ public class PostService {
         return new ListCategoryPostResponse(postList.size(), collect);
     }
 
-    public CreatePostResponse createPost(MultipartHttpServletRequest servletRequest) throws IOException {
+    @Transactional
+    public CreatePostResponse createPost(CreatePostRequest request) throws IOException {
 
-        List<MultipartFile> files = servletRequest.getFiles("files");
+        List<MultipartFile> files = request.getFiles();
         List<Image> images = imageService.storeFiles(files);
-        CreatePostRequest request = createDto(servletRequest);
 
         Optional<Member> memberOptional = memberRepository.findById(request.getMemberId());
         Member member = memberOptional.orElseThrow(NotExistMemberException::new);
@@ -88,18 +89,6 @@ public class PostService {
         postHashtagService.saveAll(collect);
 
         return CreatePostResponse.from(savedPost);
-    }
-
-    private CreatePostRequest createDto(MultipartHttpServletRequest servletRequest) {
-        String contents = servletRequest.getParameter("contents");
-        String memberId = servletRequest.getParameter("memberId");
-        String folderId = servletRequest.getParameter("folderId");
-        String privacy = servletRequest.getParameter("privacy");
-        String category = servletRequest.getParameter("category");
-        String tags = servletRequest.getParameter("tags");
-        List<String> lists = new ArrayList<>();
-
-        return new CreatePostRequest(contents, memberId, Long.parseLong(folderId), privacy, category, lists);
     }
 
 }

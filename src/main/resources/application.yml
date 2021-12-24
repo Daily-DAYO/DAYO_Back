@@ -14,10 +14,5 @@ spring:
         default_batch_fetch_size: 1000
     show-sql: true
 
-  servlet:
-    multipart:
-      maxFileSize: 30MB
-      maxRequestSize: 30MB
-
 file:
-  dir: C:\Users\jdyj\DAYO\src\main\resources\images\
+  dir: /Users/jojaeyeong/Desktop/DAYO_Back/src/main/resources/upload/

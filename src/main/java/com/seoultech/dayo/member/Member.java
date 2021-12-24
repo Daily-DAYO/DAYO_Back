@@ -6,6 +6,8 @@ import com.seoultech.dayo.folder.Folder;
 import lombok.Getter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,8 +19,10 @@ public class Member {
     @Id
     private String id;
 
+    @NotBlank
     private String name;
 
+    @Email
     @Column(nullable = false, unique = true)
     private String email;
 

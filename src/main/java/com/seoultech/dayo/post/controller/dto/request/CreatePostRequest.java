@@ -9,24 +9,37 @@ import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.Privacy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
 @AllArgsConstructor
+@ToString
 public class CreatePostRequest {
 
+    @NotNull
     private String contents;
 
+    @NotNull
     private String memberId;
 
+    @NotNull
     private Long folderId;
 
+    @NotNull
     private String privacy;
 
+    @NotNull
     private String category;
 
     private List<String> tags;
+
+    @NotNull
+    private List<MultipartFile> files;
 
     public Post toEntity(Folder folder, Member member, List<Image> images) {
         Post post = Post.builder()

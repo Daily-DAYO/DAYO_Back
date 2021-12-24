@@ -3,6 +3,7 @@ package com.seoultech.dayo.folder.service;
 import com.seoultech.dayo.Image.Image;
 import com.seoultech.dayo.Image.repository.ImageRepository;
 import com.seoultech.dayo.Image.service.ImageService;
+import com.seoultech.dayo.exception.NotExistFolderException;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.controller.dto.FolderDto;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderRequest;
@@ -11,7 +12,6 @@ import com.seoultech.dayo.folder.controller.dto.response.ListAllFolderResponse;
 import com.seoultech.dayo.folder.repository.FolderRepository;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.repository.MemberRepository;
-import com.seoultech.dayo.exception.NotExistMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,9 +32,9 @@ public class FolderService {
     private final ImageRepository imageRepository;
     private final ImageService imageService;
 
-    public CreateFolderResponse createFolder(MultipartHttpServletRequest servletRequest) throws IOException {
+    public CreateFolderResponse createFolder(CreateFolderRequest request) throws IOException {
 
-        MultipartFile thumbnailImage = servletRequest.getFile("thumbnailImage");
+        MultipartFile thumbnailImage = request.getThumbnailImage();
         Image image;
         if(thumbnailImage == null) {
             int randomValue = (int)(Math.random() * 5) + 1;
@@ -42,12 +42,11 @@ public class FolderService {
         } else {
             image = imageService.storeFile(thumbnailImage);
         }
-        CreateFolderRequest request = createDto(servletRequest);
 
         Folder savedFolder = folderRepository.save(request.toEntity(image));
 
         Optional<Member> memberOptional = memberRepository.findById(request.getMemberId());
-        Member member = memberOptional.orElseThrow(NotExistMemberException::new);
+        Member member = memberOptional.orElseThrow(NotExistFolderException::new);
         member.addFolder(savedFolder);
 
         return CreateFolderResponse.from(savedFolder);
@@ -55,7 +54,7 @@ public class FolderService {
 
     public ListAllFolderResponse listAllFolder(String memberId) {
         Optional<Member> memberOptional = memberRepository.findMemberByIdWithJoin(memberId);
-        Member member = memberOptional.orElseThrow(NotExistMemberException::new);
+        Member member = memberOptional.orElseThrow(NotExistFolderException::new);
         List<Folder> folders = member.getFolders();
         List<FolderDto> collect = folders.stream()
                 .map(FolderDto::from)
@@ -63,15 +62,5 @@ public class FolderService {
 
         return ListAllFolderResponse.from(collect);
     }
-
-    private CreateFolderRequest createDto(MultipartHttpServletRequest servletRequest) {
-
-        String name = servletRequest.getParameter("name");
-        String subheading = servletRequest.getParameter("subheading");
-        String memberId = servletRequest.getParameter("memberId");
-
-        return new CreateFolderRequest(name, subheading, memberId);
-    }
-
 
 }

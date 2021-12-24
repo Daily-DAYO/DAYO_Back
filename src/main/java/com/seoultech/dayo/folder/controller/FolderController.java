@@ -1,5 +1,6 @@
 package com.seoultech.dayo.folder.controller;
 
+import com.seoultech.dayo.folder.controller.dto.request.CreateFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.response.CreateFolderResponse;
 import com.seoultech.dayo.folder.controller.dto.response.ListAllFolderResponse;
 import com.seoultech.dayo.folder.service.FolderService;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.validation.Valid;
 import java.io.IOException;
 
 @RestController
@@ -18,9 +20,9 @@ public class FolderController {
     private final FolderService folderService;
 
     @PostMapping
-    public ResponseEntity<CreateFolderResponse> createFolder(MultipartHttpServletRequest servletRequest) throws IOException {
+    public ResponseEntity<CreateFolderResponse> createFolder(@ModelAttribute @Valid CreateFolderRequest request) throws IOException {
         return ResponseEntity.ok()
-                    .body(folderService.createFolder(servletRequest));
+                    .body(folderService.createFolder(request));
     }
 
     @GetMapping("/{memberId}")

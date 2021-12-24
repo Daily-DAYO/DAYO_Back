@@ -13,6 +13,8 @@ import lombok.Getter;
 import lombok.NonNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +29,10 @@ public class Post extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
+    @NotBlank
     private String contents;
 
+    @NotNull
     private String thumbnailImage;
 
     @NonNull
