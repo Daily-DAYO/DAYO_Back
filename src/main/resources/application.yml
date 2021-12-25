@@ -15,4 +15,4 @@ spring:
     show-sql: true
 
 file:
-  dir: /Users/jojaeyeong/Desktop/DAYO_Back/src/main/resources/upload/
+  dir: /Users/jojaeyeong/Desktop/upload/

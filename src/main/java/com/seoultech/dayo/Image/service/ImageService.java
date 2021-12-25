@@ -33,6 +33,10 @@ public class ImageService {
     @Transactional
     public List<Image> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
         List<Name> collect = new ArrayList<>();
+        File folder = new File(fileDir);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
         for(MultipartFile multipartFile : multipartFiles) {
             if(!multipartFile.isEmpty()) {
                 String originalFilename = multipartFile.getOriginalFilename();
@@ -52,6 +56,11 @@ public class ImageService {
     }
 
     public Image storeFile(MultipartFile multipartFile) throws IOException {
+
+        File folder = new File(fileDir);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
 
         String originalFilename = multipartFile.getOriginalFilename();
         String storeFilename = createStoreFileName(originalFilename);
