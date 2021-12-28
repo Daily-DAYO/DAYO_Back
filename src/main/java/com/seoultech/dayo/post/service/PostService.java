@@ -1,8 +1,9 @@
 package com.seoultech.dayo.post.service;
 
 
-import com.seoultech.dayo.Image.Image;
-import com.seoultech.dayo.Image.service.ImageService;
+import com.seoultech.dayo.exception.NotExistPostException;
+import com.seoultech.dayo.image.Image;
+import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.repository.FolderRepository;
 import com.seoultech.dayo.hashtag.Hashtag;
@@ -14,6 +15,7 @@ import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.controller.dto.PostDto;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
 import com.seoultech.dayo.post.controller.dto.response.CreatePostResponse;
+import com.seoultech.dayo.post.controller.dto.response.DetailPostResponse;
 import com.seoultech.dayo.post.controller.dto.response.ListCategoryPostResponse;
 import com.seoultech.dayo.post.repository.PostRepository;
 import com.seoultech.dayo.post.controller.dto.response.ListAllPostResponse;
@@ -26,10 +28,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,6 +89,14 @@ public class PostService {
         postHashtagService.saveAll(collect);
 
         return CreatePostResponse.from(savedPost);
+    }
+
+    public DetailPostResponse detailPost(Long postId) {
+
+        Optional<Post> postOptional = postRepository.findById(postId);
+        Post post = postOptional.orElseThrow(NotExistPostException::new);
+
+        return DetailPostResponse.from(post, post.getMember());
     }
 
 }

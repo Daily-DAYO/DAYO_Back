@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.seoultech.dayo.folder.Folder;
+import com.seoultech.dayo.folder.repository.FolderRepository;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberOAuthResponse;
@@ -24,6 +25,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final FolderRepository folderRepository;
     private final RestTemplate restTemplate;
 
     @Transactional

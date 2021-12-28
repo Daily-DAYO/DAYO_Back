@@ -1,6 +1,7 @@
 package com.seoultech.dayo.folder;
 
-import com.seoultech.dayo.Image.Image;
+import com.seoultech.dayo.BaseTimeEntity;
+import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.post.Post;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,13 +13,12 @@ import java.util.List;
 
 @Entity
 @Getter
-public class Folder {
+public class Folder extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
     private String name;
 
     private String subheading;

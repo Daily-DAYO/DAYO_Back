@@ -9,13 +9,15 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(value = {
             NotExistFolderException.class,
-            NotExistMemberException.class
+            NotExistMemberException.class,
+            NotExistPostException.class,
     })
     public ResponseEntity<BadRequestFailResponse> badRequest(Exception e) {
         return ResponseEntity.badRequest()
@@ -27,7 +29,8 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(value = {
-            BindException.class
+            BindException.class,
+            MethodArgumentTypeMismatchException.class
     })
     public ResponseEntity validationError(BindException e) {
         BindingResult bindingResult = e.getBindingResult();

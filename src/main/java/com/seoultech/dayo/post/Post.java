@@ -2,7 +2,7 @@ package com.seoultech.dayo.post;
 
 
 import com.seoultech.dayo.BaseTimeEntity;
-import com.seoultech.dayo.Image.Image;
+import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.heart.Heart;
@@ -10,11 +10,8 @@ import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.postHashtag.PostHashtag;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,20 +23,16 @@ public class Post extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Member member;
 
-    @NotBlank
     private String contents;
 
-    @NotNull
     private String thumbnailImage;
 
-    @NonNull
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    @NonNull
     @Enumerated(EnumType.STRING)
     private Privacy privacy;
 

@@ -1,6 +1,6 @@
-package com.seoultech.dayo.Image.controller;
+package com.seoultech.dayo.image.controller;
 
-import com.seoultech.dayo.Image.service.ImageService;
+import com.seoultech.dayo.image.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

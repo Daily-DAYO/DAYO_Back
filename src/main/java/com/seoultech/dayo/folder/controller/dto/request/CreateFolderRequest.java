@@ -1,7 +1,7 @@
 package com.seoultech.dayo.folder.controller.dto.request;
 
 
-import com.seoultech.dayo.Image.Image;
+import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.folder.Folder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

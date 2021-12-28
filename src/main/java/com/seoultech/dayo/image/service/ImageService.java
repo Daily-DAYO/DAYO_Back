@@ -1,7 +1,7 @@
-package com.seoultech.dayo.Image.service;
+package com.seoultech.dayo.image.service;
 
-import com.seoultech.dayo.Image.Image;
-import com.seoultech.dayo.Image.repository.ImageRepository;
+import com.seoultech.dayo.image.Image;
+import com.seoultech.dayo.image.repository.ImageRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

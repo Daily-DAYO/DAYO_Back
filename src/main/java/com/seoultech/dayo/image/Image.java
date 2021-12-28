@@ -1,4 +1,4 @@
-package com.seoultech.dayo.Image;
+package com.seoultech.dayo.image;
 
 import com.seoultech.dayo.BaseTimeEntity;
 import lombok.Getter;

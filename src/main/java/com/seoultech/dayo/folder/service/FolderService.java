@@ -1,8 +1,9 @@
 package com.seoultech.dayo.folder.service;
 
-import com.seoultech.dayo.Image.Image;
-import com.seoultech.dayo.Image.repository.ImageRepository;
-import com.seoultech.dayo.Image.service.ImageService;
+import com.seoultech.dayo.exception.NotExistMemberException;
+import com.seoultech.dayo.image.Image;
+import com.seoultech.dayo.image.repository.ImageRepository;
+import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.exception.NotExistFolderException;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.controller.dto.FolderDto;
@@ -15,7 +16,6 @@ import com.seoultech.dayo.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,7 +46,7 @@ public class FolderService {
         Folder savedFolder = folderRepository.save(request.toEntity(image));
 
         Optional<Member> memberOptional = memberRepository.findById(request.getMemberId());
-        Member member = memberOptional.orElseThrow(NotExistFolderException::new);
+        Member member = memberOptional.orElseThrow(NotExistMemberException::new);
         member.addFolder(savedFolder);
 
         return CreateFolderResponse.from(savedFolder);
@@ -54,7 +54,7 @@ public class FolderService {
 
     public ListAllFolderResponse listAllFolder(String memberId) {
         Optional<Member> memberOptional = memberRepository.findMemberByIdWithJoin(memberId);
-        Member member = memberOptional.orElseThrow(NotExistFolderException::new);
+        Member member = memberOptional.orElseThrow(NotExistMemberException::new);
         List<Folder> folders = member.getFolders();
         List<FolderDto> collect = folders.stream()
                 .map(FolderDto::from)
