@@ -8,8 +8,4 @@ public class NotExistMemberException extends RuntimeException {
         super(MESSAGE);
     }
 
-    public static String getErrorMessage() {
-        return MESSAGE;
-    }
-
 }
