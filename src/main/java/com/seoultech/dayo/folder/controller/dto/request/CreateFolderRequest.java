@@ -23,7 +23,6 @@ public class CreateFolderRequest {
     @NotNull
     private String memberId;
 
-    @NotNull
     private MultipartFile thumbnailImage;
 
     public Folder toEntity(Image image) {
