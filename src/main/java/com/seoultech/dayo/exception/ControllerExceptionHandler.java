@@ -18,6 +18,7 @@ public class ControllerExceptionHandler {
             NotExistFolderException.class,
             NotExistMemberException.class,
             NotExistPostException.class,
+            NotExistFollowerException.class,
     })
     public ResponseEntity<BadRequestFailResponse> badRequest(Exception e) {
         return ResponseEntity.badRequest()

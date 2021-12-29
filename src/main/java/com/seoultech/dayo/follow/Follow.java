@@ -9,14 +9,15 @@ import java.io.Serializable;
 
 @Entity
 @Getter
+@AllArgsConstructor
 public class Follow {
 
     @EmbeddedId
     private Key key;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("userId")
-    private Member user;
+    @MapsId("memberId")
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("followerId")
@@ -26,7 +27,7 @@ public class Follow {
     @AllArgsConstructor
     @Getter
     public static class Key implements Serializable {
-        private String userId;
+        private String memberId;
         private String followerId;
 
         protected Key() {}
