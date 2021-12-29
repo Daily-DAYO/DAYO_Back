@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @EnableCaching
 @SpringBootApplication
-@EnableJpaAuditing
 public class DayoApplication {
 
     public static void main(String[] args) {

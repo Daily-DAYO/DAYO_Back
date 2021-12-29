@@ -1,0 +1,18 @@
+= Spring REST Docs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[resources-post]]
+== 폴더
+
+[[resources-folder-list]]
+=== 폴더 조회
+
+==== HTTP request
+
+include::{snippets}/folder-list/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/folder-list/http-response.adoc[]
