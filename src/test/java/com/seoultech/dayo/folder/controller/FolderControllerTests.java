@@ -3,13 +3,13 @@ package com.seoultech.dayo.folder.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.controller.dto.FolderDto;
+import com.seoultech.dayo.folder.controller.dto.request.CreateFolderRequest;
+import com.seoultech.dayo.folder.controller.dto.response.CreateFolderResponse;
 import com.seoultech.dayo.folder.controller.dto.response.ListAllFolderResponse;
-import com.seoultech.dayo.folder.repository.FolderRepository;
 import com.seoultech.dayo.folder.service.FolderService;
-import com.seoultech.dayo.image.repository.ImageRepository;
-import com.seoultech.dayo.image.service.ImageService;
+import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.member.Member;
-import com.seoultech.dayo.member.repository.MemberRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +17,29 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.seoultech.dayo.ApiDocumentUtils.getDocumentRequest;
 import static com.seoultech.dayo.ApiDocumentUtils.getDocumentResponse;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -52,21 +57,79 @@ class FolderControllerTests {
     @MockBean
     private FolderService folderService;
 
+    private Member member;
+
+    @BeforeEach
+    public void init() {
+        member = new Member("조재영", "jdyj@naver.com","");
+    }
+
     @Test
-    public void listAll() throws Exception {
+    public void 폴더_생성() throws Exception {
 
         //given
-        Member member = new Member("조재영", "jdyj@naver.com","");
+        MockMultipartFile thumbnailImage = new MockMultipartFile("thumbnailImage","test.jpg" , "image/png" , "test.jpg".getBytes());
+        Image image = new Image("테스트.jpg","test.jpg");
+        CreateFolderRequest request = new CreateFolderRequest("기본 폴더", "부제목", member.getId(), thumbnailImage);
+        Folder folder = Folder.builder()
+                .id(1L)
+                .name("기본 폴더")
+                .subheading("부제목")
+                .thumbnailImage(image)
+                .build();
+
+        //when
+        CreateFolderResponse response = CreateFolderResponse.from(folder);
+        given(folderService.createFolder(any())).willReturn(response);
+
+        ResultActions result = this.mockMvc.perform(
+                multipart("/api/v1/folders")
+                        .file(thumbnailImage)
+                        .param("name", request.getName())
+                        .param("subheading", request.getSubheading())
+                        .param("memberId", member.getId())
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .characterEncoding("UTF-8")
+        );
+
+        //then
+        result.andExpect(status().isCreated())
+                .andDo(print())
+                .andDo(document("create-folder",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestParts(
+                                partWithName("thumbnailImage").description("썸네일 이미지")
+                        ),
+                        requestParameters(
+                                parameterWithName("name").description("폴더 이름"),
+                                parameterWithName("subheading").description("부제목"),
+                                parameterWithName("memberId").description("회원 id")
+                        ),
+                        responseFields(
+                                fieldWithPath("folderId").type(JsonFieldType.NUMBER).description("폴더 id")
+                        )
+                ));
+
+    }
+
+    @Test
+    public void 전체_폴더_조회() throws Exception {
+
+        //given
+        Image image = new Image("테스트.jpg","test.jpg");
         Folder folder1 = Folder.builder()
-                .name("gibon1")
-                .subheading("")
-                .thumbnailImage(null)
+                .id(1L)
+                .name("기본 폴더1")
+                .subheading("부제목1")
+                .thumbnailImage(image)
                 .build();
 
         Folder folder2 = Folder.builder()
-                .name("gibon2")
-                .subheading("")
-                .thumbnailImage(null)
+                .id(2L)
+                .name("기본 폴더2")
+                .subheading("부제목2")
+                .thumbnailImage(image)
                 .build();
 
         member.addFolder(folder1);
@@ -96,8 +159,10 @@ class FolderControllerTests {
                         ),
                         responseFields(
                                 fieldWithPath("count").type(JsonFieldType.NUMBER).description("폴더 개수"),
+                                fieldWithPath("data[].folderId").type(JsonFieldType.NUMBER).description("폴더 id"),
                                 fieldWithPath("data[].name").type(JsonFieldType.STRING).description("폴더 이름"),
                                 fieldWithPath("data[].subheading").type(JsonFieldType.STRING).description("폴더 부제목"),
+                                fieldWithPath("data[].thumbnailImage").type(JsonFieldType.STRING).description("폴더 썸네일"),
                                 fieldWithPath("data[].postCount").type(JsonFieldType.NUMBER).description("게시글 개수")
                         )
                 ));

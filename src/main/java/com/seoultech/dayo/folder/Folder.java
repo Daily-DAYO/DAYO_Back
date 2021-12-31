@@ -30,6 +30,14 @@ public class Folder extends BaseTimeEntity {
     private List<Post> posts = new ArrayList<>();
 
     @Builder
+    public Folder(Long id, @NonNull String name, String subheading, Image thumbnailImage) {
+        this.id = id;
+        this.name = name;
+        this.subheading = subheading;
+        this.thumbnailImage = thumbnailImage;
+    }
+
+    @Builder
     public Folder(@NonNull String name, String subheading, Image thumbnailImage) {
         this.name = name;
         this.subheading = subheading;

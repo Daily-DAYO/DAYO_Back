@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class CreateFolderResponse {
 
-    private Long id;
+    private Long folderId;
 
     public static CreateFolderResponse from(Folder folder) {
         return new CreateFolderResponse(folder.getId());

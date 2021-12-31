@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @AllArgsConstructor
-@ToString
 public class CreateFolderRequest {
 
     @NotNull

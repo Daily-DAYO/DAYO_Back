@@ -1,10 +1,21 @@
-= Spring REST Docs
+= DAYO REST Docs
 :toc: left
 :toclevels: 2
 :sectlinks:
 
-[[resources-post]]
+[[resources-folder]]
 == 폴더
+
+[[resources-create-folder]]
+=== 폴더 생성
+
+==== HTTP request
+
+include::{snippets}/create-folder/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/create-folder/http-response.adoc[]
 
 [[resources-folder-list]]
 === 폴더 조회
