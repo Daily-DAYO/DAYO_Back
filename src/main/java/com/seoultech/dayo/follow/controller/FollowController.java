@@ -2,9 +2,12 @@ package com.seoultech.dayo.follow.controller;
 
 
 import com.seoultech.dayo.follow.controller.dto.request.CreateFollowRequest;
+import com.seoultech.dayo.follow.controller.dto.request.CreateFollowUpRequest;
 import com.seoultech.dayo.follow.controller.dto.response.CreateFollowResponse;
+import com.seoultech.dayo.follow.controller.dto.response.CreateFollowUpResponse;
 import com.seoultech.dayo.follow.service.FollowService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +25,15 @@ public class FollowController {
 
     @PostMapping
     public ResponseEntity<CreateFollowResponse> createFollow(@RequestBody @Valid CreateFollowRequest request) {
-        return ResponseEntity.ok()
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(followService.createFollow(request));
     }
+
+    @PostMapping("/up")
+    public ResponseEntity<CreateFollowUpResponse> createFollowUp(@RequestBody @Valid CreateFollowUpRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(followService.createFollowUp(request));
+    }
+
 
 }

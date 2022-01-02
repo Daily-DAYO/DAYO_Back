@@ -22,10 +22,7 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +30,6 @@ import static com.seoultech.dayo.ApiDocumentUtils.getDocumentRequest;
 import static com.seoultech.dayo.ApiDocumentUtils.getDocumentResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -99,11 +95,11 @@ class FolderControllerTests {
                         getDocumentRequest(),
                         getDocumentResponse(),
                         requestParts(
-                                partWithName("thumbnailImage").description("썸네일 이미지")
+                                partWithName("thumbnailImage").description("썸네일 이미지").optional()
                         ),
                         requestParameters(
                                 parameterWithName("name").description("폴더 이름"),
-                                parameterWithName("subheading").description("부제목"),
+                                parameterWithName("subheading").description("부제목").optional(),
                                 parameterWithName("memberId").description("회원 id")
                         ),
                         responseFields(

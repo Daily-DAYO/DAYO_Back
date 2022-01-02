@@ -21,4 +21,6 @@ public class CreateFollowRequest {
         return new Follow(new Follow.Key(this.memberId, this.followerId), member, follower, false);
     }
 
+    public CreateFollowRequest() {
+    }
 }

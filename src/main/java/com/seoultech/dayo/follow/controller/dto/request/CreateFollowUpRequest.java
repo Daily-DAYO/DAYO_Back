@@ -4,6 +4,7 @@ import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 @Getter
@@ -17,5 +18,7 @@ public class CreateFollowUpRequest {
     public Follow toEntity(Member member, Member follower) {
         return new Follow(new Follow.Key(this.memberId, this.followerId), member, follower, true);
     }
+
+    public CreateFollowUpRequest() { }
 
 }

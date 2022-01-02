@@ -23,23 +23,6 @@ class HashtagServiceTests {
     @InjectMocks
     private HashtagService hashtagService;
 
-    @Test
-    void 해시태그_생성() {
-
-        //given
-        Hashtag hashtag1 = new Hashtag(1L, "태그1");
-        Hashtag hashtag2 = new Hashtag(2L, "태그2");
-
-        List<Hashtag> hashtags = new ArrayList<>();
-        hashtags.add(hashtag1);
-        hashtags.add(hashtag2);
-
-        given(hashtagRepository.findByTags(any())).willReturn(hashtags);
-
-
-
-
-    }
 
 
 }

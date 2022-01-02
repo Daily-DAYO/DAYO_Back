@@ -3,21 +3,23 @@
 :toclevels: 2
 :sectlinks:
 
-[[resources-folder]]
+[[folder]]
 == 폴더
 
-[[resources-create-folder]]
+[[create-folder]]
 === 폴더 생성
 
 ==== HTTP request
 
 include::{snippets}/create-folder/http-request.adoc[]
+include::{snippets}/create-folder/request-parameters.adoc[]
+include::{snippets}/create-folder/request-parts.adoc[]
 
 ==== HTTP response
 
 include::{snippets}/create-folder/http-response.adoc[]
 
-[[resources-folder-list]]
+[[folder-list]]
 === 폴더 조회
 
 ==== HTTP request
@@ -27,3 +29,31 @@ include::{snippets}/folder-list/http-request.adoc[]
 ==== HTTP response
 
 include::{snippets}/folder-list/http-response.adoc[]
+
+[[follow]]
+== 팔로우
+
+[[create-follow]]
+=== 팔로우 생성
+
+==== HTTP request
+
+include::{snippets}/create-follow/http-request.adoc[]
+include::{snippets}/create-follow/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/create-follow/http-response.adoc[]
+
+[[create-follow-up]]
+=== 맞팔로우
+
+==== HTTP request
+
+include::{snippets}/create-follow-up/http-request.adoc[]
+include::{snippets}/create-follow-up/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/create-follow-up/http-response.adoc[]
+
