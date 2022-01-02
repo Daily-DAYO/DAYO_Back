@@ -4,6 +4,7 @@ package com.seoultech.dayo.member;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.folder.Folder;
+import com.seoultech.dayo.follow.Follow;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -40,8 +41,18 @@ public class Member extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private List<Folder> folders = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<Follow> followings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "follower")
+    private List<Follow> followers = new ArrayList<>();
+
     public void addFolder(Folder folder) {
         folders.add(folder);
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public Member(String name, String email, String profileImg) {

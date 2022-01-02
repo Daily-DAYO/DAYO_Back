@@ -5,20 +5,17 @@ import com.seoultech.dayo.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import javax.validation.constraints.NotNull;
 
 @Getter
 @AllArgsConstructor
-public class CreateFollowRequest {
+public class CreateFollowUpRequest {
 
-    @NotNull
     private String memberId;
 
-    @NotNull
     private String followerId;
 
     public Follow toEntity(Member member, Member follower) {
-        return new Follow(new Follow.Key(this.memberId, this.followerId), member, follower, false);
+        return new Follow(new Follow.Key(this.memberId, this.followerId), member, follower, true);
     }
 
 }

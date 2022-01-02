@@ -19,6 +19,7 @@ public class ControllerExceptionHandler {
             NotExistMemberException.class,
             NotExistPostException.class,
             NotExistFollowerException.class,
+            NotExistFollowException.class,
     })
     public ResponseEntity<BadRequestFailResponse> badRequest(Exception e) {
         return ResponseEntity.badRequest()
@@ -31,7 +32,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(value = {
             BindException.class,
-            MethodArgumentTypeMismatchException.class
+            MethodArgumentNotValidException.class
     })
     public ResponseEntity validationError(BindException e) {
         BindingResult bindingResult = e.getBindingResult();

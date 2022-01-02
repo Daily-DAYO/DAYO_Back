@@ -4,9 +4,10 @@ import com.seoultech.dayo.follow.Follow;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+
 @Getter
 @AllArgsConstructor
-public class CreateFollowResponse {
+public class CreateFollowUpResponse {
 
     private String memberId;
 
@@ -14,8 +15,8 @@ public class CreateFollowResponse {
 
     private Boolean isAccept;
 
-    public static CreateFollowResponse from(Follow follow) {
-        return new CreateFollowResponse(follow.getMember().getId(), follow.getFollower().getId(), follow.getIsAccept());
+    public static CreateFollowUpResponse from(Follow follow) {
+        return new CreateFollowUpResponse(follow.getMember().getId(), follow.getFollower().getId(), follow.getIsAccept());
     }
 
 }

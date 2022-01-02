@@ -26,6 +26,11 @@ public class Hashtag {
         this.tag = tag;
     }
 
+    public Hashtag(Long id, String tag) {
+        this.id = id;
+        this.tag = tag;
+    }
+
     protected Hashtag() {
     }
 }

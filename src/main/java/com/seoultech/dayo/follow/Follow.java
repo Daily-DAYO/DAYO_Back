@@ -5,11 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import javax.persistence.*;
+import javax.swing.text.StyledEditorKit;
 import java.io.Serializable;
 
 @Entity
 @Getter
 @AllArgsConstructor
+@Table(indexes = {
+        @Index(name = "i_member", columnList = "member_id"),
+        @Index(name = "i_follower", columnList = "follower_id")
+})
 public class Follow {
 
     @EmbeddedId
@@ -22,6 +27,12 @@ public class Follow {
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("followerId")
     private Member follower;
+
+    private Boolean isAccept;
+
+    public void setIsAccept(Boolean isAccept) {
+        this.isAccept = isAccept;
+    }
 
     @Embeddable
     @AllArgsConstructor
