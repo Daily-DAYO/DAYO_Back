@@ -4,7 +4,6 @@ import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.repository.ImageRepository;
 import com.seoultech.dayo.image.service.ImageService;
-import com.seoultech.dayo.exception.NotExistFolderException;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.controller.dto.FolderDto;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderRequest;

@@ -1,6 +1,5 @@
 package com.seoultech.dayo.folder.controller;
 
-import com.seoultech.dayo.folder.controller.dto.FolderDto;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.response.CreateFolderResponse;
 import com.seoultech.dayo.folder.controller.dto.response.ListAllFolderResponse;
@@ -9,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.validation.Valid;
 import java.io.IOException;
