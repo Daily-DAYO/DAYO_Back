@@ -17,7 +17,7 @@ public class FollowerDto {
     private Boolean isAccept;
 
     public static FollowerDto from(Follow follow) {
-        return new FollowerDto(follow.getFollower().getId(), follow.getFollower().getNickname(), follow.getFollower().getProfileImg(), follow.getIsAccept());
+        return new FollowerDto(follow.getMember().getId(), follow.getMember().getNickname(), follow.getMember().getProfileImg(), follow.getIsAccept());
     }
 
 }

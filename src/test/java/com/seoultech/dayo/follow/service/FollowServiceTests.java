@@ -97,18 +97,18 @@ class FollowServiceTests {
     void listAllFollowers() {
 
         //given
-        given(memberRepository.findById(member1.getId())).willReturn(Optional.of(member1));
+        given(memberRepository.findById(member2.getId())).willReturn(Optional.of(member2));
         List<Follow> follows = new ArrayList<>();
         Follow follow1 = new Follow(new Follow.Key(member1.getId(), member2.getId()), member1, member2, false);
         follows.add(follow1);
         given(followRepository.findFollowsByFollower(any())).willReturn(follows);
 
         //when
-        ListAllFollowerResponse response = followService.listAllFollowers(member1.getId());
+        ListAllFollowerResponse response = followService.listAllFollowers(member2.getId());
 
         //then
         assertThat(response.getCount()).isEqualTo(1);
-        assertThat(response.getData().get(0).getMemberId()).isEqualTo(member2.getId());
+        assertThat(response.getData().get(0).getMemberId()).isEqualTo(member1.getId());
 
     }
 
@@ -128,7 +128,7 @@ class FollowServiceTests {
 
         //then
         assertThat(response.getCount()).isEqualTo(1);
-        assertThat(response.getData().get(0).getMemberId()).isEqualTo(member1.getId());
+        assertThat(response.getData().get(0).getMemberId()).isEqualTo(member2.getId());
 
     }
 

@@ -14,6 +14,7 @@ import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ public class FolderService {
     private final ImageRepository imageRepository;
     private final ImageService imageService;
 
+    @Transactional
     public CreateFolderResponse createFolder(CreateFolderRequest request) throws IOException {
 
         MultipartFile thumbnailImage = request.getThumbnailImage();
@@ -41,6 +43,7 @@ public class FolderService {
         } else {
             image = imageService.storeFile(thumbnailImage);
         }
+
 
         Folder savedFolder = folderRepository.save(request.toEntity(image));
 

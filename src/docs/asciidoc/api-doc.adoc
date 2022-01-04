@@ -57,6 +57,32 @@ include::{snippets}/create-follow-up/request-fields.adoc[]
 
 include::{snippets}/create-follow-up/http-response.adoc[]
 
+[[list-follower]]
+=== 팔로워 조회
+
+==== HTTP request
+
+include::{snippets}/list-follower/path-parameters.adoc[]
+include::{snippets}/list-follower/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/list-follower/http-response.adoc[]
+include::{snippets}/list-follower/response-fields.adoc[]
+
+[[list-following]]
+=== 팔로잉 조회
+
+==== HTTP request
+
+include::{snippets}/list-following/path-parameters.adoc[]
+include::{snippets}/list-following/http-request.adoc[]
+
+==== HTTP response
+
+include::{snippets}/list-following/http-response.adoc[]
+include::{snippets}/list-following/response-fields.adoc[]
+
 [[comment]]
 == 댓글
 
