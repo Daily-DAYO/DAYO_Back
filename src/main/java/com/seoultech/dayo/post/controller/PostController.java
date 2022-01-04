@@ -27,7 +27,7 @@ public class PostController {
                 .body(postService.listPostAll());
     }
 
-    @GetMapping("/{category}")
+    @GetMapping("/category/{category}")
     public ResponseEntity<ListCategoryPostResponse> listPostByCategory(@PathVariable @Valid String category) {
         return ResponseEntity.ok()
                 .body(postService.listPostByCategory(category));
