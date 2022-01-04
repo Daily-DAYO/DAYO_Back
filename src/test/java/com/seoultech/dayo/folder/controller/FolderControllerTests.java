@@ -147,7 +147,7 @@ class FolderControllerTests {
 
         //then
         result.andExpect(status().isOk())
-                .andDo(document("folder-list",
+                .andDo(document("list-folder",
                         getDocumentRequest(),
                         getDocumentResponse(),
                         pathParameters(
