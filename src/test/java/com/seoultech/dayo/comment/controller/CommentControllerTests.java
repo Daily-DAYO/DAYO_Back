@@ -1,6 +1,5 @@
 package com.seoultech.dayo.comment.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.comment.controller.request.CreateCommentRequest;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -37,13 +35,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest(CommentController.class)
+@WebMvcTest({CommentController.class})
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @AutoConfigureRestDocs
 class CommentControllerTests {
@@ -63,7 +64,7 @@ class CommentControllerTests {
     @BeforeEach
     void init() {
         member = new Member("테스트", "jdyj@naver.com", "test.jpg");
-
+        member.setNickname("닉네임테스트");
         post = Post.builder()
                 .id(1L)
                 .member(member)
@@ -113,7 +114,7 @@ class CommentControllerTests {
 
     @Test
     @DisplayName("게시글에 존재하는 전체 댓글 조회 컨트롤러")
-    void listAllCommentControllerTest() {
+    void listAllCommentControllerTest() throws Exception {
 
         //given
         Comment comment1 = new Comment(1L, member, "댓글 테스트 1");
@@ -122,13 +123,38 @@ class CommentControllerTests {
         comment2.addPost(post);
 
         List<ListAllCommentResponse.CommentDto> collect = new ArrayList<>();
-        ListAllCommentResponse.CommentDto dto1 = new ListAllCommentResponse.CommentDto(comment1.getId(), member.getNickname(), member.getProfileImg(), comment1.getContents(), comment1.getCreatedDate());
-        ListAllCommentResponse.CommentDto dto2 = new ListAllCommentResponse.CommentDto(comment2.getId(), member.getNickname(), member.getProfileImg(), comment2.getContents(), comment2.getCreatedDate());
+        ListAllCommentResponse.CommentDto dto1 = ListAllCommentResponse.CommentDto.from(comment1, member);
+        ListAllCommentResponse.CommentDto dto2 = ListAllCommentResponse.CommentDto.from(comment2, member);
         collect.add(dto1);
         collect.add(dto2);
 
         //when
-//        new ListAllCommentResponse();
+        ListAllCommentResponse response = ListAllCommentResponse.from(collect);
+        given(commentService.listAllComment(any())).willReturn(response);
+        ResultActions result = this.mockMvc.perform(
+                get("/api/v1/comments/{postId}", post.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        result.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(
+                        document("list-comment",
+                                getDocumentRequest(),
+                                getDocumentResponse(),
+                                pathParameters(
+                                        parameterWithName("postId").description("게시글 id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("count").type(JsonFieldType.NUMBER).description("댓글 개수"),
+                                        fieldWithPath("data[].commentId").type(JsonFieldType.NUMBER).description("댓글 id"),
+                                        fieldWithPath("data[].memberId").type(JsonFieldType.STRING).description("댓글 작성한 회원 id"),
+                                        fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("댓글 작성한 회원 닉네임"),
+                                        fieldWithPath("data[].profileImg").type(JsonFieldType.STRING).description("댓글 작성한 회원 프로필사진"),
+                                        fieldWithPath("data[].contents").type(JsonFieldType.STRING).description("댓글 내용"),
+                                        fieldWithPath("data[].createTime").type(JsonFieldType.STRING).description("댓글 작성시간").optional()
+                                ))
+                );
 
 
     }

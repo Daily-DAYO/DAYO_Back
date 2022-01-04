@@ -98,3 +98,16 @@ include::{snippets}/create-comment/request-fields.adoc[]
 
 include::{snippets}/create-comment/http-response.adoc[]
 include::{snippets}/create-comment/response-fields.adoc[]
+
+[[list-comment]]
+=== 댓글 조회
+
+==== HTTP request
+
+include::{snippets}/list-comment/http-request.adoc[]
+include::{snippets}/list-comment/path-parameters.adoc[]
+
+==== HTTP response
+
+include::{snippets}/list-comment/http-response.adoc[]
+include::{snippets}/list-comment/response-fields.adoc[]

@@ -25,13 +25,14 @@ public class ListAllCommentResponse {
     static public class CommentDto {
 
         private Long commentId;
+        private String memberId;
         private String nickname;
         private String profileImg;
         private String contents;
         private LocalDateTime createTime;
 
         public static CommentDto from(Comment comment, Member member) {
-            return new CommentDto(comment.getId(), member.getNickname(), member.getProfileImg(), comment.getContents(), comment.getCreatedDate());
+            return new CommentDto(comment.getId(), member.getId(), member.getNickname(), member.getProfileImg(), comment.getContents(), comment.getCreatedDate());
         }
 
     }
