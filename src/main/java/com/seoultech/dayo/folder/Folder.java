@@ -37,7 +37,6 @@ public class Folder extends BaseTimeEntity {
         this.thumbnailImage = thumbnailImage;
     }
 
-    @Builder
     public Folder(@NonNull String name, String subheading, Image thumbnailImage) {
         this.name = name;
         this.subheading = subheading;
