@@ -13,6 +13,7 @@ import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,7 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
+    @Transactional
     public CreateCommentResponse createComment(CreateCommentRequest request) {
 
         Optional<Post> postOptional = postRepository.findById(request.getPostId());
@@ -36,15 +38,16 @@ public class CommentService {
         Post post = postOptional.orElseThrow(IllegalStateException::new);
         Member member = memberOptional.orElseThrow(IllegalStateException::new);
 
-        Comment comment = request.toEntity(member, post);
+        Comment comment = request.toEntity(member);
         Comment savedComment = commentRepository.save(comment);
+        savedComment.addPost(post);
 
         return new CreateCommentResponse(savedComment.getId());
     }
 
     public ListAllCommentResponse listAllComment(Long postId) {
 
-        Optional<Post> postOptional = postRepository.findByIdWithComment(postId);
+        Optional<Post> postOptional = postRepository.findById(postId);
 
         Post post = postOptional.orElseThrow(NotExistPostException::new);
         List<ListAllCommentResponse.CommentDto> collect = post.getComments().stream()
@@ -53,7 +56,5 @@ public class CommentService {
 
         return ListAllCommentResponse.from(collect);
     }
-
-
 
 }

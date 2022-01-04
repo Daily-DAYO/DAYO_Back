@@ -57,3 +57,18 @@ include::{snippets}/create-follow-up/request-fields.adoc[]
 
 include::{snippets}/create-follow-up/http-response.adoc[]
 
+[[comment]]
+== 댓글
+
+[[create-comment]]
+=== 댓글 생성
+
+==== HTTP request
+
+include::{snippets}/create-comment/http-request.adoc[]
+include::{snippets}/create-comment/request-fields.adoc[]
+
+==== HTTP response
+
+include::{snippets}/create-comment/http-response.adoc[]
+include::{snippets}/create-comment/response-fields.adoc[]

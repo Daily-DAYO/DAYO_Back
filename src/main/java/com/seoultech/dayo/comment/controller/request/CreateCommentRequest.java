@@ -22,9 +22,9 @@ public class CreateCommentRequest {
     @NotNull
     private Long postId;
 
-    public Comment toEntity(Member member, Post post) {
-        Comment comment = new Comment(member, this.contents);
-        comment.addPost(post);
-        return comment;
+    public Comment toEntity(Member member) {
+        return new Comment(member, this.contents);
     }
+
+    public CreateCommentRequest() {}
 }

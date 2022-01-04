@@ -8,6 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CreateCommentResponse {
 
-    private Long id;
+    private Long commentId;
 
 }

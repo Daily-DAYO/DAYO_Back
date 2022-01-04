@@ -57,8 +57,18 @@ public class Post extends BaseTimeEntity {
         folder.getPosts().add(this);
     }
 
-    @Builder
     public Post(Member member, String contents, String thumbnailImage, Category category, Privacy privacy, List<Image> images) {
+        this.member = member;
+        this.contents = contents;
+        this.thumbnailImage = thumbnailImage;
+        this.category = category;
+        this.privacy = privacy;
+        this.images = images;
+    }
+
+    @Builder
+    public Post(Long id, Member member, String contents, String thumbnailImage, Category category, Privacy privacy, List<Image> images) {
+        this.id = id;
         this.member = member;
         this.contents = contents;
         this.thumbnailImage = thumbnailImage;

@@ -12,4 +12,5 @@ public interface MemberRepository extends JpaRepository<Member, String> {
 
     @Query("select m from Member m join fetch m.folders where m.id = :id")
     Optional<Member> findMemberByIdWithJoin(String id);
+
 }

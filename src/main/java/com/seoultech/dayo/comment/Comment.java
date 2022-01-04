@@ -33,6 +33,12 @@ public class Comment extends BaseTimeEntity {
         this.contents = contents;
     }
 
+    public Comment(Long id, Member member, String contents) {
+        this.id = id;
+        this.member = member;
+        this.contents = contents;
+    }
+
     protected Comment() {}
 
 }
