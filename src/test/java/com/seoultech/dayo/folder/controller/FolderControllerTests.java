@@ -2,6 +2,7 @@ package com.seoultech.dayo.folder.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seoultech.dayo.folder.Folder;
+import com.seoultech.dayo.folder.Privacy;
 import com.seoultech.dayo.folder.controller.dto.FolderDto;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.response.CreateFolderResponse;
@@ -66,11 +67,12 @@ class FolderControllerTests {
         //given
         MockMultipartFile thumbnailImage = new MockMultipartFile("thumbnailImage","test.jpg" , "image/png" , "test.jpg".getBytes());
         Image image = new Image("테스트.jpg","test.jpg");
-        CreateFolderRequest request = new CreateFolderRequest("기본 폴더", "부제목", member.getId(), thumbnailImage);
+        CreateFolderRequest request = new CreateFolderRequest("기본 폴더", "부제목", "ALL",member.getId(), thumbnailImage);
         Folder folder = Folder.builder()
                 .id(1L)
                 .name("기본 폴더")
                 .subheading("부제목")
+                .privacy(Privacy.ALL)
                 .thumbnailImage(image)
                 .build();
 
@@ -83,6 +85,7 @@ class FolderControllerTests {
                         .file(thumbnailImage)
                         .param("name", request.getName())
                         .param("subheading", request.getSubheading())
+                        .param("privacy", request.getPrivacy())
                         .param("memberId", member.getId())
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .characterEncoding("UTF-8")
@@ -100,6 +103,7 @@ class FolderControllerTests {
                         requestParameters(
                                 parameterWithName("name").description("폴더 이름"),
                                 parameterWithName("subheading").description("부제목").optional(),
+                                parameterWithName("privacy").description("공개 설정"),
                                 parameterWithName("memberId").description("회원 id")
                         ),
                         responseFields(

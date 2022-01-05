@@ -1,6 +1,8 @@
 package com.seoultech.dayo.folder.service;
 
 import com.seoultech.dayo.exception.NotExistMemberException;
+import com.seoultech.dayo.folder.controller.dto.request.CreateFolderInPostRequest;
+import com.seoultech.dayo.folder.controller.dto.response.CreateFolderInPostResponse;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.repository.ImageRepository;
 import com.seoultech.dayo.image.service.ImageService;
@@ -44,7 +46,6 @@ public class FolderService {
             image = imageService.storeFile(thumbnailImage);
         }
 
-
         Folder savedFolder = folderRepository.save(request.toEntity(image));
 
         Optional<Member> memberOptional = memberRepository.findById(request.getMemberId());
@@ -52,6 +53,18 @@ public class FolderService {
         member.addFolder(savedFolder);
 
         return CreateFolderResponse.from(savedFolder);
+    }
+
+    public CreateFolderInPostResponse createFolderInPost(CreateFolderInPostRequest request) {
+
+        Image image = imageRepository.findById(1L).get();
+
+        Folder folder = request.toEntity();
+        folder.addThumbnailImage(image);
+
+        Folder savedFolder = folderRepository.save(folder);
+
+        return null;
     }
 
     public ListAllFolderResponse listAllFolder(String memberId) {

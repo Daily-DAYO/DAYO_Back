@@ -1,6 +1,8 @@
 package com.seoultech.dayo.folder.controller;
 
+import com.seoultech.dayo.folder.controller.dto.request.CreateFolderInPostRequest;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderRequest;
+import com.seoultech.dayo.folder.controller.dto.response.CreateFolderInPostResponse;
 import com.seoultech.dayo.folder.controller.dto.response.CreateFolderResponse;
 import com.seoultech.dayo.folder.controller.dto.response.ListAllFolderResponse;
 import com.seoultech.dayo.folder.service.FolderService;

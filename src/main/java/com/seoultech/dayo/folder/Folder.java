@@ -23,24 +23,40 @@ public class Folder extends BaseTimeEntity {
 
     private String subheading;
 
+    @Enumerated(EnumType.STRING)
+    private Privacy privacy;
+
     @OneToOne
     private Image thumbnailImage;
 
     @OneToMany(mappedBy = "folder")
     private List<Post> posts = new ArrayList<>();
 
-    @Builder
-    public Folder(Long id, @NonNull String name, String subheading, Image thumbnailImage) {
-        this.id = id;
-        this.name = name;
-        this.subheading = subheading;
+
+    public void addThumbnailImage(Image thumbnailImage) {
         this.thumbnailImage = thumbnailImage;
     }
 
-    public Folder(@NonNull String name, String subheading, Image thumbnailImage) {
+
+    @Builder
+    public Folder(Long id, String name, String subheading, Privacy privacy, Image thumbnailImage) {
+        this.id = id;
         this.name = name;
         this.subheading = subheading;
+        this.privacy = privacy;
         this.thumbnailImage = thumbnailImage;
+    }
+
+    public Folder(String name, String subheading, Privacy privacy, Image thumbnailImage) {
+        this.name = name;
+        this.subheading = subheading;
+        this.privacy = privacy;
+        this.thumbnailImage = thumbnailImage;
+    }
+
+    public Folder(String name, Privacy privacy) {
+        this.name = name;
+        this.privacy = privacy;
     }
 
     protected Folder() {}
