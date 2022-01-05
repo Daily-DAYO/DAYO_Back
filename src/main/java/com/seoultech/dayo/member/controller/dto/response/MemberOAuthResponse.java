@@ -1,5 +1,6 @@
 package com.seoultech.dayo.member.controller.dto.response;
 
+import com.seoultech.dayo.config.jwt.TokenDto;
 import com.seoultech.dayo.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,10 +9,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MemberOAuthResponse {
 
-    private String id;
+    private String accessToken;
+    private String refreshToken;
 
-    public static MemberOAuthResponse from(Member member) {
-        return new MemberOAuthResponse(member.getId());
+    public static MemberOAuthResponse from(TokenDto token) {
+        return new MemberOAuthResponse(token.getAccessToken(), token.getRefreshToken());
     }
 
 }

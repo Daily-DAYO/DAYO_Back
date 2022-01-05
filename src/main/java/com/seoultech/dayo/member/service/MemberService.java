@@ -3,8 +3,11 @@ package com.seoultech.dayo.member.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.seoultech.dayo.config.jwt.TokenDto;
+import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.repository.FolderRepository;
+import com.seoultech.dayo.member.Authority;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberOAuthResponse;
@@ -12,6 +15,9 @@ import com.seoultech.dayo.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -24,8 +30,10 @@ import java.util.Optional;
 @Slf4j
 public class MemberService {
 
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
     private final FolderRepository folderRepository;
+    private final TokenProvider tokenProvider;
     private final RestTemplate restTemplate;
 
     @Transactional
@@ -47,10 +55,18 @@ public class MemberService {
         Optional<Member> memberOptional = memberRepository.findMemberByEmail(email);
 
         Member member = memberOptional.orElseGet(() ->
-                memberRepository.save(new Member(name,email,profileImage))
+                memberRepository.save(new Member(name, email, profileImage, Authority.ROLE_USER))
         );
+        log.info("여기까진가?");
 
-        return MemberOAuthResponse.from(member);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(member.getId(), null);
+        log.info("여긴가?");
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        log.info(authentication.getName());
+
+        TokenDto token = tokenProvider.generateToken(authentication);
+
+        return MemberOAuthResponse.from(token);
     }
 
     private String get(String apiUrl, String accessToken) {

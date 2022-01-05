@@ -37,6 +37,9 @@ public class Member extends BaseTimeEntity {
 
     private String profileImg;
 
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
     @OneToMany
     @JoinColumn(name = "member_id")
     private List<Folder> folders = new ArrayList<>();
@@ -55,10 +58,11 @@ public class Member extends BaseTimeEntity {
         this.nickname = nickname;
     }
 
-    public Member(String name, String email, String profileImg) {
+    public Member(String name, String email, String profileImg, Authority authority) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.email = email;
+        this.authority = authority;
         this.profileImg = profileImg;
     }
 
