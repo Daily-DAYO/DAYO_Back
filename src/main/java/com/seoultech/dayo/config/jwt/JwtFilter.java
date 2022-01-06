@@ -20,7 +20,7 @@ public class JwtFilter implements Filter {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";
-    private static final String[] whitelist = {"/", "/api/v1/members",
+    private static final String[] whitelist = {"/", "/api/v1/members/**",
             "/docs/api-doc.html", "/favicon.ico",
             "/swagger-resources/**","/v3/api-docs", "/swagger*/**", "/webjars/**", "/swagger-resources"};
 
