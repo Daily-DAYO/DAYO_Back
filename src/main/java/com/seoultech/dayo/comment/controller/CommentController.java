@@ -42,7 +42,7 @@ public class CommentController {
     }
 
     private String getDataInToken(HttpServletRequest servletRequest) {
-        String token = servletRequest.getHeader("Authorization");
+        String token = servletRequest.getHeader("Authorization").substring(7);
         return tokenProvider.getDataFromToken(token);
     }
 

@@ -5,11 +5,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.seoultech.dayo.config.jwt.TokenDto;
 import com.seoultech.dayo.config.jwt.TokenProvider;
+import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.repository.FolderRepository;
 import com.seoultech.dayo.member.Authority;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
+import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOAuthResponse;
 import com.seoultech.dayo.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 @Slf4j
+@Transactional
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -32,7 +35,6 @@ public class MemberService {
     private final TokenProvider tokenProvider;
     private final RestTemplate restTemplate;
 
-    @Transactional
     public MemberOAuthResponse kakaoApi(MemberOAuthRequest request) {
 
         String apiUrl = "https://kapi.kakao.com/v2/user/me";
@@ -56,6 +58,16 @@ public class MemberService {
         TokenDto token = tokenProvider.generateToken(member.getId());
 
         return MemberOAuthResponse.from(token);
+    }
+
+    public MemberInfoResponse memberInfo(String memberId) {
+        Member member = findMember(memberId);
+        return MemberInfoResponse.from(member);
+    }
+
+    private Member findMember(String memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(NotExistMemberException::new);
     }
 
     private String get(String apiUrl, String accessToken) {
