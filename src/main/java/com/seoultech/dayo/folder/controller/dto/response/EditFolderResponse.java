@@ -6,12 +6,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CreateFolderInPostResponse {
+public class EditFolderResponse {
 
     private Long folderId;
 
-    public static CreateFolderInPostResponse from(Folder folder) {
-        return new CreateFolderInPostResponse(folder.getId());
+    public static EditFolderResponse from(Folder folder) {
+        return new EditFolderResponse(folder.getId());
     }
-
 }

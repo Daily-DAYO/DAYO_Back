@@ -81,12 +81,12 @@ class CommentControllerTests {
     void createCommentControllerTest() throws Exception {
 
         //given
-        CreateCommentRequest request = new CreateCommentRequest(member.getId(), "댓글 테스트", post.getId());
+        CreateCommentRequest request = new CreateCommentRequest("댓글 테스트", post.getId());
         Comment comment = new Comment(1L, member, "댓글 테스트");
 
         //when
         CreateCommentResponse response = new CreateCommentResponse(comment.getId());
-        given(commentService.createComment(any())).willReturn(response);
+        given(commentService.createComment(any(), any())).willReturn(response);
         ResultActions result = this.mockMvc.perform(
                 post("/api/v1/comments")
                         .content(objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8))

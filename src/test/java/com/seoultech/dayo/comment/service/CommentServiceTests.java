@@ -70,10 +70,10 @@ class CommentServiceTests {
         given(memberRepository.findById(any())).willReturn(Optional.of(member));
 
         //when
-        CreateCommentRequest request = new CreateCommentRequest(member.getId(), "댓글 테스트1", post.getId());
+        CreateCommentRequest request = new CreateCommentRequest("댓글 테스트1", post.getId());
         Comment comment = new Comment(1L, member, "댓글 테스트1");
         given(commentRepository.save(any())).willReturn(comment);
-        CreateCommentResponse response = commentService.createComment(request);
+        CreateCommentResponse response = commentService.createComment(member.getId(), request);
 
         //then
         assertThat(response.getCommentId()).isEqualTo(comment.getId());

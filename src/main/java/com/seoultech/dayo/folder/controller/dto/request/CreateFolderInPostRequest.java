@@ -4,6 +4,7 @@ import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.Privacy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
@@ -20,4 +21,6 @@ public class CreateFolderInPostRequest {
         return new Folder(name, Privacy.valueOf(privacy));
     }
 
+    public CreateFolderInPostRequest() {
+    }
 }

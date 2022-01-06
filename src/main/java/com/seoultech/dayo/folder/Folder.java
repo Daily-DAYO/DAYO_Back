@@ -37,6 +37,21 @@ public class Folder extends BaseTimeEntity {
         this.thumbnailImage = thumbnailImage;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSubheading(String subheading) {
+        this.subheading = subheading;
+    }
+
+    public void setPrivacy(Privacy privacy) {
+        this.privacy = privacy;
+    }
+
+    public void setThumbnailImage(Image thumbnailImage) {
+        this.thumbnailImage = thumbnailImage;
+    }
 
     @Builder
     public Folder(Long id, String name, String subheading, Privacy privacy, Image thumbnailImage) {

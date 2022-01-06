@@ -67,7 +67,7 @@ class FolderControllerTests {
         //given
         MockMultipartFile thumbnailImage = new MockMultipartFile("thumbnailImage","test.jpg" , "image/png" , "test.jpg".getBytes());
         Image image = new Image("테스트.jpg","test.jpg");
-        CreateFolderRequest request = new CreateFolderRequest("기본 폴더", "부제목", "ALL",member.getId(), thumbnailImage);
+        CreateFolderRequest request = new CreateFolderRequest("기본 폴더", "부제목", "ALL", thumbnailImage);
         Folder folder = Folder.builder()
                 .id(1L)
                 .name("기본 폴더")
@@ -78,7 +78,7 @@ class FolderControllerTests {
 
         //when
         CreateFolderResponse response = CreateFolderResponse.from(folder);
-        given(folderService.createFolder(any())).willReturn(response);
+        given(folderService.createFolder(any(), any())).willReturn(response);
 
         ResultActions result = this.mockMvc.perform(
                 multipart("/api/v1/folders")

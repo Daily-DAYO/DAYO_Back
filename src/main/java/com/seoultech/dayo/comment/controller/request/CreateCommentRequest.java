@@ -13,9 +13,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class CreateCommentRequest {
 
-    @NotNull
-    private String memberId;
-
     @NotBlank
     private String contents;
 

@@ -6,6 +6,8 @@ import com.seoultech.dayo.comment.controller.response.ListAllCommentResponse;
 import com.seoultech.dayo.comment.repository.CommentRepository;
 import com.seoultech.dayo.comment.controller.request.CreateCommentRequest;
 import com.seoultech.dayo.comment.controller.response.CreateCommentResponse;
+import com.seoultech.dayo.config.jwt.TokenProvider;
+import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.exception.NotExistPostException;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.repository.MemberRepository;
@@ -30,13 +32,10 @@ public class CommentService {
     private final PostRepository postRepository;
 
     @Transactional
-    public CreateCommentResponse createComment(CreateCommentRequest request) {
+    public CreateCommentResponse createComment(String memberId, CreateCommentRequest request) {
 
-        Optional<Post> postOptional = postRepository.findById(request.getPostId());
-        Optional<Member> memberOptional = memberRepository.findById(request.getMemberId());
-
-        Post post = postOptional.orElseThrow(IllegalStateException::new);
-        Member member = memberOptional.orElseThrow(IllegalStateException::new);
+        Post post = checkPost(request.getPostId());
+        Member member = checkMember(memberId);
 
         Comment comment = request.toEntity(member);
         Comment savedComment = commentRepository.save(comment);
@@ -47,14 +46,22 @@ public class CommentService {
 
     public ListAllCommentResponse listAllComment(Long postId) {
 
-        Optional<Post> postOptional = postRepository.findById(postId);
-
-        Post post = postOptional.orElseThrow(NotExistPostException::new);
+        Post post = checkPost(postId);
         List<ListAllCommentResponse.CommentDto> collect = post.getComments().stream()
                 .map(comment -> ListAllCommentResponse.CommentDto.from(comment, comment.getMember()))
                 .collect(toList());
 
         return ListAllCommentResponse.from(collect);
+    }
+
+    private Member checkMember(String memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(NotExistMemberException::new);
+    }
+
+    private Post checkPost(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(NotExistPostException::new);
     }
 
 }
