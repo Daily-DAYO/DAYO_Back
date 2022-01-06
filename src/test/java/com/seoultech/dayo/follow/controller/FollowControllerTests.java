@@ -75,12 +75,12 @@ class FollowControllerTests {
     void createFollow() throws Exception {
 
         //given
-        CreateFollowRequest request = new CreateFollowRequest(member1.getId(), member2.getId());
+        CreateFollowRequest request = new CreateFollowRequest(member2.getId());
         Follow follow = new Follow(new Follow.Key(member1.getId(), member2.getId()), member1, member2, false);
 
         //when
         CreateFollowResponse response = CreateFollowResponse.from(follow);
-        given(followService.createFollow(any())).willReturn(response);
+        given(followService.createFollow(any(), any())).willReturn(response);
 
         ResultActions result = this.mockMvc.perform(
                 post("/api/v1/follow")
@@ -115,12 +115,12 @@ class FollowControllerTests {
     void createFollowUp() throws Exception {
 
         //given
-        CreateFollowUpRequest request = new CreateFollowUpRequest(member2.getId(), member1.getId());
+        CreateFollowUpRequest request = new CreateFollowUpRequest(member1.getId());
         Follow follow = new Follow(new Follow.Key(member2.getId(), member1.getId()), member2, member1, true);
 
         //when
         CreateFollowUpResponse response = CreateFollowUpResponse.from(follow);
-        given(followService.createFollowUp(any())).willReturn(response);
+        given(followService.createFollowUp(any(), any())).willReturn(response);
 
         ResultActions result = this.mockMvc.perform(
                 post("/api/v1/follow/up")

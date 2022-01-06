@@ -11,12 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateFollowUpRequest {
 
-    private String memberId;
-
     private String followerId;
 
     public Follow toEntity(Member member, Member follower) {
-        return new Follow(new Follow.Key(this.memberId, this.followerId), member, follower, true);
+        return new Follow(new Follow.Key(member.getId(), follower.getId()), member, follower, true);
     }
 
     public CreateFollowUpRequest() { }

@@ -14,7 +14,7 @@ import java.util.Date;
 @Component
 public class TokenProvider {
 
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60;
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 30;
 
     private final Key key;

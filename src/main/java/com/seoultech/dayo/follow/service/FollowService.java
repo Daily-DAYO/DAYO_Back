@@ -7,12 +7,11 @@ import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.follow.controller.dto.FollowerDto;
 import com.seoultech.dayo.follow.controller.dto.FollowingDto;
+import com.seoultech.dayo.follow.controller.dto.MyFollowerDto;
+import com.seoultech.dayo.follow.controller.dto.MyFollowingDto;
 import com.seoultech.dayo.follow.controller.dto.request.CreateFollowRequest;
 import com.seoultech.dayo.follow.controller.dto.request.CreateFollowUpRequest;
-import com.seoultech.dayo.follow.controller.dto.response.CreateFollowResponse;
-import com.seoultech.dayo.follow.controller.dto.response.CreateFollowUpResponse;
-import com.seoultech.dayo.follow.controller.dto.response.ListAllFollowerResponse;
-import com.seoultech.dayo.follow.controller.dto.response.ListAllFollowingResponse;
+import com.seoultech.dayo.follow.controller.dto.response.*;
 import com.seoultech.dayo.follow.repository.FollowRepository;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.repository.MemberRepository;
@@ -28,19 +27,16 @@ import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class FollowService {
 
     private final FollowRepository followRepository;
     private final MemberRepository memberRepository;
 
-    @Transactional
-    public CreateFollowResponse createFollow(CreateFollowRequest request) {
+    public CreateFollowResponse createFollow(String memberId, CreateFollowRequest request) {
 
-        Optional<Member> memberOptional = memberRepository.findById(request.getMemberId());
-        Member member = memberOptional.orElseThrow(NotExistMemberException::new);
-
-        Optional<Member> followerOptional = memberRepository.findById(request.getFollowerId());
-        Member follower = followerOptional.orElseThrow(NotExistFollowerException::new);
+        Member member = findMember(memberId);
+        Member follower = findFollower(request.getFollowerId());
 
         Follow follow = request.toEntity(member, follower);
         Follow savedFollow = followRepository.save(follow);
@@ -48,14 +44,10 @@ public class FollowService {
         return CreateFollowResponse.from(savedFollow);
     }
 
-    @Transactional
-    public CreateFollowUpResponse createFollowUp(CreateFollowUpRequest request) {
+    public CreateFollowUpResponse createFollowUp(String memberId, CreateFollowUpRequest request) {
 
-        Optional<Member> memberOptional = memberRepository.findById(request.getMemberId());
-        Member member = memberOptional.orElseThrow(NotExistMemberException::new);
-
-        Optional<Member> followerOptional = memberRepository.findById(request.getFollowerId());
-        Member follower = followerOptional.orElseThrow(NotExistFollowerException::new);
+        Member member = findMember(memberId);
+        Member follower = findFollower(request.getFollowerId());
 
         Optional<Follow> followOptional = followRepository.findFollowByMemberAndFollower(follower, member);
         Follow presentFollow = followOptional.orElseThrow(NotExistFollowException::new);
@@ -67,10 +59,10 @@ public class FollowService {
         return CreateFollowUpResponse.from(savedFollow);
     }
 
+    @Transactional(readOnly = true)
     public ListAllFollowerResponse listAllFollowers(String memberId) {
 
-        Optional<Member> memberOptional = memberRepository.findById(memberId);
-        Member member = memberOptional.orElseThrow(NotExistMemberException::new);
+        Member member = findMember(memberId);
 
         List<Follow> followers = followRepository.findFollowsByFollower(member);
         List<FollowerDto> collect = followers.stream()
@@ -80,10 +72,10 @@ public class FollowService {
         return ListAllFollowerResponse.from(collect);
     }
 
+    @Transactional(readOnly = true)
     public ListAllFollowingResponse listAllFollowings(String memberId) {
 
-        Optional<Member> memberOptional = memberRepository.findById(memberId);
-        Member member = memberOptional.orElseThrow(NotExistMemberException::new);
+        Member member = findMember(memberId);
 
         List<Follow> followings = followRepository.findFollowsByMember(member);
         List<FollowingDto> collect = followings.stream()
@@ -91,6 +83,46 @@ public class FollowService {
                 .collect(toList());
 
         return ListAllFollowingResponse.from(collect);
+    }
+
+    @Transactional(readOnly = true)
+    public ListAllMyFollowerResponse listAllMyFollowers(String memberId) {
+
+        Member member = findMember(memberId);
+
+        List<Follow> followers = followRepository.findFollowsByFollower(member);
+        List<MyFollowerDto> collect = followers.stream()
+                .map(MyFollowerDto::from)
+                .collect(toList());
+
+        return ListAllMyFollowerResponse.from(collect);
+    }
+
+    @Transactional(readOnly = true)
+    public ListAllMyFollowingResponse listAllMyFollowings(String memberId) {
+
+        Member member = findMember(memberId);
+
+        List<Follow> followings = followRepository.findFollowsByMember(member);
+        List<MyFollowingDto> collect = followings.stream()
+                .map(MyFollowingDto::from)
+                .collect(toList());
+
+        return ListAllMyFollowingResponse.from(collect);
+    }
+
+    public void deleteFollow(String memberId, String followerId) {
+        followRepository.deleteById(new Follow.Key(memberId, followerId));
+    }
+
+    private Member findMember(String memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(NotExistMemberException::new);
+    }
+
+    private Member findFollower(String followerId) {
+        return memberRepository.findById(followerId)
+                .orElseThrow(NotExistFollowerException::new);
     }
 
 }

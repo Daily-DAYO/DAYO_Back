@@ -59,12 +59,12 @@ class FollowServiceTests {
         given(memberRepository.findById(member2.getId())).willReturn(Optional.of(member2));
 
         //when
-        CreateFollowRequest request = new CreateFollowRequest(member1.getId(), member2.getId());
+        CreateFollowRequest request = new CreateFollowRequest(member2.getId());
         Follow follow = new Follow(new Follow.Key(member1.getId(), member2.getId()), member1, member2, false);
         given(followRepository.save(any())).willReturn(follow);
 
         //then
-        CreateFollowResponse response = followService.createFollow(request);
+        CreateFollowResponse response = followService.createFollow(member2.getId(), request);
         assertThat(response.getMemberId()).isEqualTo(member1.getId());
         assertThat(response.getFollowerId()).isEqualTo(member2.getId());
         assertThat(response.getIsAccept()).isEqualTo(false);
@@ -82,12 +82,12 @@ class FollowServiceTests {
         given(followRepository.findFollowByMemberAndFollower(any(), any())).willReturn(Optional.of(follow1));
         
         //when
-        CreateFollowUpRequest request = new CreateFollowUpRequest(member2.getId(), member1.getId());
+        CreateFollowUpRequest request = new CreateFollowUpRequest(member1.getId());
         Follow follow2 = new Follow(new Follow.Key(member2.getId(), member1.getId()), member2, member1, true);
         given(followRepository.save(any())).willReturn(follow2);
 
         //then
-        CreateFollowUpResponse response = followService.createFollowUp(request);
+        CreateFollowUpResponse response = followService.createFollowUp(member2.getId(), request);
         assertThat(response.getIsAccept()).isEqualTo(true);
         assertThat(follow1.getIsAccept()).isEqualTo(true);
     }

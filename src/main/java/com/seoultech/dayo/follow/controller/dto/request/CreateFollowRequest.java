@@ -12,13 +12,10 @@ import javax.validation.constraints.NotNull;
 public class CreateFollowRequest {
 
     @NotNull
-    private String memberId;
-
-    @NotNull
     private String followerId;
 
     public Follow toEntity(Member member, Member follower) {
-        return new Follow(new Follow.Key(this.memberId, this.followerId), member, follower, false);
+        return new Follow(new Follow.Key(member.getId(), follower.getId()), member, follower, false);
     }
 
     public CreateFollowRequest() {
