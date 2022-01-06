@@ -25,13 +25,13 @@ import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentService {
 
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
-    @Transactional
     public CreateCommentResponse createComment(String memberId, CreateCommentRequest request) {
 
         Post post = checkPost(request.getPostId());
@@ -44,6 +44,7 @@ public class CommentService {
         return new CreateCommentResponse(savedComment.getId());
     }
 
+    @Transactional(readOnly = true)
     public ListAllCommentResponse listAllComment(Long postId) {
 
         Post post = checkPost(postId);
@@ -52,6 +53,10 @@ public class CommentService {
                 .collect(toList());
 
         return ListAllCommentResponse.from(collect);
+    }
+
+    public void deleteComment(Long commentId) {
+        commentRepository.deleteById(commentId);
     }
 
     private Member checkMember(String memberId) {

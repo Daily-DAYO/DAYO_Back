@@ -29,6 +29,12 @@ public class CommentController {
                 .body(commentService.createComment(memberId, request));
     }
 
+    @PostMapping("/delete/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable @Valid Long commentId) {
+        commentService.deleteComment(commentId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @GetMapping("/{postId}")
     public ResponseEntity<ListAllCommentResponse> listAllComment(@PathVariable @Valid Long postId) {
         return ResponseEntity.ok()
