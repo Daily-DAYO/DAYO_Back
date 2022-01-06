@@ -29,7 +29,7 @@ public class Folder extends BaseTimeEntity {
     @OneToOne
     private Image thumbnailImage;
 
-    @OneToMany(mappedBy = "folder")
+    @OneToMany(mappedBy = "folder", fetch = FetchType.EAGER)
     private List<Post> posts = new ArrayList<>();
 
 

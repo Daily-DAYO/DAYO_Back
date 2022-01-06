@@ -3,6 +3,7 @@ package com.seoultech.dayo.folder.service;
 import com.seoultech.dayo.exception.NotExistFolderException;
 import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.folder.Privacy;
+import com.seoultech.dayo.folder.controller.dto.FolderDetailDto;
 import com.seoultech.dayo.folder.controller.dto.MyFolderDto;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderInPostRequest;
 import com.seoultech.dayo.folder.controller.dto.request.EditFolderRequest;
@@ -115,6 +116,18 @@ public class FolderService {
 
     public void deleteFolder(Long folderId) {
         folderRepository.deleteById(folderId);
+    }
+
+    @Transactional(readOnly = true)
+    public DetailFolderResponse detailFolder(Long folderId) {
+
+        Folder folder = findFolder(folderId);
+
+        List<FolderDetailDto> collect = folder.getPosts().stream()
+                .map(FolderDetailDto::from)
+                .collect(toList());
+
+        return DetailFolderResponse.from(folder, collect);
     }
 
     private Folder findFolder(Long folderId) {

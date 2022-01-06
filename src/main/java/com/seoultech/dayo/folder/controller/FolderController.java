@@ -60,10 +60,16 @@ public class FolderController {
                 .body(folderService.listAllMyFolder(memberId));
     }
 
-    @GetMapping("/{memberId}")
+    @GetMapping("/list/{memberId}")
     public ResponseEntity<ListAllFolderResponse> listAllFolder(@PathVariable String memberId) {
         return ResponseEntity.ok()
                 .body(folderService.listAllFolder(memberId));
+    }
+
+    @GetMapping("/{folderId}")
+    public ResponseEntity<DetailFolderResponse> detailListFolder(@PathVariable Long folderId) {
+        return ResponseEntity.ok()
+                .body(folderService.detailFolder(folderId));
     }
 
     private String getDataInToken(HttpServletRequest servletRequest) {
