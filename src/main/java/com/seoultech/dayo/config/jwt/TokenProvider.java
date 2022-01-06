@@ -5,7 +5,6 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -20,8 +19,8 @@ public class TokenProvider {
 
     private final Key key;
 
-    public TokenProvider(@Value("${jwt.secret}") String secretKey) {
-        byte[] decode = Decoders.BASE64.decode(secretKey);
+    public TokenProvider() {
+        byte[] decode = Decoders.BASE64.decode(JwtConfig.JWT_SECRET);
         this.key = Keys.hmacShaKeyFor(decode);
     }
 
