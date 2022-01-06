@@ -15,9 +15,6 @@ import com.seoultech.dayo.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -30,7 +27,6 @@ import java.util.Optional;
 @Slf4j
 public class MemberService {
 
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
     private final FolderRepository folderRepository;
     private final TokenProvider tokenProvider;
@@ -55,16 +51,9 @@ public class MemberService {
         Optional<Member> memberOptional = memberRepository.findMemberByEmail(email);
 
         Member member = memberOptional.orElseGet(() ->
-                memberRepository.save(new Member(name, email, profileImage, Authority.ROLE_USER))
+                memberRepository.save(new Member(name, email, profileImage))
         );
-        log.info("여기까진가?");
-
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(member.getId(), null);
-        log.info("여긴가?");
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        log.info(authentication.getName());
-
-        TokenDto token = tokenProvider.generateToken(authentication);
+        TokenDto token = tokenProvider.generateToken(member.getId());
 
         return MemberOAuthResponse.from(token);
     }

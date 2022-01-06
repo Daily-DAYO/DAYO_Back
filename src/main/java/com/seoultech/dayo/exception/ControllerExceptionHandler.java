@@ -1,6 +1,9 @@
 package com.seoultech.dayo.exception;
 
 import com.seoultech.dayo.exception.dto.BadRequestFailResponse;
+import com.seoultech.dayo.exception.dto.ForbiddenFailResponse;
+import com.seoultech.dayo.exception.dto.UnauthorizedFailResponse;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;

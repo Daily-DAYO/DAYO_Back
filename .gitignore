@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 docker-compose.yaml
 Dockerfile
+JwtConfig
 
 ### STS ###
 .apt_generated
