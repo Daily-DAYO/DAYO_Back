@@ -22,7 +22,7 @@ public class PostDto {
     private Integer commentCount;
 
     public static PostDto from(Post post) {
-        return new PostDto(post.getId(), post.getThumbnailImage(), post.getMember().getName(), post.getMember().getProfileImg(), post.getHearts().size(), post.getComments().size());
+        return new PostDto(post.getId(), post.getThumbnailImage(), post.getMember().getName(), post.getMember().getProfileImg().getStoreFileName(), post.getHearts().size(), post.getComments().size());
     }
 
 }

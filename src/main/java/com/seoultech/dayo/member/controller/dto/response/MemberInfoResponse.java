@@ -17,7 +17,7 @@ public class MemberInfoResponse {
     private String profileImg;
 
     public static MemberInfoResponse from(Member member) {
-        return new MemberInfoResponse(member.getId(), member.getEmail(), member.getNickname(), member.getProfileImg());
+        return new MemberInfoResponse(member.getId(), member.getEmail(), member.getNickname(), member.getProfileImg().getStoreFileName());
     }
 
 }

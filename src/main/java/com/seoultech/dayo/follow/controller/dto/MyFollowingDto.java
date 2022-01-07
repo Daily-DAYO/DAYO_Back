@@ -18,6 +18,6 @@ public class MyFollowingDto {
     private Boolean isAccept;
 
     public static MyFollowingDto from(Follow follow) {
-        return new MyFollowingDto(follow.getFollower().getId(), follow.getFollower().getNickname(), follow.getFollower().getProfileImg(), follow.getIsAccept());
+        return new MyFollowingDto(follow.getFollower().getId(), follow.getFollower().getNickname(), follow.getFollower().getProfileImg().getStoreFileName(), follow.getIsAccept());
     }
 }

@@ -50,7 +50,7 @@ public class DetailPostResponse {
                 .collect(toList());
 
         return new DetailPostResponse(post.getMember().getNickname(),
-                post.getMember().getProfileImg(),
+                post.getMember().getProfileImg().getStoreFileName(),
                 post.getCreatedDate(),
                 post.getCategory(),
                 collectImages,

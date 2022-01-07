@@ -32,7 +32,7 @@ public class ListAllCommentResponse {
         private LocalDateTime createTime;
 
         public static CommentDto from(Comment comment, Member member) {
-            return new CommentDto(comment.getId(), member.getId(), member.getNickname(), member.getProfileImg(), comment.getContents(), comment.getCreatedDate());
+            return new CommentDto(comment.getId(), member.getId(), member.getNickname(), member.getProfileImg().getStoreFileName(), comment.getContents(), comment.getCreatedDate());
         }
 
     }

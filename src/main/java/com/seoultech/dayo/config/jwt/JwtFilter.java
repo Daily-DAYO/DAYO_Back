@@ -22,7 +22,8 @@ public class JwtFilter implements Filter {
     public static final String BEARER_PREFIX = "Bearer ";
     private static final String[] whitelist = {"/", "/api/v1/members/kakaoOAuth",
             "/docs/api-doc.html", "/favicon.ico",
-            "/swagger-resources/**","/v3/api-docs", "/swagger*/**", "/webjars/**", "/swagger-resources"};
+            "/swagger-resources/**","/v3/api-docs", "/swagger*/**", "/webjars/**", "/swagger-resources",
+            "/images/**"};
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

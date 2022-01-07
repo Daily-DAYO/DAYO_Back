@@ -6,11 +6,12 @@ import com.google.gson.JsonParser;
 import com.seoultech.dayo.config.jwt.TokenDto;
 import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.exception.NotExistMemberException;
-import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.repository.FolderRepository;
-import com.seoultech.dayo.member.Authority;
+import com.seoultech.dayo.image.Image;
+import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
+import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOAuthResponse;
 import com.seoultech.dayo.member.repository.MemberRepository;
@@ -19,9 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -32,6 +35,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final FolderRepository folderRepository;
+    private final ImageService imageService;
     private final TokenProvider tokenProvider;
     private final RestTemplate restTemplate;
 
@@ -48,21 +52,34 @@ public class MemberService {
 
         String name = profile.getAsJsonObject().get("nickname").getAsString();
         String email = kakaoAccount.getAsJsonObject().get("email").getAsString();
-        String profileImage = profile.getAsJsonObject().get("profile_image_url").getAsString();
 
         Optional<Member> memberOptional = memberRepository.findMemberByEmail(email);
 
         Member member = memberOptional.orElseGet(() ->
-                memberRepository.save(new Member(name, email, profileImage))
+                memberRepository.save(new Member(name, email))
         );
         TokenDto token = tokenProvider.generateToken(member.getId());
 
         return MemberOAuthResponse.from(token);
     }
 
+    @Transactional(readOnly = true)
     public MemberInfoResponse memberInfo(String memberId) {
         Member member = findMember(memberId);
         return MemberInfoResponse.from(member);
+    }
+
+    public void profileUpdate(String memberId, MemberProfileUpdateRequest request) throws IOException {
+
+        Member member = findMember(memberId);
+
+        if (StringUtils.hasText(request.getNickname()))
+            member.setNickname(request.getNickname());
+        if (request.getProfileImg() != null) {
+            Image image = imageService.storeFile(request.getProfileImg());
+            member.setProfileImg(image);
+        }
+
     }
 
     private Member findMember(String memberId) {

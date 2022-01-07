@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.follow.Follow;
+import com.seoultech.dayo.image.Image;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -35,7 +36,8 @@ public class Member extends BaseTimeEntity {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    private String profileImg;
+    @OneToOne
+    private Image profileImg;
 
     @OneToMany
     @JoinColumn(name = "member_id")
@@ -55,11 +57,14 @@ public class Member extends BaseTimeEntity {
         this.nickname = nickname;
     }
 
-    public Member(String name, String email, String profileImg) {
+    public void setProfileImg(Image profileImg) {
+        this.profileImg = profileImg;
+    }
+
+    public Member(String name, String email) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.email = email;
-        this.profileImg = profileImg;
     }
 
     protected Member() {}
