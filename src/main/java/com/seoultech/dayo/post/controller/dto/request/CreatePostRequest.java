@@ -25,9 +25,6 @@ public class CreatePostRequest {
     private String contents;
 
     @NotNull
-    private String memberId;
-
-    @NotNull
     private Long folderId;
 
     @NotNull

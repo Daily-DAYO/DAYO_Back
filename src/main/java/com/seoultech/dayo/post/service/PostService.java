@@ -37,6 +37,7 @@ import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostService {
 
     private final PostRepository postRepository;
@@ -47,6 +48,7 @@ public class PostService {
     private final ImageService imageService;
 
     @Cacheable(value = "all")
+    @Transactional(readOnly = true)
     public ListAllPostResponse listPostAll() {
 
         List<Post> postList = postRepository.findAllByUsingJoin();
@@ -57,6 +59,7 @@ public class PostService {
         return new ListAllPostResponse(postList.size(), collect);
     }
 
+    @Transactional(readOnly = true)
     public ListCategoryPostResponse listPostByCategory(String category) {
 
         List<Post> postList = postRepository.findAllByCategoryUsingJoin(Category.valueOf(category));
@@ -67,17 +70,13 @@ public class PostService {
         return new ListCategoryPostResponse(postList.size(), collect);
     }
 
-    @Transactional
-    public CreatePostResponse createPost(CreatePostRequest request) throws IOException {
+    public CreatePostResponse createPost(String memberId, CreatePostRequest request) throws IOException {
 
         List<MultipartFile> files = request.getFiles();
         List<Image> images = imageService.storeFiles(files);
 
-        Optional<Member> memberOptional = memberRepository.findById(request.getMemberId());
-        Member member = memberOptional.orElseThrow(NotExistMemberException::new);
-
-        Optional<Folder> folderOptional = folderRepository.findById(request.getFolderId());
-        Folder folder = folderOptional.orElseThrow(NotExistFolderException::new);
+        Member member = findMember(memberId);
+        Folder folder = findFolder(request.getFolderId());
 
         List<Hashtag> hashtags = hashtagService.createHashtag(request.getTags());
         Post savedPost = postRepository.save(request.toEntity(folder, member, images));
@@ -91,12 +90,30 @@ public class PostService {
         return CreatePostResponse.from(savedPost);
     }
 
+    @Transactional(readOnly = true)
     public DetailPostResponse detailPost(Long postId) {
 
-        Optional<Post> postOptional = postRepository.findById(postId);
-        Post post = postOptional.orElseThrow(NotExistPostException::new);
+        Post post = findPost(postId);
 
         return DetailPostResponse.from(post, post.getMember());
     }
 
+    public void deletePost(Long postId) {
+        postRepository.findById(postId);
+    }
+
+    private Post findPost(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(NotExistPostException::new);
+    }
+
+    private Folder findFolder(Long folderId) {
+        return folderRepository.findById(folderId)
+                .orElseThrow(NotExistFolderException::new);
+    }
+
+    private Member findMember(String memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(NotExistMemberException::new);
+    }
 }
