@@ -51,9 +51,10 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<DetailPostResponse> detailPost(@PathVariable @Valid Long postId) {
+    public ResponseEntity<DetailPostResponse> detailPost(HttpServletRequest servletRequest, @PathVariable @Valid Long postId) {
+        String memberId = getDataInToken(servletRequest);
         return ResponseEntity.ok()
-                .body(postService.detailPost(postId));
+                .body(postService.detailPost(memberId, postId));
     }
 
     private String getDataInToken(HttpServletRequest servletRequest) {

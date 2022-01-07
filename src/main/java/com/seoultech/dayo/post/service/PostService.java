@@ -2,6 +2,8 @@ package com.seoultech.dayo.post.service;
 
 
 import com.seoultech.dayo.exception.NotExistPostException;
+import com.seoultech.dayo.heart.Heart;
+import com.seoultech.dayo.heart.repository.HeartRepository;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.folder.Folder;
@@ -45,6 +47,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final PostHashtagService postHashtagService;
     private final HashtagService hashtagService;
+    private final HeartRepository heartRepository;
     private final ImageService imageService;
 
     @Cacheable(value = "all")
@@ -91,11 +94,12 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public DetailPostResponse detailPost(Long postId) {
+    public DetailPostResponse detailPost(String memberId, Long postId) {
 
         Post post = findPost(postId);
+        boolean isHeart = heartRepository.existsHeartByKey(new Heart.Key(memberId, postId));
 
-        return DetailPostResponse.from(post, post.getMember());
+        return DetailPostResponse.from(post, isHeart);
     }
 
     public void deletePost(Long postId) {

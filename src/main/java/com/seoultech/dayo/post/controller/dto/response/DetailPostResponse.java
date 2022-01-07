@@ -36,13 +36,11 @@ public class DetailPostResponse {
 
     private List<String> hashtags;
 
+    private boolean isHeart;
+
     private int heartCount;
 
-    private int commentCount;
-
-    private List<CommentDto> comments;
-
-    public static DetailPostResponse from(Post post, Member member) {
+    public static DetailPostResponse from(Post post, boolean isHeart) {
         List<String> collectImages = post.getImages().stream()
                 .map(Image::getStoreFileName)
                 .collect(toList());
@@ -51,29 +49,15 @@ public class DetailPostResponse {
                 .map(postHashtag -> postHashtag.getHashtag().getTag())
                 .collect(toList());
 
-        List<CommentDto> collect = post.getComments()
-                .stream()
-                .map(CommentDto::from)
-                .collect(toList());
-
-        return new DetailPostResponse(member.getNickname(), member.getProfileImg(), post.getCreatedDate(), post.getCategory(), collectImages, post.getContents(), collectHashtags, post.getHearts().size(), post.getComments().size(), collect);
-    }
-
-    @Data
-    @AllArgsConstructor
-    static public class CommentDto {
-
-        private Long commentId;
-        private String memberId;
-        private String nickname;
-        private String profileImg;
-        private String contents;
-        private LocalDateTime createTime;
-
-        public static CommentDto from(Comment comment) {
-            return new CommentDto(comment.getId(), comment.getMember().getId(), comment.getMember().getNickname(), comment.getMember().getProfileImg(), comment.getContents(), comment.getCreatedDate());
-        }
-
+        return new DetailPostResponse(post.getMember().getNickname(),
+                post.getMember().getProfileImg(),
+                post.getCreatedDate(),
+                post.getCategory(),
+                collectImages,
+                post.getContents(),
+                collectHashtags,
+                isHeart,
+                post.getHearts().size());
     }
 
 }

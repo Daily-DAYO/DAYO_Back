@@ -10,4 +10,6 @@ public interface HeartRepository extends JpaRepository<Heart, Heart.Key> {
 
     List<Heart> findAllByMember(Member member);
 
+    boolean existsHeartByKey(Heart.Key key);
+
 }
