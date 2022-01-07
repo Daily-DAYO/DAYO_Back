@@ -14,6 +14,8 @@ public class CreateFollowResponse {
 
     private Boolean isAccept;
 
+
+    //TODO 쿼리 나가는거 확인 getKey().getMemberId() or getMember.getId()
     public static CreateFollowResponse from(Follow follow) {
         return new CreateFollowResponse(follow.getMember().getId(), follow.getFollower().getId(), follow.getIsAccept());
     }

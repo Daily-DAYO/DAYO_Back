@@ -30,7 +30,8 @@ public class Heart {
         post.getHearts().add(this);
     }
 
-    public Heart(Member member) {
+    public Heart(Key key, Member member) {
+        this.key = key;
         this.member = member;
     }
 
