@@ -67,6 +67,14 @@ public class ImageService {
         return imageRepository.save(image);
     }
 
+    public Image findDefaultProfileImage() {
+        return imageRepository.findById(1L).get();
+    }
+
+    public Image findDefaultFolderImage() {
+        return imageRepository.findById(2L).get();
+    }
+
     private String createStoreFileName(String originalFilename) {
         String ext = extractExt(originalFilename);
         String uuid = UUID.randomUUID().toString();
@@ -84,6 +92,5 @@ public class ImageService {
         private String originalFilename;
         private String storeFileName;
     }
-
 
 }

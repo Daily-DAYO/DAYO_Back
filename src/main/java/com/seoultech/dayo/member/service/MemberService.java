@@ -7,7 +7,9 @@ import com.seoultech.dayo.config.jwt.TokenDto;
 import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.folder.repository.FolderRepository;
+import com.seoultech.dayo.folder.service.FolderService;
 import com.seoultech.dayo.image.Image;
+import com.seoultech.dayo.image.repository.ImageRepository;
 import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
@@ -34,7 +36,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final FolderRepository folderRepository;
+    private final FolderService folderService;
     private final ImageService imageService;
     private final TokenProvider tokenProvider;
     private final RestTemplate restTemplate;
@@ -55,23 +57,28 @@ public class MemberService {
 
         Optional<Member> memberOptional = memberRepository.findMemberByEmail(email);
 
-        Member member = memberOptional.orElseGet(() ->
-                memberRepository.save(new Member(name, email))
-        );
-        TokenDto token = tokenProvider.generateToken(member.getId());
+        Member member;
+        if (memberOptional.isPresent()) {
+            Image profileImage = imageService.findDefaultProfileImage();
+            member = memberRepository.save(new Member(name, email, profileImage));
+            member.addFolder(folderService.createDefaultFolder());
+        } else {
+            member = memberOptional.get();
+        }
 
+        TokenDto token = tokenProvider.generateToken(member.getId());
         return MemberOAuthResponse.from(token);
     }
 
     @Transactional(readOnly = true)
     public MemberInfoResponse memberInfo(String memberId) {
-        Member member = findMember(memberId);
+        Member member = findMemberById(memberId);
         return MemberInfoResponse.from(member);
     }
 
     public void profileUpdate(String memberId, MemberProfileUpdateRequest request) throws IOException {
 
-        Member member = findMember(memberId);
+        Member member = findMemberById(memberId);
 
         if (StringUtils.hasText(request.getNickname()))
             member.setNickname(request.getNickname());
@@ -82,7 +89,7 @@ public class MemberService {
 
     }
 
-    private Member findMember(String memberId) {
+    public Member findMemberById(String memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(NotExistMemberException::new);
     }

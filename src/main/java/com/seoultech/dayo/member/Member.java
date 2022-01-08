@@ -61,10 +61,11 @@ public class Member extends BaseTimeEntity {
         this.profileImg = profileImg;
     }
 
-    public Member(String name, String email) {
+    public Member(String name, String email, Image profileImg) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.email = email;
+        this.profileImg = profileImg;
     }
 
     protected Member() {}

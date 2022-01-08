@@ -17,6 +17,7 @@ import com.seoultech.dayo.folder.controller.dto.request.CreateFolderRequest;
 import com.seoultech.dayo.folder.repository.FolderRepository;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.repository.MemberRepository;
+import com.seoultech.dayo.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,6 @@ public class FolderService {
 
     private final FolderRepository folderRepository;
     private final MemberRepository memberRepository;
-    private final ImageRepository imageRepository;
     private final ImageService imageService;
 
     public CreateFolderResponse createFolder(String memberId, CreateFolderRequest request) throws IOException {
@@ -44,8 +44,7 @@ public class FolderService {
         MultipartFile thumbnailImage = request.getThumbnailImage();
         Image image;
         if(thumbnailImage == null) {
-            int randomValue = (int)(Math.random() * 5) + 1;
-            image = imageRepository.findById((long) randomValue).get();
+            image = imageService.findDefaultFolderImage();
         } else {
             image = imageService.storeFile(thumbnailImage);
         }
@@ -60,7 +59,7 @@ public class FolderService {
 
     public CreateFolderInPostResponse createFolderInPost(String memberId, CreateFolderInPostRequest request) {
 
-        Image image = imageRepository.findById(1L).get();
+        Image image = imageService.findDefaultFolderImage();
 
         Folder folder = request.toEntity();
         folder.addThumbnailImage(image);
@@ -130,16 +129,24 @@ public class FolderService {
         return DetailFolderResponse.from(folder, collect);
     }
 
+    public Folder createDefaultFolder() {
+        Image image = imageService.findDefaultFolderImage();
+        Folder folder = new Folder("기본 폴더", Privacy.ALL, image);
+        return folderRepository.save(folder);
+    }
+
     private Folder findFolder(Long folderId) {
         return folderRepository.findById(folderId)
                 .orElseThrow(NotExistFolderException::new);
     }
 
+    //TODO 리팩토링
     private Member findMemberWithFolderJoin(String memberId) {
         return memberRepository.findMemberByIdWithJoin(memberId)
                 .orElseThrow(NotExistMemberException::new);
     }
 
+    //TODO 리팩토링
     private Member findMember(String memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(NotExistMemberException::new);
