@@ -59,11 +59,11 @@ public class MemberService {
 
         Member member;
         if (memberOptional.isPresent()) {
+            member = memberOptional.get();
+        } else {
             Image profileImage = imageService.findDefaultProfileImage();
             member = memberRepository.save(new Member(name, email, profileImage));
             member.addFolder(folderService.createDefaultFolder());
-        } else {
-            member = memberOptional.get();
         }
 
         TokenDto token = tokenProvider.generateToken(member.getId());
