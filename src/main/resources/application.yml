@@ -14,5 +14,13 @@ spring:
         default_batch_fetch_size: 1000
     show-sql: true
 
+  main:
+    allow-bean-definition-overriding: true
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
 file:
   dir: /Users/jojaeyeong/Desktop/upload/

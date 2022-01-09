@@ -1,5 +1,7 @@
 package com.seoultech.dayo.config.jwt;
 
+import com.seoultech.dayo.exception.InvalidTokenException;
+import com.seoultech.dayo.exception.dto.UnauthorizedFailResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -7,11 +9,13 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Key;
 
@@ -28,19 +32,23 @@ public class JwtFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        try {
+            HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-        String jwt = resolveToken(httpRequest);
-        String requestURI = httpRequest.getRequestURI();
+            String jwt = resolveToken(httpRequest);
+            String requestURI = httpRequest.getRequestURI();
 
-        // 2. validateToken 으로 토큰 유효성 검사
-        // 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
-        // todo 리팩토링
-        if (isCheckPath(requestURI) &&(!StringUtils.hasText(jwt) || !validateToken(jwt))) {
-            throw new IllegalStateException("토큰이 유효하지 않습니다.");
+            // 2. validateToken 으로 토큰 유효성 검사
+            // todo 리팩토링
+            if (isCheckPath(requestURI) &&(!StringUtils.hasText(jwt) || !validateToken(jwt))) {
+                throw new Exception("유효하지 않는 토큰입니다");
+            }
+
+            chain.doFilter(request, response);
+        } catch (Exception e) {
+            HttpServletResponse res = (HttpServletResponse) response;
+            res.sendError(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
         }
-
-        chain.doFilter(request, response);
     }
 
     private boolean isCheckPath(String requestURI) {
@@ -67,12 +75,16 @@ public class JwtFilter implements Filter {
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
+//            throw new IllegalStateException("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다.");
+//            throw new IllegalStateException("만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 JWT 토큰입니다.");
+//            throw new IllegalStateException("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
             log.info("JWT 토큰이 잘못되었습니다.");
+//            throw new IllegalStateException("JWT 토큰이 잘못되었습니다.");
         }
 
         return false;
