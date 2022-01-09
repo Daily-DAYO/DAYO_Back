@@ -7,7 +7,7 @@ build/
 docker-compose.yaml
 Dockerfile
 JwtConfig
-application.yml
+src/main/resources/application.yml
 
 ### STS ###
 .apt_generated
