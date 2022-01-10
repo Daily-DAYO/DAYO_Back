@@ -42,6 +42,7 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class PostService {
 
+    // TODO 리팩토링
     private final PostRepository postRepository;
     private final FolderRepository folderRepository;
     private final MemberRepository memberRepository;
