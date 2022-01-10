@@ -4,6 +4,7 @@ import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderInPostRequest;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.request.EditFolderRequest;
+import com.seoultech.dayo.folder.controller.dto.request.EditOrderFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.response.*;
 import com.seoultech.dayo.folder.service.FolderService;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,13 @@ public class FolderController {
     public ResponseEntity<Void> deleteFolder(@PathVariable @Valid Long folderId) {
         folderService.deleteFolder(folderId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/order")
+    public ResponseEntity<Void> orderFolder(HttpServletRequest servletRequest, @RequestBody EditOrderFolderRequest.EditOrderDto[] request) {
+        String memberId = getDataInToken(servletRequest);
+        folderService.orderFolder(memberId, request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/patch")

@@ -39,18 +39,18 @@ public class Member extends BaseTimeEntity {
     @OneToOne
     private Image profileImg;
 
-    @OneToMany
-    @JoinColumn(name = "member_id")
+    @OneToMany(mappedBy = "member")
     private List<Folder> folders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
-    private List<Follow> followings = new ArrayList<>();
-
-    @OneToMany(mappedBy = "follower")
-    private List<Follow> followers = new ArrayList<>();
+//    @OneToMany(mappedBy = "member")
+//    private List<Follow> followings = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "follower")
+//    private List<Follow> followers = new ArrayList<>();
 
     public void addFolder(Folder folder) {
         folders.add(folder);
+        folder.setMember(this);
     }
 
     public void setNickname(String nickname) {

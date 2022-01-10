@@ -7,6 +7,7 @@ import com.seoultech.dayo.folder.controller.dto.FolderDetailDto;
 import com.seoultech.dayo.folder.controller.dto.MyFolderDto;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderInPostRequest;
 import com.seoultech.dayo.folder.controller.dto.request.EditFolderRequest;
+import com.seoultech.dayo.folder.controller.dto.request.EditOrderFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.response.*;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.repository.ImageRepository;
@@ -52,6 +53,10 @@ public class FolderService {
         Folder savedFolder = folderRepository.save(request.toEntity(image));
 
         Member member = findMember(memberId);
+        List<Folder> folders = folderRepository.findAllByMember(member);
+
+        // TODO 리팩토링
+        savedFolder.setOrderIndex(folders.size() + 1);
         member.addFolder(savedFolder);
 
         return CreateFolderResponse.from(savedFolder);
@@ -61,12 +66,14 @@ public class FolderService {
 
         Image image = imageService.findDefaultFolderImage();
 
-        Folder folder = request.toEntity();
-        folder.addThumbnailImage(image);
-
+        Folder folder = request.toEntity(image);
         Folder savedFolder = folderRepository.save(folder);
 
         Member member = findMember(memberId);
+        List<Folder> folders = folderRepository.findAllByMember(member);
+
+        //TODO 리팩토링
+        savedFolder.setOrderIndex(folders.size() + 1);
         member.addFolder(savedFolder);
 
         return CreateFolderInPostResponse.from(savedFolder);
@@ -95,6 +102,7 @@ public class FolderService {
         return ListAllFolderResponse.from(collect);
     }
 
+    //TODO 리팩토링
     public EditFolderResponse editFolder(EditFolderRequest request) throws IOException {
 
         Folder folder = findFolder(request.getFolderId());
@@ -111,6 +119,22 @@ public class FolderService {
         }
 
         return EditFolderResponse.from(folder);
+    }
+
+    public void orderFolder(String memberId, EditOrderFolderRequest.EditOrderDto[] request) {
+
+        Member member = findMember(memberId);
+        List<Folder> folders = folderRepository.findFoldersByMember(member);
+
+        //TODO 리팩토링
+        for (Folder folder : folders) {
+            for (EditOrderFolderRequest.EditOrderDto editOrderDto : request) {
+                if (folder.getId().equals(editOrderDto.getFolderId())) {
+                    folder.setOrderIndex(editOrderDto.getOrderIndex());
+                    break;
+                }
+            }
+        }
     }
 
     public void deleteFolder(Long folderId) {

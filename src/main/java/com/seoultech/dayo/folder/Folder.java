@@ -2,6 +2,7 @@ package com.seoultech.dayo.folder;
 
 import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.image.Image;
+import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,12 +30,20 @@ public class Folder extends BaseTimeEntity {
     @OneToOne
     private Image thumbnailImage;
 
+    private Integer orderIndex;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
     @OneToMany(mappedBy = "folder", fetch = FetchType.EAGER)
     private List<Post> posts = new ArrayList<>();
 
-
     public void addThumbnailImage(Image thumbnailImage) {
         this.thumbnailImage = thumbnailImage;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 
     public void setName(String name) {
@@ -51,6 +60,10 @@ public class Folder extends BaseTimeEntity {
 
     public void setThumbnailImage(Image thumbnailImage) {
         this.thumbnailImage = thumbnailImage;
+    }
+
+    public void setOrderIndex(Integer orderIndex) {
+        this.orderIndex = orderIndex;
     }
 
     @Builder
