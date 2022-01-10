@@ -81,8 +81,8 @@ public class FolderService {
 
     @Transactional(readOnly = true)
     public ListAllMyFolderResponse listAllMyFolder(String memberId) {
-        Member member = findMemberWithFolderJoin(memberId);
-        List<Folder> folders = member.getFolders();
+        Member member = findMember(memberId);
+        List<Folder> folders = folderRepository.findFoldersByMemberOrderByOrderIndex(member);
         List<MyFolderDto> collect = folders.stream()
                 .map(MyFolderDto::from)
                 .collect(toList());
@@ -92,8 +92,8 @@ public class FolderService {
 
     @Transactional(readOnly = true)
     public ListAllFolderResponse listAllFolder(String memberId) {
-        Member member = findMemberWithFolderJoin(memberId);
-        List<Folder> folders = member.getFolders();
+        Member member = findMember(memberId);
+        List<Folder> folders = folderRepository.findFoldersByMemberOrderByOrderIndex(member);
         List<FolderDto> collect = folders.stream()
                 .filter(folder -> folder.getPrivacy() != ONLY_ME)
                 .map(FolderDto::from)

@@ -13,4 +13,6 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
 
     List<Folder> findFoldersByMember(Member member);
 
+    List<Folder> findFoldersByMemberOrderByOrderIndex(Member member);
+
 }
