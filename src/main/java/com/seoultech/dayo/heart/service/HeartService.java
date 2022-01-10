@@ -73,11 +73,13 @@ public class HeartService {
         return ListAllMyHeartPostResponse.from(collect);
     }
 
+    //TODO 리팩토링
     private Post findPost(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(NotExistPostException::new);
     }
 
+    //TODO 리팩토링
     private Member findMember(String memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(NotExistMemberException::new);

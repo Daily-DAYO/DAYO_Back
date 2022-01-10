@@ -111,11 +111,13 @@ public class PostService {
                 .orElseThrow(NotExistPostException::new);
     }
 
+    //TODO 리팩토링
     private Folder findFolder(Long folderId) {
         return folderRepository.findById(folderId)
                 .orElseThrow(NotExistFolderException::new);
     }
 
+    //TODO 리팩토링
     private Member findMember(String memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(NotExistMemberException::new);

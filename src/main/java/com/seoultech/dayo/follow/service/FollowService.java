@@ -115,11 +115,13 @@ public class FollowService {
         followRepository.deleteById(new Follow.Key(memberId, followerId));
     }
 
+    //TODO 리팩토링
     private Member findMember(String memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(NotExistMemberException::new);
     }
 
+    //TODO 리팩토링
     private Member findFollower(String followerId) {
         return memberRepository.findById(followerId)
                 .orElseThrow(NotExistFollowerException::new);
