@@ -46,4 +46,13 @@ public class HashtagService {
         return collect;
     }
 
+    public void findHashtag(String tag) {
+
+        List<Hashtag> hashtags = hashtagSearchRepository.findHashtagsByTag(tag);
+
+        for(Hashtag hashtag : hashtags) {
+            System.out.println(hashtag.getTag());
+        }
+    }
+
 }
