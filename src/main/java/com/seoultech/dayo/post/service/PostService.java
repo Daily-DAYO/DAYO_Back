@@ -104,7 +104,7 @@ public class PostService {
     }
 
     public void deletePost(Long postId) {
-        postRepository.findById(postId);
+        postRepository.deleteById(postId);
     }
 
     private Post findPost(Long postId) {

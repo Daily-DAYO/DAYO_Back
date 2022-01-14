@@ -43,13 +43,25 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "post_id")
     private List<Image> images;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(
+            mappedBy = "post",
+            cascade = CascadeType.PERSIST,
+            orphanRemoval = true
+    )
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(
+            mappedBy = "post",
+            cascade = CascadeType.PERSIST,
+            orphanRemoval = true
+    )
     private List<Heart> hearts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(
+            mappedBy = "post",
+            cascade = CascadeType.PERSIST,
+            orphanRemoval = true
+    )
     private List<PostHashtag> postHashtags = new ArrayList<>();
 
     public void addFolder(Folder folder) {
