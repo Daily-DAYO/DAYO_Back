@@ -17,10 +17,12 @@ public class DetailFolderResponse {
 
     private String subheading;
 
+    private String thumbnailImage;
+
     private List<FolderDetailDto> data;
 
     public static DetailFolderResponse from(Folder folder, List<FolderDetailDto> collect) {
-        return new DetailFolderResponse(collect.size(), folder.getName(), folder.getSubheading(), collect);
+        return new DetailFolderResponse(collect.size(), folder.getName(), folder.getSubheading(), folder.getThumbnailImage().getStoreFileName(), collect);
     }
 
 }
