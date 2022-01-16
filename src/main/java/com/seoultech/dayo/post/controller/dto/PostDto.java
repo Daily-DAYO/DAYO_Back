@@ -13,6 +13,8 @@ public class PostDto {
 
     private String thumbnailImage;
 
+    private String memberId;
+
     private String nickname;
 
     private String userProfileImage;
@@ -22,7 +24,13 @@ public class PostDto {
     private Integer commentCount;
 
     public static PostDto from(Post post) {
-        return new PostDto(post.getId(), post.getThumbnailImage(), post.getMember().getName(), post.getMember().getProfileImg().getStoreFileName(), post.getHearts().size(), post.getComments().size());
+        return new PostDto(post.getId(),
+                post.getThumbnailImage(),
+                post.getMember().getId(),
+                post.getMember().getNickname(),
+                post.getMember().getProfileImg().getStoreFileName(),
+                post.getHearts().size(),
+                post.getComments().size());
     }
 
 }
