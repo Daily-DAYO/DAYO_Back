@@ -6,7 +6,9 @@ import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.image.Image;
+import com.seoultech.dayo.post.Post;
 import lombok.Getter;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -41,6 +43,19 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member")
     private List<Folder> folders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Post> posts = new ArrayList<>();
+
+    @Formula("(select count(1) from follow f where f.member_id = id)")
+    private int followingCount;
+
+    @Formula("(select count(1) from follow f where f.follower_id = id)")
+    private int followerCount;
+
+    @Formula("(select count(1) from post p where p.member_id = id)")
+    private int postCount;
+
 
 //    @OneToMany(mappedBy = "member")
 //    private List<Follow> followings = new ArrayList<>();
