@@ -111,8 +111,16 @@ public class FollowService {
         return ListAllMyFollowingResponse.from(collect);
     }
 
+    public List<Follow> findFollowings(Member member) {
+        return followRepository.findFollowsByMember(member);
+    }
+
     public void deleteFollow(String memberId, String followerId) {
         followRepository.deleteById(new Follow.Key(memberId, followerId));
+    }
+
+    public boolean isFollow(String memberId, String followerId) {
+        return followRepository.existsById(new Follow.Key(memberId, followerId));
     }
 
     //TODO 리팩토링

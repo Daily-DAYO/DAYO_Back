@@ -8,6 +8,7 @@ import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.folder.repository.FolderRepository;
 import com.seoultech.dayo.folder.service.FolderService;
+import com.seoultech.dayo.follow.service.FollowService;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.repository.ImageRepository;
 import com.seoultech.dayo.image.service.ImageService;
@@ -15,7 +16,9 @@ import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
+import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOAuthResponse;
+import com.seoultech.dayo.member.controller.dto.response.MemberOtherProfileResponse;
 import com.seoultech.dayo.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +43,7 @@ public class MemberService {
     private final ImageService imageService;
     private final TokenProvider tokenProvider;
     private final RestTemplate restTemplate;
+    private final FollowService followService;
 
     public MemberOAuthResponse kakaoApi(MemberOAuthRequest request) {
 
@@ -74,6 +78,19 @@ public class MemberService {
     public MemberInfoResponse memberInfo(String memberId) {
         Member member = findMemberById(memberId);
         return MemberInfoResponse.from(member);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberMyProfileResponse myProfile(String memberId) {
+        Member member = findMemberById(memberId);
+        return MemberMyProfileResponse.from(member);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberOtherProfileResponse otherProfile(String memberId, String otherId) {
+        boolean isFollow = followService.isFollow(memberId, otherId);
+        Member member = findMemberById(otherId);
+        return MemberOtherProfileResponse.from(member, isFollow);
     }
 
     public void profileUpdate(String memberId, MemberProfileUpdateRequest request) throws IOException {

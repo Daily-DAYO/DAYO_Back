@@ -3,6 +3,8 @@ package com.seoultech.dayo.member.controller;
 import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
+import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse;
+import com.seoultech.dayo.member.controller.dto.response.MemberOtherProfileResponse;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberOAuthResponse;
@@ -36,7 +38,21 @@ public class MemberController {
                 .body(memberService.memberInfo(memberId));
     }
 
-    @PostMapping("/profile")
+    @GetMapping("/profile/other/{memberId}")
+    public ResponseEntity<MemberOtherProfileResponse> otherProfile(HttpServletRequest servletRequest, @PathVariable @Valid String memberId) {
+        String myMemberId = getDataInToken(servletRequest);
+        return ResponseEntity.ok()
+                .body(memberService.otherProfile(myMemberId, memberId));
+    }
+
+    @GetMapping("/profile/my")
+    public ResponseEntity<MemberMyProfileResponse> myProfile(HttpServletRequest servletRequest) {
+        String memberId = getDataInToken(servletRequest);
+        return ResponseEntity.ok()
+                .body(memberService.myProfile(memberId));
+    }
+
+    @PostMapping("/update/profile")
     public ResponseEntity<Void> profileUpdate(HttpServletRequest servletRequest, @ModelAttribute @Valid MemberProfileUpdateRequest request) throws IOException {
         String memberId = getDataInToken(servletRequest);
         memberService.profileUpdate(memberId, request);
