@@ -71,6 +71,7 @@ public class Post extends BaseTimeEntity {
 
     public Post(Member member, String contents, String thumbnailImage, Category category, Privacy privacy, List<Image> images) {
         this.member = member;
+        member.getPosts().add(this);
         this.contents = contents;
         this.thumbnailImage = thumbnailImage;
         this.category = category;
@@ -82,6 +83,7 @@ public class Post extends BaseTimeEntity {
     public Post(Long id, Member member, String contents, String thumbnailImage, Category category, Privacy privacy, List<Image> images) {
         this.id = id;
         this.member = member;
+        member.getPosts().add(this);
         this.contents = contents;
         this.thumbnailImage = thumbnailImage;
         this.category = category;

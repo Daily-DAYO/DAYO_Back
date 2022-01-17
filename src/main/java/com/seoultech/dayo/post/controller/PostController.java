@@ -3,10 +3,7 @@ package com.seoultech.dayo.post.controller;
 
 import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
-import com.seoultech.dayo.post.controller.dto.response.CreatePostResponse;
-import com.seoultech.dayo.post.controller.dto.response.DetailPostResponse;
-import com.seoultech.dayo.post.controller.dto.response.ListAllPostResponse;
-import com.seoultech.dayo.post.controller.dto.response.ListCategoryPostResponse;
+import com.seoultech.dayo.post.controller.dto.response.*;
 import com.seoultech.dayo.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -55,6 +52,12 @@ public class PostController {
         String memberId = getDataInToken(servletRequest);
         return ResponseEntity.ok()
                 .body(postService.detailPost(memberId, postId));
+    }
+
+    public ResponseEntity<ListFeedResponse> listFeed(HttpServletRequest servletRequest) {
+        String memberId = getDataInToken(servletRequest);
+        return ResponseEntity.ok()
+                .body(postService.listFeed(memberId));
     }
 
     private String getDataInToken(HttpServletRequest servletRequest) {

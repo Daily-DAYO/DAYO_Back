@@ -2,6 +2,8 @@ package com.seoultech.dayo.post.service;
 
 
 import com.seoultech.dayo.exception.NotExistPostException;
+import com.seoultech.dayo.follow.Follow;
+import com.seoultech.dayo.follow.service.FollowService;
 import com.seoultech.dayo.heart.Heart;
 import com.seoultech.dayo.heart.repository.HeartRepository;
 import com.seoultech.dayo.image.Image;
@@ -16,11 +18,8 @@ import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.controller.dto.PostDto;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
-import com.seoultech.dayo.post.controller.dto.response.CreatePostResponse;
-import com.seoultech.dayo.post.controller.dto.response.DetailPostResponse;
-import com.seoultech.dayo.post.controller.dto.response.ListCategoryPostResponse;
+import com.seoultech.dayo.post.controller.dto.response.*;
 import com.seoultech.dayo.post.repository.PostRepository;
-import com.seoultech.dayo.post.controller.dto.response.ListAllPostResponse;
 import com.seoultech.dayo.postHashtag.PostHashtag;
 import com.seoultech.dayo.postHashtag.service.PostHashtagService;
 import com.seoultech.dayo.exception.NotExistFolderException;
@@ -49,6 +48,7 @@ public class PostService {
     private final PostHashtagService postHashtagService;
     private final HashtagService hashtagService;
     private final HeartRepository heartRepository;
+    private final FollowService followService;
     private final ImageService imageService;
 
     @Cacheable(value = "all")
@@ -96,11 +96,26 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public DetailPostResponse detailPost(String memberId, Long postId) {
-
         Post post = findPost(postId);
         boolean isHeart = heartRepository.existsHeartByKey(new Heart.Key(memberId, postId));
 
         return DetailPostResponse.from(post, isHeart);
+    }
+
+    @Transactional(readOnly = true)
+    public ListFeedResponse listFeed(String memberId) {
+
+        Member member = findMember(memberId);
+        List<Follow> follows = followService.findFollowings(member);
+        List<Member> members = follows.stream()
+                .map(follow -> follow.getMember())
+                .collect(toList());
+
+        members.stream()
+                .map(Member::getPosts)
+                .collect(toList());
+
+        return null;
     }
 
     public void deletePost(Long postId) {

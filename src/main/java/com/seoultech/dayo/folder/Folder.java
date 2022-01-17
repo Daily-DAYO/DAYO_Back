@@ -35,12 +35,13 @@ public class Folder extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @OneToMany(mappedBy = "folder", fetch = FetchType.EAGER)
+    @OneToMany(
+            mappedBy = "folder",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.PERSIST,
+            orphanRemoval = true
+    )
     private List<Post> posts = new ArrayList<>();
-
-    public void addThumbnailImage(Image thumbnailImage) {
-        this.thumbnailImage = thumbnailImage;
-    }
 
     public void setMember(Member member) {
         this.member = member;
