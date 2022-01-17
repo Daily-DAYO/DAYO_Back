@@ -12,6 +12,8 @@ public class MemberMyProfileResponse {
 
     private String profileImg;
 
+    private String email;
+
     private int followingCount;
 
     private int followerCount;
@@ -22,6 +24,7 @@ public class MemberMyProfileResponse {
         return new MemberMyProfileResponse(
                 member.getNickname(),
                 member.getProfileImg().getStoreFileName(),
+                member.getEmail(),
                 member.getFollowingCount(),
                 member.getFollowerCount(),
                 member.getPostCount()
