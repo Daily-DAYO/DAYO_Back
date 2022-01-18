@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 
 @Getter
-@AllArgsConstructor
 public class CreateFolderInPostRequest {
 
     @NotNull
@@ -22,6 +21,4 @@ public class CreateFolderInPostRequest {
         return new Folder(this.name, Privacy.valueOf(this.privacy), image);
     }
 
-    public CreateFolderInPostRequest() {
-    }
 }

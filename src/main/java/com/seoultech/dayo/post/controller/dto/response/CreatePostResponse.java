@@ -3,6 +3,7 @@ package com.seoultech.dayo.post.controller.dto.response;
 import com.seoultech.dayo.post.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor

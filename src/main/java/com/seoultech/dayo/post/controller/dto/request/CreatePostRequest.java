@@ -9,6 +9,7 @@ import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.Privacy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +19,6 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-@ToString
 public class CreatePostRequest {
 
     @NotBlank
