@@ -2,18 +2,17 @@ package com.seoultech.dayo.post.service;
 
 
 import com.seoultech.dayo.exception.NotExistPostException;
+import com.seoultech.dayo.folder.service.FolderService;
 import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.follow.service.FollowService;
-import com.seoultech.dayo.heart.Heart;
-import com.seoultech.dayo.heart.repository.HeartRepository;
+import com.seoultech.dayo.heart.service.HeartService;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.folder.Folder;
-import com.seoultech.dayo.folder.repository.FolderRepository;
 import com.seoultech.dayo.hashtag.Hashtag;
 import com.seoultech.dayo.hashtag.service.HashtagService;
 import com.seoultech.dayo.member.Member;
-import com.seoultech.dayo.member.repository.MemberRepository;
+import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.controller.dto.PostDto;
@@ -22,17 +21,13 @@ import com.seoultech.dayo.post.controller.dto.response.*;
 import com.seoultech.dayo.post.repository.PostRepository;
 import com.seoultech.dayo.postHashtag.PostHashtag;
 import com.seoultech.dayo.postHashtag.service.PostHashtagService;
-import com.seoultech.dayo.exception.NotExistFolderException;
-import com.seoultech.dayo.exception.NotExistMemberException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -41,17 +36,16 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class PostService {
 
-    // TODO 리팩토링
     private final PostRepository postRepository;
-    private final FolderRepository folderRepository;
-    private final MemberRepository memberRepository;
+    private final FolderService folderService;
+    private final MemberService memberService;
     private final PostHashtagService postHashtagService;
     private final HashtagService hashtagService;
-    private final HeartRepository heartRepository;
+    private final HeartService heartService;
     private final FollowService followService;
     private final ImageService imageService;
 
-    @Cacheable(value = "all")
+//    @Cacheable(value = "all")
     @Transactional(readOnly = true)
     public ListAllPostResponse listPostAll() {
 
@@ -79,25 +73,22 @@ public class PostService {
         List<MultipartFile> files = request.getFiles();
         List<Image> images = imageService.storeFiles(files);
 
-        Member member = findMember(memberId);
-        Folder folder = findFolder(request.getFolderId());
-
-        List<Hashtag> hashtags = hashtagService.createHashtag(request.getTags());
+        Member member = memberService.findMemberById(memberId);
+        Folder folder = folderService.findFolderById(request.getFolderId());
         Post savedPost = postRepository.save(request.toEntity(folder, member, images));
 
-        List<PostHashtag> collect = hashtags.stream()
-                .map(hashtag -> new PostHashtag(savedPost, hashtag))
-                .collect(toList());
-
-        postHashtagService.saveAll(collect);
+        if(request.getTags() != null) {
+            List<Hashtag> hashtags = hashtagService.createHashtag(request.getTags());
+            postHashtagService.createPostHashtag(savedPost, hashtags);
+        }
 
         return CreatePostResponse.from(savedPost);
     }
 
     @Transactional(readOnly = true)
     public DetailPostResponse detailPost(String memberId, Long postId) {
-        Post post = findPost(postId);
-        boolean isHeart = heartRepository.existsHeartByKey(new Heart.Key(memberId, postId));
+        Post post = findPostById(postId);
+        boolean isHeart = heartService.isHeart(memberId, postId);
 
         return DetailPostResponse.from(post, isHeart);
     }
@@ -105,10 +96,10 @@ public class PostService {
     @Transactional(readOnly = true)
     public ListFeedResponse listFeed(String memberId) {
 
-        Member member = findMember(memberId);
+        Member member = memberService.findMemberById(memberId);
         List<Follow> follows = followService.findFollowings(member);
         List<Member> members = follows.stream()
-                .map(follow -> follow.getMember())
+                .map(Follow::getMember)
                 .collect(toList());
 
         members.stream()
@@ -122,20 +113,9 @@ public class PostService {
         postRepository.deleteById(postId);
     }
 
-    private Post findPost(Long postId) {
+    public Post findPostById(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(NotExistPostException::new);
     }
 
-    //TODO 리팩토링
-    private Folder findFolder(Long folderId) {
-        return folderRepository.findById(folderId)
-                .orElseThrow(NotExistFolderException::new);
-    }
-
-    //TODO 리팩토링
-    private Member findMember(String memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(NotExistMemberException::new);
-    }
 }

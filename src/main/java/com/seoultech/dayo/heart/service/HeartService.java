@@ -12,8 +12,10 @@ import com.seoultech.dayo.heart.controller.dto.response.ListAllMyHeartPostRespon
 import com.seoultech.dayo.heart.repository.HeartRepository;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.repository.MemberRepository;
+import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.repository.PostRepository;
+import com.seoultech.dayo.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,14 +30,14 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class HeartService {
 
-    private final MemberRepository memberRepository;
     private final HeartRepository heartRepository;
+    private final MemberService memberService;
     private final PostRepository postRepository;
 
     public CreateHeartResponse createHeart(String memberId, CreateHeartRequest request) {
 
-        Member member = findMember(memberId);
-        Post post = findPost(request.getPostId());
+        Member member = memberService.findMemberById(memberId);
+        Post post = findPostById(request.getPostId());
 
         Heart heart = request.toEntity(member, post);
         Heart savedHeart = heartRepository.save(heart);
@@ -44,13 +46,13 @@ public class HeartService {
     }
 
     public void deleteHeart(String memberId, Long postId) {
-        heartRepository.findById(new Heart.Key(memberId, postId));
+        heartRepository.deleteById(new Heart.Key(memberId, postId));
     }
 
     @Transactional(readOnly = true)
     public ListAllHeartPostResponse listAllHeartPost(String memberId) {
 
-        Member member = findMember(memberId);
+        Member member = memberService.findMemberById(memberId);
 
         List<Heart> hearts = heartRepository.findAllByMember(member);
         List<HeartPostDto> collect = hearts.stream()
@@ -63,7 +65,7 @@ public class HeartService {
     @Transactional(readOnly = true)
     public ListAllMyHeartPostResponse listAllMyHeartPost(String memberId) {
 
-        Member member = findMember(memberId);
+        Member member = memberService.findMemberById(memberId);
 
         List<Heart> hearts = heartRepository.findAllByMember(member);
         List<MyHeartPostDto> collect = hearts.stream()
@@ -73,16 +75,13 @@ public class HeartService {
         return ListAllMyHeartPostResponse.from(collect);
     }
 
-    //TODO 리팩토링
-    private Post findPost(Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(NotExistPostException::new);
+    public boolean isHeart(String memberId, Long postId) {
+        return heartRepository.existsHeartByKey(new Heart.Key(memberId, postId));
     }
 
-    //TODO 리팩토링
-    private Member findMember(String memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(NotExistMemberException::new);
+    private Post findPostById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(NotExistPostException::new);
     }
 
 }

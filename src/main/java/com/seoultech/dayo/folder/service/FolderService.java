@@ -10,7 +10,6 @@ import com.seoultech.dayo.folder.controller.dto.request.EditFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.request.EditOrderFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.response.*;
 import com.seoultech.dayo.image.Image;
-import com.seoultech.dayo.image.repository.ImageRepository;
 import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.controller.dto.FolderDto;
@@ -52,7 +51,7 @@ public class FolderService {
 
         Folder savedFolder = folderRepository.save(request.toEntity(image));
 
-        Member member = findMember(memberId);
+        Member member = findMemberById(memberId);
         List<Folder> folders = folderRepository.findAllByMember(member);
 
         // TODO 리팩토링
@@ -69,7 +68,7 @@ public class FolderService {
         Folder folder = request.toEntity(image);
         Folder savedFolder = folderRepository.save(folder);
 
-        Member member = findMember(memberId);
+        Member member = findMemberById(memberId);
         List<Folder> folders = folderRepository.findAllByMember(member);
 
         //TODO 리팩토링
@@ -81,7 +80,7 @@ public class FolderService {
 
     @Transactional(readOnly = true)
     public ListAllMyFolderResponse listAllMyFolder(String memberId) {
-        Member member = findMember(memberId);
+        Member member = findMemberById(memberId);
         List<Folder> folders = folderRepository.findFoldersByMemberOrderByOrderIndex(member);
         List<MyFolderDto> collect = folders.stream()
                 .map(MyFolderDto::from)
@@ -92,7 +91,7 @@ public class FolderService {
 
     @Transactional(readOnly = true)
     public ListAllFolderResponse listAllFolder(String memberId) {
-        Member member = findMember(memberId);
+        Member member = findMemberById(memberId);
         List<Folder> folders = folderRepository.findFoldersByMemberOrderByOrderIndex(member);
         List<FolderDto> collect = folders.stream()
                 .filter(folder -> folder.getPrivacy() != ONLY_ME)
@@ -105,7 +104,7 @@ public class FolderService {
     //TODO 리팩토링
     public EditFolderResponse editFolder(EditFolderRequest request) throws IOException {
 
-        Folder folder = findFolder(request.getFolderId());
+        Folder folder = findFolderById(request.getFolderId());
 
         if (StringUtils.hasText(request.getName()))
             folder.setName(request.getName());
@@ -123,7 +122,7 @@ public class FolderService {
 
     public void orderFolder(String memberId, EditOrderFolderRequest.EditOrderDto[] request) {
 
-        Member member = findMember(memberId);
+        Member member = findMemberById(memberId);
         List<Folder> folders = folderRepository.findFoldersByMember(member);
 
         //TODO 리팩토링
@@ -144,7 +143,7 @@ public class FolderService {
     @Transactional(readOnly = true)
     public DetailFolderResponse detailFolder(Long folderId) {
 
-        Folder folder = findFolder(folderId);
+        Folder folder = findFolderById(folderId);
 
         List<FolderDetailDto> collect = folder.getPosts().stream()
                 .map(FolderDetailDto::from)
@@ -159,20 +158,14 @@ public class FolderService {
         return folderRepository.save(folder);
     }
 
-    private Folder findFolder(Long folderId) {
+    public Folder findFolderById(Long folderId) {
         return folderRepository.findById(folderId)
                 .orElseThrow(NotExistFolderException::new);
     }
 
-    //TODO 리팩토링
-    private Member findMemberWithFolderJoin(String memberId) {
-        return memberRepository.findMemberByIdWithJoin(memberId)
-                .orElseThrow(NotExistMemberException::new);
-    }
-
-    //TODO 리팩토링
-    private Member findMember(String memberId) {
+    private Member findMemberById(String memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(NotExistMemberException::new);
     }
+
 }

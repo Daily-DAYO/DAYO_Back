@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.seoultech.dayo.config.jwt.TokenDto;
 import com.seoultech.dayo.config.jwt.TokenProvider;
+import com.seoultech.dayo.exception.NotExistFollowerException;
 import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.folder.repository.FolderRepository;
 import com.seoultech.dayo.folder.service.FolderService;
@@ -109,6 +110,11 @@ public class MemberService {
     public Member findMemberById(String memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(NotExistMemberException::new);
+    }
+
+    public Member findFollowerById(String memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(NotExistFollowerException::new);
     }
 
     private String get(String apiUrl, String accessToken) {
