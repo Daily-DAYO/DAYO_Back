@@ -33,35 +33,34 @@ public class MemberController {
 
     @GetMapping("/myInfo")
     public ResponseEntity<MemberInfoResponse> memberInfo(HttpServletRequest servletRequest) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.ok()
                 .body(memberService.memberInfo(memberId));
     }
 
     @GetMapping("/profile/other/{memberId}")
     public ResponseEntity<MemberOtherProfileResponse> otherProfile(HttpServletRequest servletRequest, @PathVariable @Valid String memberId) {
-        String myMemberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String myMemberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.ok()
                 .body(memberService.otherProfile(myMemberId, memberId));
     }
 
     @GetMapping("/profile/my")
     public ResponseEntity<MemberMyProfileResponse> myProfile(HttpServletRequest servletRequest) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.ok()
                 .body(memberService.myProfile(memberId));
     }
 
     @PostMapping("/update/profile")
     public ResponseEntity<Void> profileUpdate(HttpServletRequest servletRequest, @ModelAttribute @Valid MemberProfileUpdateRequest request) throws IOException {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         memberService.profileUpdate(memberId, request);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    private String getDataInToken(HttpServletRequest servletRequest) {
-        String token = servletRequest.getHeader("Authorization").substring(7);
-        return tokenProvider.getDataFromToken(token);
     }
 
 }

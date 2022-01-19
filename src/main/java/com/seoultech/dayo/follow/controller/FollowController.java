@@ -24,35 +24,40 @@ public class FollowController {
 
     @PostMapping
     public ResponseEntity<CreateFollowResponse> createFollow(HttpServletRequest servletRequest, @RequestBody @Valid CreateFollowRequest request) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(followService.createFollow(memberId, request));
     }
 
     @PostMapping("/up")
     public ResponseEntity<CreateFollowUpResponse> createFollowUp(HttpServletRequest servletRequest, @RequestBody @Valid CreateFollowUpRequest request) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(followService.createFollowUp(memberId, request));
     }
 
     @PostMapping("/delete/{followerId}")
     public ResponseEntity<Void> deleteFollow(HttpServletRequest servletRequest, @PathVariable String followerId) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         followService.deleteFollow(memberId, followerId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/follower/my")
     public ResponseEntity<ListAllMyFollowerResponse> listAllMyFollower(HttpServletRequest servletRequest) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.ok()
                 .body(followService.listAllMyFollowers(memberId));
     }
 
     @GetMapping("/following/my")
     public ResponseEntity<ListAllMyFollowingResponse> listAllMyFollowing(HttpServletRequest servletRequest) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.ok()
                 .body(followService.listAllMyFollowings(memberId));
     }
@@ -67,11 +72,6 @@ public class FollowController {
     public ResponseEntity<ListAllFollowingResponse> listAllFollowing(@PathVariable @Valid String memberId) {
         return ResponseEntity.ok()
                 .body(followService.listAllFollowings(memberId));
-    }
-
-    private String getDataInToken(HttpServletRequest servletRequest) {
-        String token = servletRequest.getHeader("Authorization").substring(7);
-        return tokenProvider.getDataFromToken(token);
     }
 
 }

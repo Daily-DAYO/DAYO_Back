@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Date;
 
@@ -53,6 +54,10 @@ public class TokenProvider {
                 .getBody();
 
         return claims.get("jti", String.class);
+    }
+
+    public String getTokenInHeader(HttpServletRequest servletRequest) {
+        return servletRequest.getHeader("Authorization").substring(7);
     }
 
 }

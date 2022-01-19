@@ -29,14 +29,16 @@ public class FolderController {
 
     @PostMapping
     public ResponseEntity<CreateFolderResponse> createFolder(HttpServletRequest servletRequest, @ModelAttribute @Valid CreateFolderRequest request) throws IOException {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(folderService.createFolder(memberId, request));
     }
 
     @PostMapping("/inPost")
     public ResponseEntity<CreateFolderInPostResponse> createFolderInPost(HttpServletRequest servletRequest, @RequestBody @Valid CreateFolderInPostRequest request) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(folderService.createFolderInPost(memberId, request));
     }
@@ -49,21 +51,22 @@ public class FolderController {
 
     @PostMapping("/order")
     public ResponseEntity<Void> orderFolder(HttpServletRequest servletRequest, @RequestBody EditOrderFolderRequest.EditOrderDto[] request) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         folderService.orderFolder(memberId, request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/patch")
     public ResponseEntity<EditFolderResponse> editFolder(@ModelAttribute EditFolderRequest request) throws IOException {
-        log.info(request.toString());
         return ResponseEntity.ok()
                 .body(folderService.editFolder(request));
     }
 
     @GetMapping("/my")
     public ResponseEntity<ListAllMyFolderResponse> listAllMyFolder(HttpServletRequest servletRequest) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.ok()
                 .body(folderService.listAllMyFolder(memberId));
     }
@@ -80,8 +83,4 @@ public class FolderController {
                 .body(folderService.detailFolder(folderId));
     }
 
-    private String getDataInToken(HttpServletRequest servletRequest) {
-        String token = servletRequest.getHeader("Authorization").substring(7);
-        return tokenProvider.getDataFromToken(token);
-    }
 }

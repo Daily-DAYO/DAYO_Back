@@ -36,7 +36,8 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<CreatePostResponse> createPost(HttpServletRequest servletRequest, @ModelAttribute @Valid CreatePostRequest request) throws IOException {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.ok()
                 .body(postService.createPost(memberId, request));
     }
@@ -49,20 +50,17 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public ResponseEntity<DetailPostResponse> detailPost(HttpServletRequest servletRequest, @PathVariable @Valid Long postId) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.ok()
                 .body(postService.detailPost(memberId, postId));
     }
 
     public ResponseEntity<ListFeedResponse> listFeed(HttpServletRequest servletRequest) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.ok()
                 .body(postService.listFeed(memberId));
-    }
-
-    private String getDataInToken(HttpServletRequest servletRequest) {
-        String token = servletRequest.getHeader("Authorization").substring(7);
-        return tokenProvider.getDataFromToken(token);
     }
 
 }

@@ -11,8 +11,10 @@ import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.exception.NotExistPostException;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.repository.MemberRepository;
+import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.repository.PostRepository;
+import com.seoultech.dayo.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,13 +31,13 @@ import static java.util.stream.Collectors.toList;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final MemberRepository memberRepository;
-    private final PostRepository postRepository;
+    private final MemberService memberService;
+    private final PostService postService;
 
     public CreateCommentResponse createComment(String memberId, CreateCommentRequest request) {
 
-        Post post = checkPost(request.getPostId());
-        Member member = checkMember(memberId);
+        Post post = postService.findPostById(request.getPostId());
+        Member member = memberService.findMemberById(memberId);
 
         Comment comment = request.toEntity(member);
         Comment savedComment = commentRepository.save(comment);
@@ -47,7 +49,7 @@ public class CommentService {
     @Transactional(readOnly = true)
     public ListAllCommentResponse listAllComment(Long postId) {
 
-        Post post = checkPost(postId);
+        Post post = postService.findPostById(postId);
         List<ListAllCommentResponse.CommentDto> collect = post.getComments().stream()
                 .map(comment -> ListAllCommentResponse.CommentDto.from(comment, comment.getMember()))
                 .collect(toList());
@@ -57,16 +59,6 @@ public class CommentService {
 
     public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
-    }
-
-    private Member checkMember(String memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(NotExistMemberException::new);
-    }
-
-    private Post checkPost(Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(NotExistPostException::new);
     }
 
 }

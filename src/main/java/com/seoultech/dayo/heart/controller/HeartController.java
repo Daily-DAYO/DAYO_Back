@@ -24,14 +24,16 @@ public class HeartController {
 
     @PostMapping
     public ResponseEntity<CreateHeartResponse> createHeart(HttpServletRequest servletRequest, @RequestBody @Valid CreateHeartRequest request) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(heartService.createHeart(memberId, request));
     }
 
     @PostMapping("/delete/{postId}")
     public ResponseEntity<Void> deleteHeart(HttpServletRequest servletRequest, Long postId) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         heartService.deleteHeart(memberId, postId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -44,14 +46,10 @@ public class HeartController {
 
     @GetMapping("/list")
     public ResponseEntity<ListAllMyHeartPostResponse> listAllMyHeartPost(HttpServletRequest servletRequest) {
-        String memberId = getDataInToken(servletRequest);
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        String memberId = tokenProvider.getDataFromToken(token);
         return ResponseEntity.ok()
                 .body(heartService.listAllMyHeartPost(memberId));
-    }
-
-    private String getDataInToken(HttpServletRequest servletRequest) {
-        String token = servletRequest.getHeader("Authorization").substring(7);
-        return tokenProvider.getDataFromToken(token);
     }
 
 }

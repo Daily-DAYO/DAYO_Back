@@ -9,8 +9,8 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
 public class ListAllCommentResponse {
 
     private int count;
@@ -20,7 +20,7 @@ public class ListAllCommentResponse {
         return new ListAllCommentResponse(data.size(), data);
     }
 
-    @Data
+    @Getter
     @AllArgsConstructor
     static public class CommentDto {
 
