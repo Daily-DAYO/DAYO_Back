@@ -15,7 +15,7 @@ public class Heart {
 
 
     @EmbeddedId
-    private Key key = new Key();
+    private Key key;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("memberId")
@@ -25,14 +25,10 @@ public class Heart {
     @MapsId("postId")
     private Post post;
 
-    public void addPost(Post post) {
-        this.post = post;
-        post.getHearts().add(this);
-    }
-
-    public Heart(Key key, Member member) {
-        this.key = key;
+    public Heart(Member member, Post post) {
         this.member = member;
+        this.post = post;
+        key = new Key(member.getId(), post.getId());
     }
 
     @Embeddable

@@ -16,8 +16,6 @@ public class CreateHeartRequest {
     private Long postId;
 
     public Heart toEntity(Member member, Post post) {
-        Heart heart = new Heart(new Heart.Key(member.getId(), post.getId()), member);
-        heart.addPost(post);
-        return heart;
+        return new Heart(member, post);
     }
 }

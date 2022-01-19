@@ -31,7 +31,7 @@ public class HeartController {
     }
 
     @PostMapping("/delete/{postId}")
-    public ResponseEntity<Void> deleteHeart(HttpServletRequest servletRequest, Long postId) {
+    public ResponseEntity<Void> deleteHeart(HttpServletRequest servletRequest, @PathVariable Long postId) {
         String token = tokenProvider.getTokenInHeader(servletRequest);
         String memberId = tokenProvider.getDataFromToken(token);
         heartService.deleteHeart(memberId, postId);
