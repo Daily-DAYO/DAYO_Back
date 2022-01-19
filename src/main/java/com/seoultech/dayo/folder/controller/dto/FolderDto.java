@@ -19,7 +19,7 @@ public class FolderDto {
     private int postCount;
 
     public static FolderDto from(Folder folder) {
-        return new FolderDto(folder.getId(), folder.getName(), folder.getSubheading(), folder.getThumbnailImage().getStoreFileName() ,folder.getPosts().size());
+        return new FolderDto(folder.getId(), folder.getName(), folder.getSubheading(), folder.getThumbnailImage().getStoreFileName() ,folder.getPostCount());
     }
 
 }

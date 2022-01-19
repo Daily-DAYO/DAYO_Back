@@ -7,6 +7,7 @@ import com.seoultech.dayo.post.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -37,11 +38,13 @@ public class Folder extends BaseTimeEntity {
 
     @OneToMany(
             mappedBy = "folder",
-            fetch = FetchType.EAGER,
             cascade = CascadeType.PERSIST,
             orphanRemoval = true
     )
     private List<Post> posts = new ArrayList<>();
+
+    @Formula("(select count(1) from post p where p.folder_id = id)")
+    private int postCount;
 
     public void setMember(Member member) {
         this.member = member;
