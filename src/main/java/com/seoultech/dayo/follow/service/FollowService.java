@@ -30,107 +30,85 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class FollowService {
 
-    private final FollowRepository followRepository;
-    private final MemberRepository memberRepository;
+  private final FollowRepository followRepository;
 
-    public CreateFollowResponse createFollow(String memberId, CreateFollowRequest request) {
+  public CreateFollowResponse createFollow(Member member, Member follower,
+      CreateFollowRequest request) {
 
-        Member member = findMemberById(memberId);
-        Member follower = findFollowerById(request.getFollowerId());
+    Follow follow = request.toEntity(member, follower);
+    Follow savedFollow = followRepository.save(follow);
 
-        Follow follow = request.toEntity(member, follower);
-        Follow savedFollow = followRepository.save(follow);
+    return CreateFollowResponse.from(savedFollow);
+  }
 
-        return CreateFollowResponse.from(savedFollow);
-    }
+  public CreateFollowUpResponse createFollowUp(Member member, Member follower,
+      CreateFollowUpRequest request) {
 
-    public CreateFollowUpResponse createFollowUp(String memberId, CreateFollowUpRequest request) {
+    Optional<Follow> followOptional = followRepository.findFollowByMemberAndFollower(follower,
+        member);
+    Follow presentFollow = followOptional.orElseThrow(NotExistFollowException::new);
+    presentFollow.setIsAccept(true);
 
-        Member member = findMemberById(memberId);
-        Member follower = findFollowerById(request.getFollowerId());
+    Follow follow = request.toEntity(member, follower);
+    Follow savedFollow = followRepository.save(follow);
 
-        Optional<Follow> followOptional = followRepository.findFollowByMemberAndFollower(follower, member);
-        Follow presentFollow = followOptional.orElseThrow(NotExistFollowException::new);
-        presentFollow.setIsAccept(true);
+    return CreateFollowUpResponse.from(savedFollow);
+  }
 
-        Follow follow = request.toEntity(member, follower);
-        Follow savedFollow = followRepository.save(follow);
+  @Transactional(readOnly = true)
+  public ListAllFollowerResponse listAllFollowers(Member member) {
 
-        return CreateFollowUpResponse.from(savedFollow);
-    }
+    List<Follow> followers = followRepository.findFollowsByFollower(member);
+    List<FollowerDto> collect = followers.stream()
+        .map(FollowerDto::from)
+        .collect(toList());
 
-    @Transactional(readOnly = true)
-    public ListAllFollowerResponse listAllFollowers(String memberId) {
+    return ListAllFollowerResponse.from(collect);
+  }
 
-        Member member = findMemberById(memberId);
+  @Transactional(readOnly = true)
+  public ListAllFollowingResponse listAllFollowings(Member member) {
 
-        List<Follow> followers = followRepository.findFollowsByFollower(member);
-        List<FollowerDto> collect = followers.stream()
-                .map(FollowerDto::from)
-                .collect(toList());
+    List<Follow> followings = followRepository.findFollowsByMember(member);
+    List<FollowingDto> collect = followings.stream()
+        .map(FollowingDto::from)
+        .collect(toList());
 
-        return ListAllFollowerResponse.from(collect);
-    }
+    return ListAllFollowingResponse.from(collect);
+  }
 
-    @Transactional(readOnly = true)
-    public ListAllFollowingResponse listAllFollowings(String memberId) {
+  @Transactional(readOnly = true)
+  public ListAllMyFollowerResponse listAllMyFollowers(Member member) {
 
-        Member member = findMemberById(memberId);
+    List<Follow> followers = followRepository.findFollowsByFollower(member);
+    List<MyFollowerDto> collect = followers.stream()
+        .map(MyFollowerDto::from)
+        .collect(toList());
 
-        List<Follow> followings = followRepository.findFollowsByMember(member);
-        List<FollowingDto> collect = followings.stream()
-                .map(FollowingDto::from)
-                .collect(toList());
+    return ListAllMyFollowerResponse.from(collect);
+  }
 
-        return ListAllFollowingResponse.from(collect);
-    }
+  @Transactional(readOnly = true)
+  public ListAllMyFollowingResponse listAllMyFollowings(Member member) {
 
-    @Transactional(readOnly = true)
-    public ListAllMyFollowerResponse listAllMyFollowers(String memberId) {
+    List<Follow> followings = followRepository.findFollowsByMember(member);
+    List<MyFollowingDto> collect = followings.stream()
+        .map(MyFollowingDto::from)
+        .collect(toList());
 
-        Member member = findMemberById(memberId);
+    return ListAllMyFollowingResponse.from(collect);
+  }
 
-        List<Follow> followers = followRepository.findFollowsByFollower(member);
-        List<MyFollowerDto> collect = followers.stream()
-                .map(MyFollowerDto::from)
-                .collect(toList());
+  public List<Follow> findFollowings(Member member) {
+    return followRepository.findFollowsByMember(member);
+  }
 
-        return ListAllMyFollowerResponse.from(collect);
-    }
+  public void deleteFollow(String memberId, String followerId) {
+    followRepository.deleteById(new Follow.Key(memberId, followerId));
+  }
 
-    @Transactional(readOnly = true)
-    public ListAllMyFollowingResponse listAllMyFollowings(String memberId) {
-
-        Member member = findMemberById(memberId);
-
-        List<Follow> followings = followRepository.findFollowsByMember(member);
-        List<MyFollowingDto> collect = followings.stream()
-                .map(MyFollowingDto::from)
-                .collect(toList());
-
-        return ListAllMyFollowingResponse.from(collect);
-    }
-
-    public List<Follow> findFollowings(Member member) {
-        return followRepository.findFollowsByMember(member);
-    }
-
-    public void deleteFollow(String memberId, String followerId) {
-        followRepository.deleteById(new Follow.Key(memberId, followerId));
-    }
-
-    public boolean isFollow(String memberId, String followerId) {
-        return followRepository.existsById(new Follow.Key(memberId, followerId));
-    }
-
-    private Member findMemberById(String memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(NotExistMemberException::new);
-    }
-
-    private Member findFollowerById(String followerId) {
-        return memberRepository.findById(followerId)
-                .orElseThrow(NotExistFollowerException::new);
-    }
+  public boolean isFollow(String memberId, String followerId) {
+    return followRepository.existsById(new Follow.Key(memberId, followerId));
+  }
 
 }
