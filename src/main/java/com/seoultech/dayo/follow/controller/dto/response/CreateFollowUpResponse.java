@@ -16,7 +16,7 @@ public class CreateFollowUpResponse {
     private Boolean isAccept;
 
     public static CreateFollowUpResponse from(Follow follow) {
-        return new CreateFollowUpResponse(follow.getMember().getId(), follow.getFollower().getId(), follow.getIsAccept());
+        return new CreateFollowUpResponse(follow.getKey().getMemberId(), follow.getKey().getFollowerId(), follow.getIsAccept());
     }
 
 }

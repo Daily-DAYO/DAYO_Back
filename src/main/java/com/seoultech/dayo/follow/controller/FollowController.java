@@ -63,7 +63,9 @@ public class FollowController {
     }
 
     @GetMapping("/follower/list/{memberId}")
-    public ResponseEntity<ListAllFollowerResponse> listAllFollower(@PathVariable @Valid String memberId) {
+    public ResponseEntity<ListAllFollowerResponse> listAllFollower(HttpServletRequest servletRequest, @PathVariable @Valid String memberId) {
+        String token = tokenProvider.getTokenInHeader(servletRequest);
+        tokenProvider.getDataFromToken(token);
         return ResponseEntity.ok()
                 .body(followService.listAllFollowers(memberId));
     }
