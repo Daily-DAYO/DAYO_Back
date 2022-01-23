@@ -17,85 +17,86 @@ import java.util.List;
 @Getter
 public class Folder extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private String name;
+  private String name;
 
-    private String subheading;
+  private String subheading;
 
-    @Enumerated(EnumType.STRING)
-    private Privacy privacy;
+  @Enumerated(EnumType.STRING)
+  private Privacy privacy;
 
-    @OneToOne
-    private Image thumbnailImage;
+  @OneToOne
+  private Image thumbnailImage;
 
-    private Integer orderIndex;
+  private Integer orderIndex;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Member member;
 
-    @OneToMany(
-            mappedBy = "folder",
-            cascade = CascadeType.PERSIST,
-            orphanRemoval = true
-    )
-    private List<Post> posts = new ArrayList<>();
+  @OneToMany(
+      mappedBy = "folder",
+      cascade = CascadeType.PERSIST,
+      orphanRemoval = true
+  )
+  private List<Post> posts = new ArrayList<>();
 
-    @Formula("(select count(1) from post p where p.folder_id = id)")
-    private int postCount;
+  @Formula("(select count(1) from post p where p.folder_id = id)")
+  private int postCount;
 
-    public void setMember(Member member) {
-        this.member = member;
-    }
+  public void setMember(Member member) {
+    this.member = member;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setSubheading(String subheading) {
-        this.subheading = subheading;
-    }
+  public void setSubheading(String subheading) {
+    this.subheading = subheading;
+  }
 
-    public void setPrivacy(Privacy privacy) {
-        this.privacy = privacy;
-    }
+  public void setPrivacy(Privacy privacy) {
+    this.privacy = privacy;
+  }
 
-    public void setThumbnailImage(Image thumbnailImage) {
-        this.thumbnailImage = thumbnailImage;
-    }
+  public void setThumbnailImage(Image thumbnailImage) {
+    this.thumbnailImage = thumbnailImage;
+  }
 
-    public void setOrderIndex(Integer orderIndex) {
-        this.orderIndex = orderIndex;
-    }
+  public void setOrderIndex(Integer orderIndex) {
+    this.orderIndex = orderIndex;
+  }
 
-    @Builder
-    public Folder(Long id, String name, String subheading, Privacy privacy, Image thumbnailImage) {
-        this.id = id;
-        this.name = name;
-        this.subheading = subheading;
-        this.privacy = privacy;
-        this.thumbnailImage = thumbnailImage;
-    }
+  @Builder
+  public Folder(Long id, String name, String subheading, Privacy privacy, Image thumbnailImage) {
+    this.id = id;
+    this.name = name;
+    this.subheading = subheading;
+    this.privacy = privacy;
+    this.thumbnailImage = thumbnailImage;
+  }
 
-    public Folder(String name, String subheading, Privacy privacy, Image thumbnailImage) {
-        this.name = name;
-        this.subheading = subheading;
-        this.privacy = privacy;
-        this.thumbnailImage = thumbnailImage;
-    }
+  public Folder(String name, String subheading, Privacy privacy, Image thumbnailImage) {
+    this.name = name;
+    this.subheading = subheading;
+    this.privacy = privacy;
+    this.thumbnailImage = thumbnailImage;
+  }
 
-    public Folder(String name, Privacy privacy, Image thumbnailImage) {
-        this.name = name;
-        this.privacy = privacy;
-        this.thumbnailImage = thumbnailImage;
-    }
+  public Folder(String name, Privacy privacy, Image thumbnailImage) {
+    this.name = name;
+    this.privacy = privacy;
+    this.thumbnailImage = thumbnailImage;
+  }
 
-    public Folder(String name, Privacy privacy) {
-        this.name = name;
-        this.privacy = privacy;
-    }
+  public Folder(String name, Privacy privacy) {
+    this.name = name;
+    this.privacy = privacy;
+  }
 
-    protected Folder() {}
+  protected Folder() {
+  }
 }

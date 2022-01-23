@@ -21,11 +21,14 @@ public class DetailFolderResponse {
 
   private String privacy;
 
+  private String memberId;
+
   private List<FolderDetailDto> data;
 
   public static DetailFolderResponse from(Folder folder, List<FolderDetailDto> collect) {
     return new DetailFolderResponse(collect.size(), folder.getName(), folder.getSubheading(),
-        folder.getThumbnailImage().getStoreFileName(), folder.getPrivacy().name(), collect);
+        folder.getThumbnailImage().getStoreFileName(), folder.getPrivacy().name(),
+        folder.getMember().getId(), collect);
   }
 
 }
