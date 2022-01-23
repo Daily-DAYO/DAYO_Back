@@ -24,6 +24,7 @@ public class HashtagService {
         List<Hashtag> collect = new ArrayList<>();
         List<Hashtag> notExists = new ArrayList<>();
 
+        //TODO Set List 차이
         for (String tag : tags) {
             boolean notExist = true;
             for (Hashtag hashtag : hashtags) {

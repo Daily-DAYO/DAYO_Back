@@ -36,10 +36,9 @@ import static java.util.stream.Collectors.toList;
 public class FolderService {
 
     private final FolderRepository folderRepository;
-    private final MemberRepository memberRepository;
     private final ImageService imageService;
 
-    public CreateFolderResponse createFolder(String memberId, CreateFolderRequest request) throws IOException {
+    public CreateFolderResponse createFolder(Member member, CreateFolderRequest request) throws IOException {
 
         MultipartFile thumbnailImage = request.getThumbnailImage();
         Image image;
@@ -50,28 +49,23 @@ public class FolderService {
         }
 
         Folder savedFolder = folderRepository.save(request.toEntity(image));
-
-        Member member = findMemberById(memberId);
         List<Folder> folders = folderRepository.findAllByMember(member);
 
-        // TODO 리팩토링
         savedFolder.setOrderIndex(folders.size() + 1);
         member.addFolder(savedFolder);
 
         return CreateFolderResponse.from(savedFolder);
     }
 
-    public CreateFolderInPostResponse createFolderInPost(String memberId, CreateFolderInPostRequest request) {
+    public CreateFolderInPostResponse createFolderInPost(Member member, CreateFolderInPostRequest request) {
 
         Image image = imageService.findDefaultFolderImage();
 
         Folder folder = request.toEntity(image);
         Folder savedFolder = folderRepository.save(folder);
 
-        Member member = findMemberById(memberId);
         List<Folder> folders = folderRepository.findAllByMember(member);
 
-        //TODO 리팩토링
         savedFolder.setOrderIndex(folders.size() + 1);
         member.addFolder(savedFolder);
 
@@ -79,8 +73,7 @@ public class FolderService {
     }
 
     @Transactional(readOnly = true)
-    public ListAllMyFolderResponse listAllMyFolder(String memberId) {
-        Member member = findMemberById(memberId);
+    public ListAllMyFolderResponse listAllMyFolder(Member member) {
         List<Folder> folders = folderRepository.findFoldersByMemberOrderByOrderIndex(member);
         List<MyFolderDto> collect = folders.stream()
                 .map(MyFolderDto::from)
@@ -90,8 +83,7 @@ public class FolderService {
     }
 
     @Transactional(readOnly = true)
-    public ListAllFolderResponse listAllFolder(String memberId) {
-        Member member = findMemberById(memberId);
+    public ListAllFolderResponse listAllFolder(Member member) {
         List<Folder> folders = folderRepository.findFoldersByMemberOrderByOrderIndex(member);
         List<FolderDto> collect = folders.stream()
                 .filter(folder -> folder.getPrivacy() != ONLY_ME)
@@ -120,9 +112,8 @@ public class FolderService {
         return EditFolderResponse.from(folder);
     }
 
-    public void orderFolder(String memberId, EditOrderFolderRequest.EditOrderDto[] request) {
+    public void orderFolder(Member member, EditOrderFolderRequest.EditOrderDto[] request) {
 
-        Member member = findMemberById(memberId);
         List<Folder> folders = folderRepository.findFoldersByMember(member);
 
         //TODO 리팩토링
@@ -161,11 +152,6 @@ public class FolderService {
     public Folder findFolderById(Long folderId) {
         return folderRepository.findById(folderId)
                 .orElseThrow(NotExistFolderException::new);
-    }
-
-    private Member findMemberById(String memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(NotExistMemberException::new);
     }
 
 }

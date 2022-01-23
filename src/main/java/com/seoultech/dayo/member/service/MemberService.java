@@ -62,6 +62,16 @@ public class MemberService {
 
         Optional<Member> memberOptional = memberRepository.findMemberByEmail(email);
 
+
+        // 기획, 스펙 (말)
+        // 기획 -> 코드 (개발자) json 요청을받으면 ~
+        // 코드 (순환참조라는 문제가 있음)
+        // 기획에서 잘 드러나지 않는 부분
+        // ==> 받게만 해주는 아이가 있어야 한다.
+        //
+
+
+
         Member member;
         if (memberOptional.isPresent()) {
             member = memberOptional.get();
