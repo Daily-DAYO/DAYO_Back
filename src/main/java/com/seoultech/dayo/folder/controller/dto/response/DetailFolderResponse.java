@@ -11,18 +11,21 @@ import java.util.List;
 @AllArgsConstructor
 public class DetailFolderResponse {
 
-    private int count;
+  private int count;
 
-    private String name;
+  private String name;
 
-    private String subheading;
+  private String subheading;
 
-    private String thumbnailImage;
+  private String thumbnailImage;
 
-    private List<FolderDetailDto> data;
+  private String privacy;
 
-    public static DetailFolderResponse from(Folder folder, List<FolderDetailDto> collect) {
-        return new DetailFolderResponse(collect.size(), folder.getName(), folder.getSubheading(), folder.getThumbnailImage().getStoreFileName(), collect);
-    }
+  private List<FolderDetailDto> data;
+
+  public static DetailFolderResponse from(Folder folder, List<FolderDetailDto> collect) {
+    return new DetailFolderResponse(collect.size(), folder.getName(), folder.getSubheading(),
+        folder.getThumbnailImage().getStoreFileName(), folder.getPrivacy().name(), collect);
+  }
 
 }

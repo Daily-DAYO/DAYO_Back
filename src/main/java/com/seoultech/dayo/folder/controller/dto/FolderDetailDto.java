@@ -8,12 +8,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public class FolderDetailDto {
 
-    private Long postId;
+  private Long postId;
 
-    private String thumbnailImage;
+  private String thumbnailImage;
 
-    public static FolderDetailDto from(Post post) {
-        return new FolderDetailDto(post.getId(), post.getThumbnailImage());
-    }
+  public static FolderDetailDto from(Post post) {
+    return new FolderDetailDto(post.getId(), post.getThumbnailImage());
+  }
 
 }
