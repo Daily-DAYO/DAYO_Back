@@ -1,8 +1,13 @@
 package com.seoultech.dayo.hashtag.service;
 
+import static java.util.stream.Collectors.toSet;
+
 import com.seoultech.dayo.hashtag.Hashtag;
 import com.seoultech.dayo.hashtag.repository.HashtagRepository;
 import com.seoultech.dayo.hashtag.repository.HashtagSearchRepository;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,45 +20,41 @@ import java.util.List;
 @Slf4j
 public class HashtagService {
 
-    private final HashtagRepository hashtagRepository;
-    private final HashtagSearchRepository hashtagSearchRepository;
+  private final HashtagRepository hashtagRepository;
+  private final HashtagSearchRepository hashtagSearchRepository;
 
-    public List<Hashtag> createHashtag(List<String> tags) {
+  public List<Hashtag> createHashtag(List<String> tags) {
 
-        List<Hashtag> hashtags = hashtagRepository.findByTags(tags);
-        List<Hashtag> collect = new ArrayList<>();
-        List<Hashtag> notExists = new ArrayList<>();
+    List<Hashtag> hashtags = hashtagRepository.findByTags(tags);
 
-        //TODO Set List 차이
-        for (String tag : tags) {
-            boolean notExist = true;
-            for (Hashtag hashtag : hashtags) {
-                if(hashtag.getTag().equals(tag)) {
-                    collect.add(hashtag);
-                    notExist = false;
-                    break;
-                }
-            }
-            if(notExist) {
-                Hashtag hashtag = new Hashtag(tag);
-                collect.add(hashtag);
-                notExists.add(hashtag);
-            }
-        }
+    Set<String> collect = hashtags.stream()
+        .map(Hashtag::getTag)
+        .collect(toSet());
 
-        hashtagRepository.saveAll(notExists);
-        hashtagSearchRepository.saveAll(notExists);
+    List<Hashtag> notExists = new ArrayList<>();
 
-        return collect;
+    for (String tag : tags) {
+      if (!collect.contains(tag)) {
+        Hashtag hashtag = new Hashtag(tag);
+        notExists.add(hashtag);
+      }
     }
 
-    public void findHashtag(String tag) {
-
-        List<Hashtag> hashtags = hashtagSearchRepository.findHashtagsByTag(tag);
-
-        for(Hashtag hashtag : hashtags) {
-            System.out.println(hashtag.getTag());
-        }
+    if (notExists.size() > 0) {
+      hashtagRepository.saveAll(notExists);
+      hashtagSearchRepository.saveAll(notExists);
     }
+
+    return hashtags;
+  }
+
+  public void findHashtag(String tag) {
+
+    List<Hashtag> hashtags = hashtagSearchRepository.findHashtagsByTag(tag);
+
+    for (Hashtag hashtag : hashtags) {
+      System.out.println(hashtag.getTag());
+    }
+  }
 
 }
