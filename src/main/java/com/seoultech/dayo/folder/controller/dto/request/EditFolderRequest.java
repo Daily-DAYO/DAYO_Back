@@ -13,15 +13,15 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class EditFolderRequest {
 
-    @NotNull
-    private Long folderId;
+  @NotNull
+  private Long folderId;
 
-    private String name;
+  private String name;
 
-    private String subheading;
+  private String subheading;
 
-    private String privacy;
+  private String privacy;
 
-    private MultipartFile thumbnailImage;
+  private MultipartFile thumbnailImage;
 
 }

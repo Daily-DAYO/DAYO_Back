@@ -35,123 +35,128 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class FolderService {
 
-    private final FolderRepository folderRepository;
-    private final ImageService imageService;
+  private final FolderRepository folderRepository;
+  private final ImageService imageService;
 
-    public CreateFolderResponse createFolder(Member member, CreateFolderRequest request) throws IOException {
+  public CreateFolderResponse createFolder(Member member, CreateFolderRequest request)
+      throws IOException {
 
-        MultipartFile thumbnailImage = request.getThumbnailImage();
-        Image image;
-        if(thumbnailImage == null) {
-            image = imageService.findDefaultFolderImage();
-        } else {
-            image = imageService.storeFile(thumbnailImage);
-        }
-
-        Folder savedFolder = folderRepository.save(request.toEntity(image));
-        List<Folder> folders = folderRepository.findAllByMember(member);
-
-        savedFolder.setOrderIndex(folders.size() + 1);
-        member.addFolder(savedFolder);
-
-        return CreateFolderResponse.from(savedFolder);
+    MultipartFile thumbnailImage = request.getThumbnailImage();
+    Image image;
+    if (thumbnailImage == null) {
+      image = imageService.findDefaultFolderImage();
+    } else {
+      image = imageService.storeFile(thumbnailImage);
     }
 
-    public CreateFolderInPostResponse createFolderInPost(Member member, CreateFolderInPostRequest request) {
+    Folder savedFolder = folderRepository.save(request.toEntity(image));
+    List<Folder> folders = folderRepository.findAllByMember(member);
 
-        Image image = imageService.findDefaultFolderImage();
+    savedFolder.setOrderIndex(folders.size() + 1);
+    member.addFolder(savedFolder);
 
-        Folder folder = request.toEntity(image);
-        Folder savedFolder = folderRepository.save(folder);
+    return CreateFolderResponse.from(savedFolder);
+  }
 
-        List<Folder> folders = folderRepository.findAllByMember(member);
+  public CreateFolderInPostResponse createFolderInPost(Member member,
+      CreateFolderInPostRequest request) {
 
-        savedFolder.setOrderIndex(folders.size() + 1);
-        member.addFolder(savedFolder);
+    Image image = imageService.findDefaultFolderImage();
 
-        return CreateFolderInPostResponse.from(savedFolder);
+    Folder folder = request.toEntity(image);
+    Folder savedFolder = folderRepository.save(folder);
+
+    List<Folder> folders = folderRepository.findAllByMember(member);
+
+    savedFolder.setOrderIndex(folders.size() + 1);
+    member.addFolder(savedFolder);
+
+    return CreateFolderInPostResponse.from(savedFolder);
+  }
+
+  @Transactional(readOnly = true)
+  public ListAllMyFolderResponse listAllMyFolder(Member member) {
+    List<Folder> folders = folderRepository.findFoldersByMemberOrderByOrderIndex(member);
+    List<MyFolderDto> collect = folders.stream()
+        .map(MyFolderDto::from)
+        .collect(toList());
+
+    return ListAllMyFolderResponse.from(collect);
+  }
+
+  @Transactional(readOnly = true)
+  public ListAllFolderResponse listAllFolder(Member member) {
+    List<Folder> folders = folderRepository.findFoldersByMemberOrderByOrderIndex(member);
+    List<FolderDto> collect = folders.stream()
+        .filter(folder -> folder.getPrivacy() != ONLY_ME)
+        .map(FolderDto::from)
+        .collect(toList());
+
+    return ListAllFolderResponse.from(collect);
+  }
+
+  //TODO 리팩토링
+  public EditFolderResponse editFolder(EditFolderRequest request) throws IOException {
+
+    Folder folder = findFolderById(request.getFolderId());
+
+    if (StringUtils.hasText(request.getName())) {
+      folder.setName(request.getName());
+    }
+    if (StringUtils.hasText(request.getSubheading())) {
+      folder.setSubheading(request.getSubheading());
+    }
+    if (StringUtils.hasText(request.getPrivacy())) {
+      folder.setPrivacy(Privacy.valueOf(request.getPrivacy()));
+    }
+    if (request.getThumbnailImage() != null) {
+      Image image = imageService.storeFile(request.getThumbnailImage());
+      folder.setThumbnailImage(image);
     }
 
-    @Transactional(readOnly = true)
-    public ListAllMyFolderResponse listAllMyFolder(Member member) {
-        List<Folder> folders = folderRepository.findFoldersByMemberOrderByOrderIndex(member);
-        List<MyFolderDto> collect = folders.stream()
-                .map(MyFolderDto::from)
-                .collect(toList());
+    return EditFolderResponse.from(folder);
+  }
 
-        return ListAllMyFolderResponse.from(collect);
-    }
+  public void orderFolder(Member member, EditOrderFolderRequest.EditOrderDto[] request) {
 
-    @Transactional(readOnly = true)
-    public ListAllFolderResponse listAllFolder(Member member) {
-        List<Folder> folders = folderRepository.findFoldersByMemberOrderByOrderIndex(member);
-        List<FolderDto> collect = folders.stream()
-                .filter(folder -> folder.getPrivacy() != ONLY_ME)
-                .map(FolderDto::from)
-                .collect(toList());
-
-        return ListAllFolderResponse.from(collect);
-    }
+    List<Folder> folders = folderRepository.findFoldersByMember(member);
 
     //TODO 리팩토링
-    public EditFolderResponse editFolder(EditFolderRequest request) throws IOException {
-
-        Folder folder = findFolderById(request.getFolderId());
-
-        if (StringUtils.hasText(request.getName()))
-            folder.setName(request.getName());
-        if (StringUtils.hasText(request.getSubheading()))
-            folder.setSubheading(request.getSubheading());
-        if (StringUtils.hasText(request.getPrivacy()))
-            folder.setPrivacy(Privacy.valueOf(request.getPrivacy()));
-        if (request.getThumbnailImage() != null) {
-            Image image = imageService.storeFile(request.getThumbnailImage());
-            folder.setThumbnailImage(image);
+    for (Folder folder : folders) {
+      for (EditOrderFolderRequest.EditOrderDto editOrderDto : request) {
+        if (folder.getId().equals(editOrderDto.getFolderId())) {
+          folder.setOrderIndex(editOrderDto.getOrderIndex());
+          break;
         }
-
-        return EditFolderResponse.from(folder);
+      }
     }
+  }
 
-    public void orderFolder(Member member, EditOrderFolderRequest.EditOrderDto[] request) {
+  public void deleteFolder(Long folderId) {
+    folderRepository.deleteById(folderId);
+  }
 
-        List<Folder> folders = folderRepository.findFoldersByMember(member);
+  @Transactional(readOnly = true)
+  public DetailFolderResponse detailFolder(Long folderId) {
 
-        //TODO 리팩토링
-        for (Folder folder : folders) {
-            for (EditOrderFolderRequest.EditOrderDto editOrderDto : request) {
-                if (folder.getId().equals(editOrderDto.getFolderId())) {
-                    folder.setOrderIndex(editOrderDto.getOrderIndex());
-                    break;
-                }
-            }
-        }
-    }
+    Folder folder = findFolderById(folderId);
 
-    public void deleteFolder(Long folderId) {
-        folderRepository.deleteById(folderId);
-    }
+    List<FolderDetailDto> collect = folder.getPosts().stream()
+        .map(FolderDetailDto::from)
+        .collect(toList());
 
-    @Transactional(readOnly = true)
-    public DetailFolderResponse detailFolder(Long folderId) {
+    return DetailFolderResponse.from(folder, collect);
+  }
 
-        Folder folder = findFolderById(folderId);
+  public Folder createDefaultFolder() {
+    Image image = imageService.findDefaultFolderImage();
+    Folder folder = new Folder("기본 폴더", Privacy.ALL, image);
+    return folderRepository.save(folder);
+  }
 
-        List<FolderDetailDto> collect = folder.getPosts().stream()
-                .map(FolderDetailDto::from)
-                .collect(toList());
-
-        return DetailFolderResponse.from(folder, collect);
-    }
-
-    public Folder createDefaultFolder() {
-        Image image = imageService.findDefaultFolderImage();
-        Folder folder = new Folder("기본 폴더", Privacy.ALL, image);
-        return folderRepository.save(folder);
-    }
-
-    public Folder findFolderById(Long folderId) {
-        return folderRepository.findById(folderId)
-                .orElseThrow(NotExistFolderException::new);
-    }
+  public Folder findFolderById(Long folderId) {
+    return folderRepository.findById(folderId)
+        .orElseThrow(NotExistFolderException::new);
+  }
 
 }

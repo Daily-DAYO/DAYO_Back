@@ -30,35 +30,35 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class CommentService {
 
-    private final CommentRepository commentRepository;
-    private final MemberService memberService;
-    private final PostService postService;
+  private final CommentRepository commentRepository;
+  private final MemberService memberService;
+  private final PostService postService;
 
-    public CreateCommentResponse createComment(String memberId, CreateCommentRequest request) {
+  public CreateCommentResponse createComment(String memberId, CreateCommentRequest request) {
 
-        Post post = postService.findPostById(request.getPostId());
-        Member member = memberService.findMemberById(memberId);
+    Post post = postService.findPostById(request.getPostId());
+    Member member = memberService.findMemberById(memberId);
 
-        Comment comment = request.toEntity(member);
-        Comment savedComment = commentRepository.save(comment);
-        savedComment.addPost(post);
+    Comment comment = request.toEntity(member);
+    Comment savedComment = commentRepository.save(comment);
+    savedComment.addPost(post);
 
-        return new CreateCommentResponse(savedComment.getId());
-    }
+    return new CreateCommentResponse(savedComment.getId());
+  }
 
-    @Transactional(readOnly = true)
-    public ListAllCommentResponse listAllComment(Long postId) {
+  @Transactional(readOnly = true)
+  public ListAllCommentResponse listAllComment(Long postId) {
 
-        Post post = postService.findPostById(postId);
-        List<ListAllCommentResponse.CommentDto> collect = post.getComments().stream()
-                .map(comment -> ListAllCommentResponse.CommentDto.from(comment, comment.getMember()))
-                .collect(toList());
+    Post post = postService.findPostById(postId);
+    List<ListAllCommentResponse.CommentDto> collect = post.getComments().stream()
+        .map(comment -> ListAllCommentResponse.CommentDto.from(comment, comment.getMember()))
+        .collect(toList());
 
-        return ListAllCommentResponse.from(collect);
-    }
+    return ListAllCommentResponse.from(collect);
+  }
 
-    public void deleteComment(Long commentId) {
-        commentRepository.deleteById(commentId);
-    }
+  public void deleteComment(Long commentId) {
+    commentRepository.deleteById(commentId);
+  }
 
 }

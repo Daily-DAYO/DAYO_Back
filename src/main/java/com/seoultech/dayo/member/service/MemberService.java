@@ -39,106 +39,99 @@ import java.util.Optional;
 @Transactional
 public class MemberService {
 
-    private final MemberRepository memberRepository;
-    private final FolderService folderService;
-    private final ImageService imageService;
-    private final TokenProvider tokenProvider;
-    private final RestTemplate restTemplate;
-    private final FollowService followService;
+  private final MemberRepository memberRepository;
+  private final FolderService folderService;
+  private final ImageService imageService;
+  private final TokenProvider tokenProvider;
+  private final RestTemplate restTemplate;
+  private final FollowService followService;
 
-    public MemberOAuthResponse kakaoApi(MemberOAuthRequest request) {
+  public MemberOAuthResponse kakaoApi(MemberOAuthRequest request) {
 
-        String apiUrl = "https://kapi.kakao.com/v2/user/me";
-        String responseBody = get(apiUrl, request.getAccessToken());
+    String apiUrl = "https://kapi.kakao.com/v2/user/me";
+    String responseBody = get(apiUrl, request.getAccessToken());
 
-        JsonParser parser = new JsonParser();
-        JsonElement element = parser.parse(responseBody);
+    JsonParser parser = new JsonParser();
+    JsonElement element = parser.parse(responseBody);
 
-        JsonObject kakaoAccount = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
-        JsonObject profile = kakaoAccount.getAsJsonObject().get("profile").getAsJsonObject();
+    JsonObject kakaoAccount = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
+    JsonObject profile = kakaoAccount.getAsJsonObject().get("profile").getAsJsonObject();
 
-        String name = profile.getAsJsonObject().get("nickname").getAsString();
-        String email = kakaoAccount.getAsJsonObject().get("email").getAsString();
+    String name = profile.getAsJsonObject().get("nickname").getAsString();
+    String email = kakaoAccount.getAsJsonObject().get("email").getAsString();
 
-        Optional<Member> memberOptional = memberRepository.findMemberByEmail(email);
+    Optional<Member> memberOptional = memberRepository.findMemberByEmail(email);
 
-
-        // 기획, 스펙 (말)
-        // 기획 -> 코드 (개발자) json 요청을받으면 ~
-        // 코드 (순환참조라는 문제가 있음)
-        // 기획에서 잘 드러나지 않는 부분
-        // ==> 받게만 해주는 아이가 있어야 한다.
-        //
-
-
-
-        Member member;
-        if (memberOptional.isPresent()) {
-            member = memberOptional.get();
-        } else {
-            Image profileImage = imageService.findDefaultProfileImage();
-            member = memberRepository.save(new Member(name, email, profileImage));
-            member.addFolder(folderService.createDefaultFolder());
-        }
-
-        TokenDto token = tokenProvider.generateToken(member.getId());
-        return MemberOAuthResponse.from(token);
+    Member member;
+    if (memberOptional.isPresent()) {
+      member = memberOptional.get();
+    } else {
+      Image profileImage = imageService.findDefaultProfileImage();
+      member = memberRepository.save(new Member(name, email, profileImage));
+      member.addFolder(folderService.createDefaultFolder());
     }
 
-    @Transactional(readOnly = true)
-    public MemberInfoResponse memberInfo(String memberId) {
-        Member member = findMemberById(memberId);
-        return MemberInfoResponse.from(member);
+    TokenDto token = tokenProvider.generateToken(member.getId());
+    return MemberOAuthResponse.from(token);
+  }
+
+  @Transactional(readOnly = true)
+  public MemberInfoResponse memberInfo(String memberId) {
+    Member member = findMemberById(memberId);
+    return MemberInfoResponse.from(member);
+  }
+
+  @Transactional(readOnly = true)
+  public MemberMyProfileResponse myProfile(String memberId) {
+    Member member = findMemberById(memberId);
+    return MemberMyProfileResponse.from(member);
+  }
+
+  @Transactional(readOnly = true)
+  public MemberOtherProfileResponse otherProfile(String memberId, String otherId) {
+    boolean isFollow = followService.isFollow(memberId, otherId);
+    Member member = findMemberById(otherId);
+    return MemberOtherProfileResponse.from(member, isFollow);
+  }
+
+  public void profileUpdate(String memberId, MemberProfileUpdateRequest request)
+      throws IOException {
+
+    Member member = findMemberById(memberId);
+
+      if (StringUtils.hasText(request.getNickname())) {
+          member.setNickname(request.getNickname());
+      }
+    if (request.getProfileImg() != null) {
+      Image image = imageService.storeFile(request.getProfileImg());
+      member.setProfileImg(image);
     }
 
-    @Transactional(readOnly = true)
-    public MemberMyProfileResponse myProfile(String memberId) {
-        Member member = findMemberById(memberId);
-        return MemberMyProfileResponse.from(member);
+  }
+
+  public Member findMemberById(String memberId) {
+    return memberRepository.findById(memberId)
+        .orElseThrow(NotExistMemberException::new);
+  }
+
+  public Member findFollowerById(String memberId) {
+    return memberRepository.findById(memberId)
+        .orElseThrow(NotExistFollowerException::new);
+  }
+
+  private String get(String apiUrl, String accessToken) {
+
+    try {
+      HttpHeaders headers = new HttpHeaders();
+      headers.set("Authorization", "Bearer " + accessToken);
+
+      HttpEntity entity = new HttpEntity(headers);
+      ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity,
+          String.class);
+
+      return response.getBody();
+    } catch (HttpStatusCodeException e) {
+      throw new RuntimeException("API 요청과 응답 실패", e);
     }
-
-    @Transactional(readOnly = true)
-    public MemberOtherProfileResponse otherProfile(String memberId, String otherId) {
-        boolean isFollow = followService.isFollow(memberId, otherId);
-        Member member = findMemberById(otherId);
-        return MemberOtherProfileResponse.from(member, isFollow);
-    }
-
-    public void profileUpdate(String memberId, MemberProfileUpdateRequest request) throws IOException {
-
-        Member member = findMemberById(memberId);
-
-        if (StringUtils.hasText(request.getNickname()))
-            member.setNickname(request.getNickname());
-        if (request.getProfileImg() != null) {
-            Image image = imageService.storeFile(request.getProfileImg());
-            member.setProfileImg(image);
-        }
-
-    }
-
-    public Member findMemberById(String memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(NotExistMemberException::new);
-    }
-
-    public Member findFollowerById(String memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(NotExistFollowerException::new);
-    }
-
-    private String get(String apiUrl, String accessToken) {
-
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer " + accessToken);
-
-            HttpEntity entity = new HttpEntity(headers);
-            ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, String.class);
-
-            return response.getBody();
-        } catch (HttpStatusCodeException e) {
-            throw new RuntimeException("API 요청과 응답 실패", e);
-        }
-    }
+  }
 }
