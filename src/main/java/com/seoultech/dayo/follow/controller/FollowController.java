@@ -88,22 +88,27 @@ public class FollowController {
   public ResponseEntity<ListAllFollowerResponse> listAllFollower(HttpServletRequest servletRequest,
       @PathVariable @Valid String memberId) {
     String token = tokenProvider.getTokenInHeader(servletRequest);
-    tokenProvider.getDataFromToken(token);
+    String myMemberId = tokenProvider.getDataFromToken(token);
 
+    Member me = memberService.findMemberById(myMemberId);
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()
-        .body(followService.listAllFollowers(member));
+        .body(followService.listAllFollowers(me, member));
   }
 
   @GetMapping("/following/list/{memberId}")
   public ResponseEntity<ListAllFollowingResponse> listAllFollowing(
+      HttpServletRequest servletRequest,
       @PathVariable @Valid String memberId) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String myMemberId = tokenProvider.getDataFromToken(token);
 
+    Member me = memberService.findMemberById(myMemberId);
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()
-        .body(followService.listAllFollowings(member));
+        .body(followService.listAllFollowings(me, member));
   }
 
 }

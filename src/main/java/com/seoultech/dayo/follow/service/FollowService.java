@@ -15,6 +15,8 @@ import com.seoultech.dayo.follow.controller.dto.response.*;
 import com.seoultech.dayo.follow.repository.FollowRepository;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.repository.MemberRepository;
+import java.util.ArrayList;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,23 +58,45 @@ public class FollowService {
   }
 
   @Transactional(readOnly = true)
-  public ListAllFollowerResponse listAllFollowers(Member member) {
+  public ListAllFollowerResponse listAllFollowers(Member me, Member member) {
 
     List<Follow> followers = followRepository.findFollowsByFollower(member);
-    List<FollowerDto> collect = followers.stream()
-        .map(FollowerDto::from)
-        .collect(toList());
+    List<Follow> myFollowings = followRepository.findFollowsByMember(me);
+    Set<String> myCollect = myFollowings.stream()
+        .map(follow -> follow.getFollower().getId())
+        .collect(Collectors.toSet());
+
+    List<FollowerDto> collect = new ArrayList<>();
+
+    for (Follow follower : followers) {
+      if (myCollect.contains(follower.getMember().getId())) {
+        collect.add(FollowerDto.from(follower, true));
+      } else {
+        collect.add(FollowerDto.from(follower, false));
+      }
+    }
 
     return ListAllFollowerResponse.from(collect);
   }
 
   @Transactional(readOnly = true)
-  public ListAllFollowingResponse listAllFollowings(Member member) {
+  public ListAllFollowingResponse listAllFollowings(Member me, Member member) {
 
     List<Follow> followings = followRepository.findFollowsByMember(member);
-    List<FollowingDto> collect = followings.stream()
-        .map(FollowingDto::from)
-        .collect(toList());
+    List<Follow> myFollowings = followRepository.findFollowsByMember(me);
+    Set<String> myCollect = myFollowings.stream()
+        .map(follow -> follow.getFollower().getId())
+        .collect(Collectors.toSet());
+
+    List<FollowingDto> collect = new ArrayList<>();
+
+    for (Follow following : followings) {
+      if (myCollect.contains(following.getMember().getId())) {
+        collect.add(FollowingDto.from(following, true));
+      } else {
+        collect.add(FollowingDto.from(following, false));
+      }
+    }
 
     return ListAllFollowingResponse.from(collect);
   }
