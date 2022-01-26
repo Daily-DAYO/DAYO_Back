@@ -1,5 +1,6 @@
 package com.seoultech.dayo.hashtag.service;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import com.seoultech.dayo.hashtag.Hashtag;
@@ -27,18 +28,57 @@ public class HashtagService {
 
     List<Hashtag> hashtags = hashtagRepository.findByTags(tags);
 
+//    1번
+//    List<Hashtag> collect = new ArrayList<>();
+//    List<Hashtag> notExists = new ArrayList<>();
+//
+//    for (String tag : tags) {
+//      boolean notExist = true;
+//      for (Hashtag hashtag : hashtags) {
+//        if(hashtag.getTag().equals(tag)) {
+//          collect.add(hashtag);
+//          notExist = false;
+//          break;
+//        }
+//      }
+//      if(notExist) {
+//        Hashtag hashtag = new Hashtag(tag);
+//        collect.add(hashtag);
+//        notExists.add(hashtag);
+//      }
+//    }
+//
+//    hashtagRepository.saveAll(notExists);
+//    hashtagSearchRepository.saveAll(notExists);
+
+//    2번
+//    Set<String> collect = hashtags.stream()
+//        .map(Hashtag::getTag)
+//        .collect(toSet());
+//
+//    List<Hashtag> notExists = new ArrayList<>();
+//
+//    for (String tag : tags) {
+//      if (!collect.contains(tag)) {
+//        Hashtag hashtag = new Hashtag(tag);
+//        notExists.add(hashtag);
+//      }
+//    }
+//
+//    if (notExists.size() > 0) {
+//      hashtagRepository.saveAll(notExists);
+//      hashtagSearchRepository.saveAll(notExists);
+//    }
+
+//    3번
     Set<String> collect = hashtags.stream()
         .map(Hashtag::getTag)
         .collect(toSet());
 
-    List<Hashtag> notExists = new ArrayList<>();
-
-    for (String tag : tags) {
-      if (!collect.contains(tag)) {
-        Hashtag hashtag = new Hashtag(tag);
-        notExists.add(hashtag);
-      }
-    }
+    List<Hashtag> notExists = tags.stream()
+        .filter(tag -> !collect.contains(tag))
+        .map(Hashtag::new)
+        .collect(toList());
 
     if (notExists.size() > 0) {
       hashtagRepository.saveAll(notExists);
