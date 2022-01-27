@@ -11,12 +11,12 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query("select p from Post p join fetch p.member where p.category = :category")
-    List<Post> findAllByCategoryUsingJoin(Category category);
+  @Query("select p from Post p join fetch p.member where p.category = :category and p.privacy = 'ALL' order by p.createdDate desc")
+  List<Post> findAllByCategoryUsingJoinOrderByCreateDate(Category category);
 
-    @Query("select p from Post p join fetch p.member where not p.privacy = 'ONLY_ME'")
-    List<Post> findAllByUsingJoin();
+  @Query("select p from Post p join fetch p.member where p.privacy = 'ALL' order by p.createdDate desc")
+  List<Post> findAllByUsingJoinMemberOrderByCreateDate();
 
-    @Query("select p from Post p join fetch p.comments where p.id = :id")
-    Optional<Post> findByIdWithComment(@Param("id") Long id);
+  @Query("select p from Post p join fetch p.comments where p.id = :id")
+  Optional<Post> findByIdWithComment(@Param("id") Long id);
 }

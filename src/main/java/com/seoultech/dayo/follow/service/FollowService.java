@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +65,7 @@ public class FollowService {
     List<Follow> myFollowings = followRepository.findFollowsByMember(me);
     Set<String> myCollect = myFollowings.stream()
         .map(follow -> follow.getFollower().getId())
-        .collect(Collectors.toSet());
+        .collect(toSet());
 
     List<FollowerDto> collect = new ArrayList<>();
 
@@ -86,7 +87,7 @@ public class FollowService {
     List<Follow> myFollowings = followRepository.findFollowsByMember(me);
     Set<String> myCollect = myFollowings.stream()
         .map(follow -> follow.getFollower().getId())
-        .collect(Collectors.toSet());
+        .collect(toSet());
 
     List<FollowingDto> collect = new ArrayList<>();
 

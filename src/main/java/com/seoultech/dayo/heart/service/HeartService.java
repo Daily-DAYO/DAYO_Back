@@ -30,58 +30,62 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class HeartService {
 
-    private final HeartRepository heartRepository;
-    private final MemberService memberService;
-    private final PostRepository postRepository;
+  private final HeartRepository heartRepository;
+  private final MemberService memberService;
+  private final PostRepository postRepository;
 
-    public CreateHeartResponse createHeart(String memberId, CreateHeartRequest request) {
+  public CreateHeartResponse createHeart(String memberId, CreateHeartRequest request) {
 
-        Member member = memberService.findMemberById(memberId);
-        Post post = findPostById(request.getPostId());
+    Member member = memberService.findMemberById(memberId);
+    Post post = findPostById(request.getPostId());
 
-        Heart heart = request.toEntity(member, post);
-        Heart savedHeart = heartRepository.save(heart);
+    Heart heart = request.toEntity(member, post);
+    Heart savedHeart = heartRepository.save(heart);
 
-        return CreateHeartResponse.from(savedHeart);
-    }
+    return CreateHeartResponse.from(savedHeart);
+  }
 
-    public void deleteHeart(String memberId, Long postId) {
-        heartRepository.deleteById(new Heart.Key(memberId, postId));
-    }
+  public void deleteHeart(String memberId, Long postId) {
+    heartRepository.deleteById(new Heart.Key(memberId, postId));
+  }
 
-    @Transactional(readOnly = true)
-    public ListAllHeartPostResponse listAllHeartPost(String memberId) {
+  @Transactional(readOnly = true)
+  public ListAllHeartPostResponse listAllHeartPost(String memberId) {
 
-        Member member = memberService.findMemberById(memberId);
+    Member member = memberService.findMemberById(memberId);
 
-        List<Heart> hearts = heartRepository.findAllByMember(member);
-        List<HeartPostDto> collect = hearts.stream()
-                .map(HeartPostDto::from)
-                .collect(toList());
+    List<Heart> hearts = heartRepository.findAllByMember(member);
+    List<HeartPostDto> collect = hearts.stream()
+        .map(HeartPostDto::from)
+        .collect(toList());
 
-        return ListAllHeartPostResponse.from(collect);
-    }
+    return ListAllHeartPostResponse.from(collect);
+  }
 
-    @Transactional(readOnly = true)
-    public ListAllMyHeartPostResponse listAllMyHeartPost(String memberId) {
+  @Transactional(readOnly = true)
+  public ListAllMyHeartPostResponse listAllMyHeartPost(String memberId) {
 
-        Member member = memberService.findMemberById(memberId);
+    Member member = memberService.findMemberById(memberId);
 
-        List<Heart> hearts = heartRepository.findAllByMember(member);
-        List<MyHeartPostDto> collect = hearts.stream()
-                .map(MyHeartPostDto::from)
-                .collect(toList());
+    List<Heart> hearts = heartRepository.findAllByMember(member);
+    List<MyHeartPostDto> collect = hearts.stream()
+        .map(MyHeartPostDto::from)
+        .collect(toList());
 
-        return ListAllMyHeartPostResponse.from(collect);
-    }
+    return ListAllMyHeartPostResponse.from(collect);
+  }
 
-    public boolean isHeart(String memberId, Long postId) {
-        return heartRepository.existsHeartByKey(new Heart.Key(memberId, postId));
-    }
+  public List<Heart> listHeartsByMember(Member member) {
+    return heartRepository.findAllByMember(member);
+  }
 
-    private Post findPostById(Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(NotExistPostException::new);
-    }
+  public boolean isHeart(String memberId, Long postId) {
+    return heartRepository.existsHeartByKey(new Heart.Key(memberId, postId));
+  }
+
+  private Post findPostById(Long postId) {
+    return postRepository.findById(postId)
+        .orElseThrow(NotExistPostException::new);
+  }
 
 }

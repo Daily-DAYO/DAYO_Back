@@ -2,6 +2,10 @@ package com.seoultech.dayo.post.controller;
 
 
 import com.seoultech.dayo.config.jwt.TokenProvider;
+import com.seoultech.dayo.folder.Folder;
+import com.seoultech.dayo.folder.service.FolderService;
+import com.seoultech.dayo.member.Member;
+import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
 import com.seoultech.dayo.post.controller.dto.response.*;
 import com.seoultech.dayo.post.service.PostService;
@@ -19,48 +23,72 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostService postService;
-    private final TokenProvider tokenProvider;
+  private final PostService postService;
+  private final MemberService memberService;
+  private final FolderService folderService;
+  private final TokenProvider tokenProvider;
 
-    @GetMapping
-    public ResponseEntity<ListAllPostResponse> listAllPost() {
-        return ResponseEntity.ok()
-                .body(postService.listPostAll());
-    }
+  @GetMapping
+  public ResponseEntity<ListAllPostResponse> listAllPost(HttpServletRequest servletRequest) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
 
-    @GetMapping("/category/{category}")
-    public ResponseEntity<ListCategoryPostResponse> listPostByCategory(@PathVariable @Valid String category) {
-        return ResponseEntity.ok()
-                .body(postService.listPostByCategory(category));
-    }
+    Member member = memberService.findMemberById(memberId);
 
-    @PostMapping
-    public ResponseEntity<CreatePostResponse> createPost(HttpServletRequest servletRequest, @ModelAttribute @Valid CreatePostRequest request) throws IOException {
-        String token = tokenProvider.getTokenInHeader(servletRequest);
-        String memberId = tokenProvider.getDataFromToken(token);
-        return ResponseEntity.ok()
-                .body(postService.createPost(memberId, request));
-    }
+    return ResponseEntity.ok()
+        .body(postService.listPostAll(member));
+  }
 
-    @PostMapping("/delete/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+  @GetMapping("/category/{category}")
+  public ResponseEntity<ListCategoryPostResponse> listPostByCategory(
+      HttpServletRequest servletRequest,
+      @PathVariable @Valid String category) {
 
-    @GetMapping("/{postId}")
-    public ResponseEntity<DetailPostResponse> detailPost(HttpServletRequest servletRequest, @PathVariable @Valid Long postId) {
-        String token = tokenProvider.getTokenInHeader(servletRequest);
-        String memberId = tokenProvider.getDataFromToken(token);
-        return ResponseEntity.ok()
-                .body(postService.detailPost(memberId, postId));
-    }
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
 
-    public ResponseEntity<ListFeedResponse> listFeed(HttpServletRequest servletRequest) {
-        String token = tokenProvider.getTokenInHeader(servletRequest);
-        String memberId = tokenProvider.getDataFromToken(token);
-        return ResponseEntity.ok()
-                .body(postService.listFeed(memberId));
-    }
+    Member member = memberService.findMemberById(memberId);
+
+    return ResponseEntity.ok()
+        .body(postService.listPostByCategory(member, category));
+  }
+
+  @PostMapping
+  public ResponseEntity<CreatePostResponse> createPost(HttpServletRequest servletRequest,
+      @ModelAttribute @Valid CreatePostRequest request) throws IOException {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
+
+    Member member = memberService.findMemberById(memberId);
+    Folder folder = folderService.findFolderById(request.getFolderId());
+
+    return ResponseEntity.ok()
+        .body(postService.createPost(member, folder, request));
+  }
+
+  @PostMapping("/delete/{postId}")
+  public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
+    postService.deletePost(postId);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  @GetMapping("/{postId}")
+  public ResponseEntity<DetailPostResponse> detailPost(HttpServletRequest servletRequest,
+      @PathVariable @Valid Long postId) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
+    return ResponseEntity.ok()
+        .body(postService.detailPost(memberId, postId));
+  }
+
+  public ResponseEntity<ListFeedResponse> listFeed(HttpServletRequest servletRequest) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
+
+    Member member = memberService.findMemberById(memberId);
+
+    return ResponseEntity.ok()
+        .body(postService.listFeed(member));
+  }
 
 }
