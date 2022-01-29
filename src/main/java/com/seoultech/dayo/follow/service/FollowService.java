@@ -92,7 +92,7 @@ public class FollowService {
     List<FollowingDto> collect = new ArrayList<>();
 
     for (Follow following : followings) {
-      if (myCollect.contains(following.getMember().getId())) {
+      if (myCollect.contains(following.getFollower().getId())) {
         collect.add(FollowingDto.from(following, true));
       } else {
         collect.add(FollowingDto.from(following, false));
