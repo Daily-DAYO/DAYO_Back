@@ -9,20 +9,20 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MyFollowingDto {
 
-    private String memberId;
+  private String memberId;
 
-    private String nickname;
+  private String nickname;
 
-    private String profileImg;
+  private String profileImg;
 
-    private Boolean isAccept;
+  private Boolean isFollow;
 
-    public static MyFollowingDto from(Follow follow) {
-        return new MyFollowingDto(
-                follow.getFollower().getId(),
-                follow.getFollower().getNickname(),
-                follow.getFollower().getProfileImg().getStoreFileName(),
-                follow.getIsAccept()
-        );
-    }
+  public static MyFollowingDto from(Follow follow) {
+    return new MyFollowingDto(
+        follow.getFollower().getId(),
+        follow.getFollower().getNickname(),
+        follow.getFollower().getProfileImg().getStoreFileName(),
+        true
+    );
+  }
 }
