@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface HashtagRepository extends JpaRepository<Hashtag, Long> {
 
+  //TODO 실행해보기 (set)
   @Query("select h from Hashtag h where h.tag in :tags")
   List<Hashtag> findByTags(@Param("tags") List<String> tags);
 

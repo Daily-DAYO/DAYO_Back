@@ -2,6 +2,7 @@ package com.seoultech.dayo.post.controller;
 
 
 import com.seoultech.dayo.config.jwt.TokenProvider;
+import com.seoultech.dayo.exception.InvalidFolderAccess;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.service.FolderService;
 import com.seoultech.dayo.member.Member;
@@ -62,8 +63,13 @@ public class PostController {
     Member member = memberService.findMemberById(memberId);
     Folder folder = folderService.findFolderById(request.getFolderId());
 
-    return ResponseEntity.ok()
-        .body(postService.createPost(member, folder, request));
+    if (folderService.checkMyFolder(member, folder)) {
+      return ResponseEntity.ok()
+          .body(postService.createPost(member, folder, request));
+    } else {
+      throw new InvalidFolderAccess();
+    }
+
   }
 
   @PostMapping("/delete/{postId}")

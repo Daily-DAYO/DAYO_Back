@@ -50,7 +50,7 @@ public class FolderService {
     }
 
     Folder savedFolder = folderRepository.save(request.toEntity(image));
-    List<Folder> folders = folderRepository.findAllByMember(member);
+    List<Folder> folders = folderRepository.findFoldersByMember(member);
 
     savedFolder.setOrderIndex(folders.size() + 1);
     member.addFolder(savedFolder);
@@ -66,7 +66,7 @@ public class FolderService {
     Folder folder = request.toEntity(image);
     Folder savedFolder = folderRepository.save(folder);
 
-    List<Folder> folders = folderRepository.findAllByMember(member);
+    List<Folder> folders = folderRepository.findFoldersByMember(member);
 
     savedFolder.setOrderIndex(folders.size() + 1);
     member.addFolder(savedFolder);
@@ -157,6 +157,13 @@ public class FolderService {
   public Folder findFolderById(Long folderId) {
     return folderRepository.findById(folderId)
         .orElseThrow(NotExistFolderException::new);
+  }
+
+  public boolean checkMyFolder(Member member, Folder folder) {
+
+    List<Folder> folders = folderRepository.findFoldersByMember(member);
+    return folders.contains(folder);
+    
   }
 
 }

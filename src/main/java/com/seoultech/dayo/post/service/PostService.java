@@ -77,6 +77,13 @@ public class PostService {
         .map(heart -> heart.getPost().getId())
         .collect(toSet());
 
+    /**
+     * 이득(혜택)
+     * 윗 스타일 : 초기화 코드가 없다, 불변형태(add, remove 등이 없다)
+     * 아랫 스타일 : 진입장벽이 낮다.(기본 문법만 알면 사용할 수 있다.), 가변형태
+     *
+     * 성능 얘기 : 문맥 파악을 하고 성능 얘기를 해야함.
+     */
     List<PostDto> collect = postList.stream()
         .map(post -> {
           if (likePost.contains(post.getId())) {
@@ -104,8 +111,9 @@ public class PostService {
     List<MultipartFile> files = request.getFiles();
     List<Image> images = imageService.storeFiles(files);
 
-    Post savedPost = postRepository.save(request.toEntity(folder, member, images));
-
+    Post savedPost = postRepository.save(request.toEntity(member, images));
+    savedPost.addFolder(folder);
+    
     if (request.getTags() != null) {
       List<Hashtag> hashtags = hashtagService.createHashtag(request.getTags());
       postHashtagService.createPostHashtag(savedPost, hashtags);

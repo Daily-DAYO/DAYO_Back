@@ -22,45 +22,47 @@ import java.io.IOException;
 @RequestMapping("/api/v1/members")
 public class MemberController {
 
-    private final MemberService memberService;
-    private final TokenProvider tokenProvider;
+  private final MemberService memberService;
+  private final TokenProvider tokenProvider;
 
-    @PostMapping("/kakaoOAuth")
-    public ResponseEntity<MemberOAuthResponse> kakaoOAuth(@RequestBody MemberOAuthRequest request) {
-        return ResponseEntity.ok()
-                .body(memberService.kakaoApi(request));
-    }
+  @PostMapping("/kakaoOAuth")
+  public ResponseEntity<MemberOAuthResponse> kakaoOAuth(@RequestBody MemberOAuthRequest request) {
+    return ResponseEntity.ok()
+        .body(memberService.kakaoApi(request));
+  }
 
-    @GetMapping("/myInfo")
-    public ResponseEntity<MemberInfoResponse> memberInfo(HttpServletRequest servletRequest) {
-        String token = tokenProvider.getTokenInHeader(servletRequest);
-        String memberId = tokenProvider.getDataFromToken(token);
-        return ResponseEntity.ok()
-                .body(memberService.memberInfo(memberId));
-    }
+  @GetMapping("/myInfo")
+  public ResponseEntity<MemberInfoResponse> memberInfo(HttpServletRequest servletRequest) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
+    return ResponseEntity.ok()
+        .body(memberService.memberInfo(memberId));
+  }
 
-    @GetMapping("/profile/other/{memberId}")
-    public ResponseEntity<MemberOtherProfileResponse> otherProfile(HttpServletRequest servletRequest, @PathVariable @Valid String memberId) {
-        String token = tokenProvider.getTokenInHeader(servletRequest);
-        String myMemberId = tokenProvider.getDataFromToken(token);
-        return ResponseEntity.ok()
-                .body(memberService.otherProfile(myMemberId, memberId));
-    }
+  @GetMapping("/profile/other/{memberId}")
+  public ResponseEntity<MemberOtherProfileResponse> otherProfile(HttpServletRequest servletRequest,
+      @PathVariable @Valid String memberId) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String myMemberId = tokenProvider.getDataFromToken(token);
+    return ResponseEntity.ok()
+        .body(memberService.otherProfile(myMemberId, memberId));
+  }
 
-    @GetMapping("/profile/my")
-    public ResponseEntity<MemberMyProfileResponse> myProfile(HttpServletRequest servletRequest) {
-        String token = tokenProvider.getTokenInHeader(servletRequest);
-        String memberId = tokenProvider.getDataFromToken(token);
-        return ResponseEntity.ok()
-                .body(memberService.myProfile(memberId));
-    }
+  @GetMapping("/profile/my")
+  public ResponseEntity<MemberMyProfileResponse> myProfile(HttpServletRequest servletRequest) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
+    return ResponseEntity.ok()
+        .body(memberService.myProfile(memberId));
+  }
 
-    @PostMapping("/update/profile")
-    public ResponseEntity<Void> profileUpdate(HttpServletRequest servletRequest, @ModelAttribute @Valid MemberProfileUpdateRequest request) throws IOException {
-        String token = tokenProvider.getTokenInHeader(servletRequest);
-        String memberId = tokenProvider.getDataFromToken(token);
-        memberService.profileUpdate(memberId, request);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
+  @PostMapping("/update/profile")
+  public ResponseEntity<Void> profileUpdate(HttpServletRequest servletRequest,
+      @ModelAttribute @Valid MemberProfileUpdateRequest request) throws IOException {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
+    memberService.profileUpdate(memberId, request);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+  
 }

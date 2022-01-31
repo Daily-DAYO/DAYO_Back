@@ -2,6 +2,7 @@ package com.seoultech.dayo.post;
 
 
 import com.seoultech.dayo.BaseTimeEntity;
+import com.seoultech.dayo.bookmark.BookMark;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.folder.Folder;
@@ -19,74 +20,83 @@ import java.util.List;
 @Getter
 public class Post extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Member member;
+  @ManyToOne(fetch = FetchType.EAGER)
+  private Member member;
 
-    private String contents;
+  private String contents;
 
-    private String thumbnailImage;
+  private String thumbnailImage;
 
-    @Enumerated(EnumType.STRING)
-    private Category category;
+  @Enumerated(EnumType.STRING)
+  private Category category;
 
-    @Enumerated(EnumType.STRING)
-    private Privacy privacy;
+  @Enumerated(EnumType.STRING)
+  private Privacy privacy;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Folder folder;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Folder folder;
 
-    @OneToMany
-    @JoinColumn(name = "post_id")
-    private List<Image> images;
+  @OneToMany
+  @JoinColumn(name = "post_id")
+  private List<Image> images;
 
-    @OneToMany(
-            mappedBy = "post",
-            orphanRemoval = true
-    )
-    private List<Comment> comments = new ArrayList<>();
+  @OneToMany(
+      mappedBy = "post",
+      orphanRemoval = true
+  )
+  private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(
-            mappedBy = "post",
-            orphanRemoval = true
-    )
-    private List<Heart> hearts = new ArrayList<>();
+  @OneToMany(
+      mappedBy = "post",
+      orphanRemoval = true
+  )
+  private List<Heart> hearts = new ArrayList<>();
 
-    @OneToMany(
-            mappedBy = "post",
-            orphanRemoval = true
-    )
-    private List<PostHashtag> postHashtags = new ArrayList<>();
+  @OneToMany(
+      mappedBy = "post",
+      orphanRemoval = true
+  )
+  private List<PostHashtag> postHashtags = new ArrayList<>();
 
-    public void addFolder(Folder folder) {
-        this.folder = folder;
-        folder.getPosts().add(this);
-    }
+  @OneToMany(
+      mappedBy = "post",
+      orphanRemoval = true
+  )
+  private List<BookMark> bookmarks = new ArrayList<>();
 
-    public Post(Member member, String contents, String thumbnailImage, Category category, Privacy privacy, List<Image> images) {
-        this.member = member;
-        member.getPosts().add(this);
-        this.contents = contents;
-        this.thumbnailImage = thumbnailImage;
-        this.category = category;
-        this.privacy = privacy;
-        this.images = images;
-    }
+  public void addFolder(Folder folder) {
+    this.folder = folder;
+    folder.getPosts().add(this);
+  }
 
-    @Builder
-    public Post(Long id, Member member, String contents, String thumbnailImage, Category category, Privacy privacy, List<Image> images) {
-        this.id = id;
-        this.member = member;
-        member.getPosts().add(this);
-        this.contents = contents;
-        this.thumbnailImage = thumbnailImage;
-        this.category = category;
-        this.privacy = privacy;
-        this.images = images;
-    }
+  public Post(Member member, String contents, String thumbnailImage, Category category,
+      Privacy privacy, List<Image> images) {
+    this.member = member;
+    member.getPosts().add(this);
+    this.contents = contents;
+    this.thumbnailImage = thumbnailImage;
+    this.category = category;
+    this.privacy = privacy;
+    this.images = images;
+  }
 
-    protected Post() { }
+  @Builder
+  public Post(Long id, Member member, String contents, String thumbnailImage, Category category,
+      Privacy privacy, List<Image> images) {
+    this.id = id;
+    this.member = member;
+    member.getPosts().add(this);
+    this.contents = contents;
+    this.thumbnailImage = thumbnailImage;
+    this.category = category;
+    this.privacy = privacy;
+    this.images = images;
+  }
+
+  protected Post() {
+  }
 }

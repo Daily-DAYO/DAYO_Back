@@ -17,42 +17,43 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(value = {
-            NotExistFolderException.class,
-            NotExistMemberException.class,
-            NotExistPostException.class,
-            NotExistFollowerException.class,
-            NotExistFollowException.class,
-    })
-    public ResponseEntity<BadRequestFailResponse> badRequest(Exception e) {
-        return ResponseEntity.badRequest()
-                .body(BadRequestFailResponse.builder()
-                    .status(HttpStatus.BAD_REQUEST.value())
-                    .message(e.getMessage())
-                    .build()
-                );
+  @ExceptionHandler(value = {
+      NotExistFolderException.class,
+      NotExistMemberException.class,
+      NotExistPostException.class,
+      NotExistFollowerException.class,
+      NotExistFollowException.class,
+      NotExistPostCategoryException.class,
+      InvalidFolderAccess.class,
+  })
+  public ResponseEntity<BadRequestFailResponse> badRequest(Exception e) {
+    return ResponseEntity.badRequest()
+        .body(BadRequestFailResponse.builder()
+            .status(HttpStatus.BAD_REQUEST.value())
+            .message(e.getMessage())
+            .build()
+        );
+  }
+
+  @ExceptionHandler(value = {
+      BindException.class,
+      MethodArgumentNotValidException.class
+  })
+  public ResponseEntity validationError(BindException e) {
+    BindingResult bindingResult = e.getBindingResult();
+
+    StringBuilder builder = new StringBuilder();
+    for (FieldError fieldError : bindingResult.getFieldErrors()) {
+      builder.append("[");
+      builder.append(fieldError.getField());
+      builder.append("](은)는 ");
+      builder.append(fieldError.getDefaultMessage());
+      builder.append(" 입력된 값: [");
+      builder.append(fieldError.getRejectedValue());
+      builder.append("]\n");
     }
-
-    @ExceptionHandler(value = {
-            BindException.class,
-            MethodArgumentNotValidException.class
-    })
-    public ResponseEntity validationError(BindException e) {
-        BindingResult bindingResult = e.getBindingResult();
-
-        StringBuilder builder = new StringBuilder();
-        for (FieldError fieldError : bindingResult.getFieldErrors()) {
-            builder.append("[");
-            builder.append(fieldError.getField());
-            builder.append("](은)는 ");
-            builder.append(fieldError.getDefaultMessage());
-            builder.append(" 입력된 값: [");
-            builder.append(fieldError.getRejectedValue());
-            builder.append("]\n");
-        }
-        return ResponseEntity.badRequest().body(builder.toString());
-    }
-
+    return ResponseEntity.badRequest().body(builder.toString());
+  }
 
 
 }
