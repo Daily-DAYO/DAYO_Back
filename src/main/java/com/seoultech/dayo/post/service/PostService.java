@@ -113,7 +113,7 @@ public class PostService {
 
     Post savedPost = postRepository.save(request.toEntity(member, images));
     savedPost.addFolder(folder);
-    
+
     if (request.getTags() != null) {
       List<Hashtag> hashtags = hashtagService.createHashtag(request.getTags());
       postHashtagService.createPostHashtag(savedPost, hashtags);
