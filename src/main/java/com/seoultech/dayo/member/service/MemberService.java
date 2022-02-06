@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.seoultech.dayo.config.jwt.TokenDto;
 import com.seoultech.dayo.config.jwt.TokenProvider;
+import com.seoultech.dayo.exception.ExistEmailException;
 import com.seoultech.dayo.exception.NotExistFollowerException;
 import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.folder.repository.FolderRepository;
@@ -16,14 +17,18 @@ import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
+import com.seoultech.dayo.member.controller.dto.request.MemberSignUpRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOAuthResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOtherProfileResponse;
+import com.seoultech.dayo.member.controller.dto.response.MemberSignUpResponse;
 import com.seoultech.dayo.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.monitor.os.OsStats.Mem;
 import org.springframework.http.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -45,6 +50,7 @@ public class MemberService {
   private final TokenProvider tokenProvider;
   private final RestTemplate restTemplate;
   private final FollowService followService;
+  private final PasswordEncoder passwordEncoder;
 
   public MemberOAuthResponse kakaoApi(MemberOAuthRequest request) {
 
@@ -99,14 +105,32 @@ public class MemberService {
 
     Member member = findMemberById(memberId);
 
-      if (StringUtils.hasText(request.getNickname())) {
-          member.setNickname(request.getNickname());
-      }
+    if (StringUtils.hasText(request.getNickname())) {
+      member.setNickname(request.getNickname());
+    }
     if (request.getProfileImg() != null) {
       Image image = imageService.storeFile(request.getProfileImg());
       member.setProfileImg(image);
     }
 
+  }
+
+  public MemberSignUpResponse signUp(MemberSignUpRequest request) throws IOException {
+
+    String password = passwordEncoder.encode(request.getPassword());
+
+    Image image;
+    if (request.getProfileImg() != null) {
+      image = imageService.storeFile(request.getProfileImg());
+    } else {
+      image = imageService.findDefaultProfileImage();
+    }
+
+    Member savedMember = memberRepository.save(
+        new Member(request.getNickname(), request.getEmail(), password,
+            image));
+
+    return MemberSignUpResponse.from(savedMember);
   }
 
   public Member findMemberById(String memberId) {
@@ -117,6 +141,13 @@ public class MemberService {
   public Member findFollowerById(String memberId) {
     return memberRepository.findById(memberId)
         .orElseThrow(NotExistFollowerException::new);
+  }
+
+  public void duplicateEmail(String email) {
+    memberRepository.findMemberByEmail(email)
+        .ifPresent(member -> {
+          throw new ExistEmailException();
+        });
   }
 
   private String get(String apiUrl, String accessToken) {

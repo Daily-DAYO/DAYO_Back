@@ -80,7 +80,7 @@ public class PostService {
     /**
      * 이득(혜택)
      * 윗 스타일 : 초기화 코드가 없다, 불변형태(add, remove 등이 없다)
-     * 아랫 스타일 : 진입장벽이 낮다.(기본 문법만 알면 사용할 수 있다.), 가변형태
+     * 아랫 스타일 : 진입장벽이 낮다.(기본 문법만 알면 사용할 수 있다.), 가변형태 s
      *
      * 성능 얘기 : 문맥 파악을 하고 성능 얘기를 해야함.
      */
@@ -138,9 +138,10 @@ public class PostService {
         .map(Follow::getMember)
         .collect(toList());
 
-    members.stream()
-        .map(Member::getPosts)
-        .collect(toList());
+    List<Post> posts = null;
+    for (Member m : members) {
+      posts.addAll(m.getPosts());
+    }
 
     return null;
   }

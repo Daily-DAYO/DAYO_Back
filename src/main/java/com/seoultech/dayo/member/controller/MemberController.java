@@ -1,13 +1,17 @@
 package com.seoultech.dayo.member.controller;
 
 import com.seoultech.dayo.config.jwt.TokenProvider;
+import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
+import com.seoultech.dayo.member.controller.dto.request.MemberSignUpRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOtherProfileResponse;
+import com.seoultech.dayo.member.controller.dto.response.MemberSignUpResponse;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberOAuthResponse;
+import javax.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,5 +68,18 @@ public class MemberController {
     memberService.profileUpdate(memberId, request);
     return new ResponseEntity<>(HttpStatus.OK);
   }
-  
+
+  @GetMapping("/duplicate/email/{email}")
+  public ResponseEntity<Void> duplicateEmail(@PathVariable @Email String email) {
+    memberService.duplicateEmail(email);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/signUp")
+  public ResponseEntity<MemberSignUpResponse> signUpMember(
+      @ModelAttribute MemberSignUpRequest request) throws IOException {
+    return ResponseEntity.ok()
+        .body(memberService.signUp(request));
+  }
+
 }

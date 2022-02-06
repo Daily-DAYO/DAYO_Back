@@ -22,40 +22,38 @@ import java.util.UUID;
 @Getter
 public class Member extends BaseTimeEntity {
 
-    @Id
-    private String id;
+  @Id
+  private String id;
 
-    @NotBlank
-    private String name;
+  private String name;
 
-    @Pattern(regexp = "\\S+$")
-    private String nickname;
+  @Pattern(regexp = "\\S+$")
+  private String nickname;
 
-    @Email
-    @Column(nullable = false, unique = true)
-    private String email;
+  @Email
+  @Column(nullable = false, unique = true)
+  private String email;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String password;
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+  private String password;
 
-    @OneToOne
-    private Image profileImg;
+  @OneToOne
+  private Image profileImg;
 
-    @OneToMany(mappedBy = "member")
-    private List<Folder> folders = new ArrayList<>();
+  @OneToMany(mappedBy = "member")
+  private List<Folder> folders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
-    private List<Post> posts = new ArrayList<>();
+  @OneToMany(mappedBy = "member")
+  private List<Post> posts = new ArrayList<>();
 
-    @Formula("(select count(1) from follow f where f.member_id = id)")
-    private int followingCount;
+  @Formula("(select count(1) from follow f where f.member_id = id)")
+  private int followingCount;
 
-    @Formula("(select count(1) from follow f where f.follower_id = id)")
-    private int followerCount;
+  @Formula("(select count(1) from follow f where f.follower_id = id)")
+  private int followerCount;
 
-    @Formula("(select count(1) from post p where p.member_id = id)")
-    private int postCount;
-
+  @Formula("(select count(1) from post p where p.member_id = id)")
+  private int postCount;
 
 //    @OneToMany(mappedBy = "member")
 //    private List<Follow> followings = new ArrayList<>();
@@ -63,25 +61,35 @@ public class Member extends BaseTimeEntity {
 //    @OneToMany(mappedBy = "follower")
 //    private List<Follow> followers = new ArrayList<>();
 
-    public void addFolder(Folder folder) {
-        folders.add(folder);
-        folder.setMember(this);
-    }
+  public void addFolder(Folder folder) {
+    folders.add(folder);
+    folder.setMember(this);
+  }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
+  public void setNickname(String nickname) {
+    this.nickname = nickname;
+  }
 
-    public void setProfileImg(Image profileImg) {
-        this.profileImg = profileImg;
-    }
+  public void setProfileImg(Image profileImg) {
+    this.profileImg = profileImg;
+  }
 
-    public Member(String name, String email, Image profileImg) {
-        this.id = UUID.randomUUID().toString();
-        this.name = name;
-        this.email = email;
-        this.profileImg = profileImg;
-    }
+  public Member(String name, String email, Image profileImg) {
+    this.id = UUID.randomUUID().toString();
+    this.name = name;
+    this.email = email;
+    this.profileImg = profileImg;
+  }
 
-    protected Member() {}
+  public Member(String nickname, String email, String password,
+      Image profileImg) {
+    this.id = UUID.randomUUID().toString();
+    this.nickname = nickname;
+    this.email = email;
+    this.password = password;
+    this.profileImg = profileImg;
+  }
+
+  protected Member() {
+  }
 }

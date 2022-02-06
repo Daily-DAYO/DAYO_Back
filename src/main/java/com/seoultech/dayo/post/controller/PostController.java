@@ -87,6 +87,7 @@ public class PostController {
         .body(postService.detailPost(memberId, postId));
   }
 
+  @GetMapping("/feed/list")
   public ResponseEntity<ListFeedResponse> listFeed(HttpServletRequest servletRequest) {
     String token = tokenProvider.getTokenInHeader(servletRequest);
     String memberId = tokenProvider.getDataFromToken(token);
