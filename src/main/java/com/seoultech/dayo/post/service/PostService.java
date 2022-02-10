@@ -14,6 +14,9 @@ import com.seoultech.dayo.hashtag.service.HashtagService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
+import com.seoultech.dayo.post.Privacy;
+import com.seoultech.dayo.post.controller.dto.FeedDto;
+import com.seoultech.dayo.post.controller.dto.FeedDto.CommentDto;
 import com.seoultech.dayo.post.controller.dto.PostDto;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
 import com.seoultech.dayo.post.controller.dto.response.*;
@@ -143,7 +146,23 @@ public class PostService {
       posts.addAll(m.getPosts());
     }
 
-    return null;
+    List<Post> postCollect = posts.stream()
+        .filter(post -> post.getPrivacy() != Privacy.ONLY_ME)
+        .collect(toList());
+
+    List<FeedDto> feedDtos = new ArrayList<>();
+    for (Post post : postCollect) {
+
+      List<CommentDto> temp = post.getComments().stream()
+          .map(CommentDto::from)
+          .collect(toList());
+
+      boolean isHeart = heartService.isHeart(member.getId(), post.getId());
+
+      feedDtos.add(FeedDto.from(post, isHeart, temp));
+    }
+
+    return ListFeedResponse.from(feedDtos);
   }
 
   public void deletePost(Long postId) {

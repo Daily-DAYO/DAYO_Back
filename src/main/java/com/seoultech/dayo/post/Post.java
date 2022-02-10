@@ -15,6 +15,7 @@ import lombok.Getter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.Formula;
 
 @Entity
 @Getter
@@ -67,6 +68,12 @@ public class Post extends BaseTimeEntity {
       orphanRemoval = true
   )
   private List<BookMark> bookmarks = new ArrayList<>();
+
+  @Formula("(select count(1) from heart h where h.post_id = id)")
+  private int heartCount;
+
+  @Formula("(select count(1) from comment c where c.post_id = id)")
+  private int commentCount;
 
   public void addFolder(Folder folder) {
     this.folder = folder;

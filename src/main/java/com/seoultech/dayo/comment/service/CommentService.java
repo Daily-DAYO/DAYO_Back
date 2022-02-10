@@ -51,7 +51,7 @@ public class CommentService {
 
     Post post = postService.findPostById(postId);
     List<ListAllCommentResponse.CommentDto> collect = post.getComments().stream()
-        .map(comment -> ListAllCommentResponse.CommentDto.from(comment, comment.getMember()))
+        .map(ListAllCommentResponse.CommentDto::from)
         .collect(toList());
 
     return ListAllCommentResponse.from(collect);
