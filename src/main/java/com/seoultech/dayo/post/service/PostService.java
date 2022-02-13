@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +37,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -141,7 +143,7 @@ public class PostService {
         .map(Follow::getMember)
         .collect(toList());
 
-    List<Post> posts = null;
+    List<Post> posts = new ArrayList<>();
     for (Member m : members) {
       posts.addAll(m.getPosts());
     }

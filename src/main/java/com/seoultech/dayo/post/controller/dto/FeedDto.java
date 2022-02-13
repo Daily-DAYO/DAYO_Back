@@ -1,10 +1,13 @@
 package com.seoultech.dayo.post.controller.dto;
 
 import com.seoultech.dayo.comment.Comment;
+import com.seoultech.dayo.hashtag.Hashtag;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
+import com.seoultech.dayo.postHashtag.PostHashtag;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -30,14 +33,31 @@ public class FeedDto {
 
   private List<CommentDto> comments;
 
+  private String category;
+
+  private LocalDateTime localDateTime;
+
+  private List<String> hashtags;
+
   public static FeedDto from(Post post, boolean isHeart, List<CommentDto> comments) {
+    List<Hashtag> collect = post.getPostHashtags().stream()
+        .map(PostHashtag::getHashtag)
+        .collect(Collectors.toList());
+    List<String> hashtags = collect.stream()
+        .map(Hashtag::getTag)
+        .collect(Collectors.toList());
+    
     return new FeedDto(post.getId(), post.getImages().get(0).getStoreFileName(),
         post.getMember().getId(), post.getMember().getNickname(),
         post.getMember().getProfileImg().getStoreFileName(),
         post.getHeartCount(),
         post.getCommentCount(),
         isHeart,
-        comments);
+        comments,
+        post.getCategory().toString(),
+        post.getCreatedDate(),
+        hashtags
+    );
   }
 
   @Getter

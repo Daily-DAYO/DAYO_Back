@@ -14,25 +14,20 @@ import java.util.List;
 @Document(indexName = "hashtags")
 public class Hashtag {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(unique = true)
-    private String tag;
+  @Column(unique = true)
+  private String tag;
 
-    @OneToMany(mappedBy = "hashtag")
-    private List<PostHashtag> postHashtags = new ArrayList<>();
+  @OneToMany(mappedBy = "hashtag")
+  private List<PostHashtag> postHashtags = new ArrayList<>();
 
-    public Hashtag(String tag) {
-        this.tag = tag;
-    }
+  public Hashtag(String tag) {
+    this.tag = tag;
+  }
 
-    public Hashtag(Long id, String tag) {
-        this.id = id;
-        this.tag = tag;
-    }
-
-    protected Hashtag() {
-    }
+  protected Hashtag() {
+  }
 }
