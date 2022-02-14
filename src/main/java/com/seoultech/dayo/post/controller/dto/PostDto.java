@@ -26,7 +26,9 @@ public class PostDto {
 
   private boolean isHeart;
 
-  public static PostDto from(Post post, boolean isHeart) {
+  private boolean isBookmark;
+
+  public static PostDto from(Post post, boolean isHeart, boolean isBookmark) {
     return new PostDto(post.getId(),
         post.getThumbnailImage(),
         post.getMember().getId(),
@@ -34,7 +36,8 @@ public class PostDto {
         post.getMember().getProfileImg().getStoreFileName(),
         post.getHearts().size(),
         post.getComments().size(),
-        isHeart
+        isHeart,
+        isBookmark
     );
   }
 

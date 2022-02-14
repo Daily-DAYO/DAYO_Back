@@ -2,7 +2,7 @@ package com.seoultech.dayo.post;
 
 
 import com.seoultech.dayo.BaseTimeEntity;
-import com.seoultech.dayo.bookmark.BookMark;
+import com.seoultech.dayo.bookmark.Bookmark;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.folder.Folder;
@@ -67,7 +67,7 @@ public class Post extends BaseTimeEntity {
       mappedBy = "post",
       orphanRemoval = true
   )
-  private List<BookMark> bookmarks = new ArrayList<>();
+  private List<Bookmark> bookmarks = new ArrayList<>();
 
   @Formula("(select count(1) from heart h where h.post_id = id)")
   private int heartCount;

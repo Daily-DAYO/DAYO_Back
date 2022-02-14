@@ -22,42 +22,46 @@ import static java.util.stream.Collectors.toList;
 @AllArgsConstructor
 public class DetailPostResponse {
 
-    private String nickname;
+  private String nickname;
 
-    private String profileImg;
+  private String profileImg;
 
-    private LocalDateTime createDateTime;
+  private LocalDateTime createDateTime;
 
-    private Category category;
+  private Category category;
 
-    private List<String> images;
+  private List<String> images;
 
-    private String contents;
+  private String contents;
 
-    private List<String> hashtags;
+  private List<String> hashtags;
 
-    private boolean isHeart;
+  private boolean isHeart;
 
-    private int heartCount;
+  private int heartCount;
 
-    public static DetailPostResponse from(Post post, boolean isHeart) {
-        List<String> collectImages = post.getImages().stream()
-                .map(Image::getStoreFileName)
-                .collect(toList());
+  private boolean isBookmark;
 
-        List<String> collectHashtags = post.getPostHashtags().stream()
-                .map(postHashtag -> postHashtag.getHashtag().getTag())
-                .collect(toList());
+  public static DetailPostResponse from(Post post, boolean isHeart, boolean isBookmark) {
+    List<String> collectImages = post.getImages().stream()
+        .map(Image::getStoreFileName)
+        .collect(toList());
 
-        return new DetailPostResponse(post.getMember().getNickname(),
-                post.getMember().getProfileImg().getStoreFileName(),
-                post.getCreatedDate(),
-                post.getCategory(),
-                collectImages,
-                post.getContents(),
-                collectHashtags,
-                isHeart,
-                post.getHearts().size());
-    }
+    List<String> collectHashtags = post.getPostHashtags().stream()
+        .map(postHashtag -> postHashtag.getHashtag().getTag())
+        .collect(toList());
+
+    return new DetailPostResponse(post.getMember().getNickname(),
+        post.getMember().getProfileImg().getStoreFileName(),
+        post.getCreatedDate(),
+        post.getCategory(),
+        collectImages,
+        post.getContents(),
+        collectHashtags,
+        isHeart,
+        post.getHearts().size(),
+        isBookmark
+    );
+  }
 
 }

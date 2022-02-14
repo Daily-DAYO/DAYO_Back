@@ -30,6 +30,8 @@ public class FeedDto {
 
   private boolean isHeart;
 
+  private boolean isBookmark;
+
   private String contents;
 
   private List<CommentDto> comments;
@@ -40,7 +42,8 @@ public class FeedDto {
 
   private List<String> hashtags;
 
-  public static FeedDto from(Post post, boolean isHeart, List<CommentDto> comments) {
+  public static FeedDto from(Post post, boolean isHeart, boolean isBookmark,
+      List<CommentDto> comments) {
     List<Hashtag> collect = post.getPostHashtags().stream()
         .map(PostHashtag::getHashtag)
         .collect(Collectors.toList());
@@ -54,6 +57,7 @@ public class FeedDto {
         post.getHeartCount(),
         post.getCommentCount(),
         isHeart,
+        isBookmark,
         post.getContents(),
         comments,
         post.getCategory().toString(),

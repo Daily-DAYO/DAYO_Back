@@ -1,6 +1,8 @@
 package com.seoultech.dayo.post.service;
 
 
+import com.seoultech.dayo.bookmark.Bookmark;
+import com.seoultech.dayo.bookmark.service.BookmarkService;
 import com.seoultech.dayo.exception.NotExistPostException;
 import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.follow.service.FollowService;
@@ -47,6 +49,7 @@ public class PostService {
   private final PostHashtagService postHashtagService;
   private final HashtagService hashtagService;
   private final HeartService heartService;
+  private final BookmarkService bookmarkService;
   private final FollowService followService;
   private final ImageService imageService;
 
@@ -60,14 +63,28 @@ public class PostService {
         .map(heart -> heart.getPost().getId())
         .collect(toSet());
 
+    List<Bookmark> bookmarks = bookmarkService.listBookmarksByMember(member);
+    Set<Long> bookmarkPost = bookmarks.stream()
+        .map(bookmark -> bookmark.getPost().getId())
+        .collect(toSet());
+
     List<PostDto> collect = new ArrayList<>();
 
     for (Post post : postList) {
-      if (likePost.contains(post.getId())) {
-        collect.add(PostDto.from(post, true));
+
+      boolean like = likePost.contains(post.getId());
+      boolean bookmark = bookmarkPost.contains(post.getId());
+
+      if (like && bookmark) {
+        collect.add(PostDto.from(post, true, true));
+      } else if (like) {
+        collect.add(PostDto.from(post, true, false));
+      } else if (bookmark) {
+        collect.add(PostDto.from(post, false, true));
       } else {
-        collect.add(PostDto.from(post, false));
+        collect.add(PostDto.from(post, false, false));
       }
+
     }
 
     return new ListAllPostResponse(postList.size(), collect);
@@ -82,30 +99,29 @@ public class PostService {
         .map(heart -> heart.getPost().getId())
         .collect(toSet());
 
-    /**
-     * 이득(혜택)
-     * 윗 스타일 : 초기화 코드가 없다, 불변형태(add, remove 등이 없다)
-     * 아랫 스타일 : 진입장벽이 낮다.(기본 문법만 알면 사용할 수 있다.), 가변형태 s
-     *
-     * 성능 얘기 : 문맥 파악을 하고 성능 얘기를 해야함.
-     */
-    List<PostDto> collect = postList.stream()
-        .map(post -> {
-          if (likePost.contains(post.getId())) {
-            return PostDto.from(post, true);
-          } else {
-            return PostDto.from(post, false);
-          }
-        })
-        .collect(toList());
+    List<Bookmark> bookmarks = bookmarkService.listBookmarksByMember(member);
+    Set<Long> bookmarkPost = bookmarks.stream()
+        .map(bookmark -> bookmark.getPost().getId())
+        .collect(toSet());
 
-//    for (Post post : postList) {
-//      if (likePost.contains(post.getId())) {
-//        collect.add(PostDto.from(post, true));
-//      } else {
-//        collect.add(PostDto.from(post, false));
-//      }
-//    }
+    List<PostDto> collect = new ArrayList<>();
+
+    for (Post post : postList) {
+
+      boolean like = likePost.contains(post.getId());
+      boolean bookmark = bookmarkPost.contains(post.getId());
+
+      if (like && bookmark) {
+        collect.add(PostDto.from(post, true, true));
+      } else if (like) {
+        collect.add(PostDto.from(post, true, false));
+      } else if (bookmark) {
+        collect.add(PostDto.from(post, false, true));
+      } else {
+        collect.add(PostDto.from(post, false, false));
+      }
+
+    }
 
     return new ListCategoryPostResponse(postList.size(), collect);
   }
@@ -131,8 +147,9 @@ public class PostService {
   public DetailPostResponse detailPost(String memberId, Long postId) {
     Post post = findPostById(postId);
     boolean isHeart = heartService.isHeart(memberId, postId);
+    boolean isBookmark = bookmarkService.isBookmark(memberId, postId);
 
-    return DetailPostResponse.from(post, isHeart);
+    return DetailPostResponse.from(post, isHeart, isBookmark);
   }
 
   @Transactional(readOnly = true)
@@ -160,8 +177,9 @@ public class PostService {
           .collect(toList());
 
       boolean isHeart = heartService.isHeart(member.getId(), post.getId());
+      boolean isBookmark = bookmarkService.isBookmark(member.getId(), post.getId());
 
-      feedDtos.add(FeedDto.from(post, isHeart, temp));
+      feedDtos.add(FeedDto.from(post, isHeart, isBookmark, temp));
     }
 
     return ListFeedResponse.from(feedDtos);
