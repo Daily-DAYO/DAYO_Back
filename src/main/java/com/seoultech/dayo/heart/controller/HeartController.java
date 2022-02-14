@@ -6,6 +6,10 @@ import com.seoultech.dayo.heart.controller.dto.response.CreateHeartResponse;
 import com.seoultech.dayo.heart.controller.dto.response.ListAllHeartPostResponse;
 import com.seoultech.dayo.heart.controller.dto.response.ListAllMyHeartPostResponse;
 import com.seoultech.dayo.heart.service.HeartService;
+import com.seoultech.dayo.member.Member;
+import com.seoultech.dayo.member.service.MemberService;
+import com.seoultech.dayo.post.Post;
+import com.seoultech.dayo.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,37 +23,53 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/heart")
 public class HeartController {
 
-    private final HeartService heartService;
-    private final TokenProvider tokenProvider;
+  private final HeartService heartService;
+  private final MemberService memberService;
+  private final PostService postService;
+  private final TokenProvider tokenProvider;
 
-    @PostMapping
-    public ResponseEntity<CreateHeartResponse> createHeart(HttpServletRequest servletRequest, @RequestBody @Valid CreateHeartRequest request) {
-        String token = tokenProvider.getTokenInHeader(servletRequest);
-        String memberId = tokenProvider.getDataFromToken(token);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(heartService.createHeart(memberId, request));
-    }
+  @PostMapping
+  public ResponseEntity<CreateHeartResponse> createHeart(HttpServletRequest servletRequest,
+      @RequestBody @Valid CreateHeartRequest request) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
 
-    @PostMapping("/delete/{postId}")
-    public ResponseEntity<Void> deleteHeart(HttpServletRequest servletRequest, @PathVariable Long postId) {
-        String token = tokenProvider.getTokenInHeader(servletRequest);
-        String memberId = tokenProvider.getDataFromToken(token);
-        heartService.deleteHeart(memberId, postId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+    Member member = memberService.findMemberById(memberId);
+    Post post = postService.findPostById(request.getPostId());
 
-    @GetMapping("/list/{memberId}")
-    public ResponseEntity<ListAllHeartPostResponse> listAllHeartPost(@PathVariable @Valid String memberId) {
-        return ResponseEntity.ok()
-                .body(heartService.listAllHeartPost(memberId));
-    }
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(heartService.createHeart(member, post, request));
+  }
 
-    @GetMapping("/list")
-    public ResponseEntity<ListAllMyHeartPostResponse> listAllMyHeartPost(HttpServletRequest servletRequest) {
-        String token = tokenProvider.getTokenInHeader(servletRequest);
-        String memberId = tokenProvider.getDataFromToken(token);
-        return ResponseEntity.ok()
-                .body(heartService.listAllMyHeartPost(memberId));
-    }
+  @PostMapping("/delete/{postId}")
+  public ResponseEntity<Void> deleteHeart(HttpServletRequest servletRequest,
+      @PathVariable Long postId) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
+    heartService.deleteHeart(memberId, postId);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  @GetMapping("/list/{memberId}")
+  public ResponseEntity<ListAllHeartPostResponse> listAllHeartPost(
+      @PathVariable @Valid String memberId) {
+
+    Member member = memberService.findMemberById(memberId);
+
+    return ResponseEntity.ok()
+        .body(heartService.listAllHeartPost(member));
+  }
+
+  @GetMapping("/list")
+  public ResponseEntity<ListAllMyHeartPostResponse> listAllMyHeartPost(
+      HttpServletRequest servletRequest) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
+
+    Member member = memberService.findMemberById(memberId);
+
+    return ResponseEntity.ok()
+        .body(heartService.listAllMyHeartPost(member));
+  }
 
 }

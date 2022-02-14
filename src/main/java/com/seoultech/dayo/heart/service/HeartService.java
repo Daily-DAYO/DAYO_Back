@@ -31,14 +31,8 @@ import static java.util.stream.Collectors.toList;
 public class HeartService {
 
   private final HeartRepository heartRepository;
-  private final MemberService memberService;
-  private final PostRepository postRepository;
 
-  public CreateHeartResponse createHeart(String memberId, CreateHeartRequest request) {
-
-    Member member = memberService.findMemberById(memberId);
-    Post post = findPostById(request.getPostId());
-
+  public CreateHeartResponse createHeart(Member member, Post post, CreateHeartRequest request) {
     Heart heart = request.toEntity(member, post);
     Heart savedHeart = heartRepository.save(heart);
 
@@ -50,10 +44,7 @@ public class HeartService {
   }
 
   @Transactional(readOnly = true)
-  public ListAllHeartPostResponse listAllHeartPost(String memberId) {
-
-    Member member = memberService.findMemberById(memberId);
-
+  public ListAllHeartPostResponse listAllHeartPost(Member member) {
     List<Heart> hearts = heartRepository.findAllByMember(member);
     List<HeartPostDto> collect = hearts.stream()
         .map(HeartPostDto::from)
@@ -63,10 +54,7 @@ public class HeartService {
   }
 
   @Transactional(readOnly = true)
-  public ListAllMyHeartPostResponse listAllMyHeartPost(String memberId) {
-
-    Member member = memberService.findMemberById(memberId);
-
+  public ListAllMyHeartPostResponse listAllMyHeartPost(Member member) {
     List<Heart> hearts = heartRepository.findAllByMember(member);
     List<MyHeartPostDto> collect = hearts.stream()
         .map(MyHeartPostDto::from)
@@ -81,11 +69,6 @@ public class HeartService {
 
   public boolean isHeart(String memberId, Long postId) {
     return heartRepository.existsHeartByKey(new Heart.Key(memberId, postId));
-  }
-
-  private Post findPostById(Long postId) {
-    return postRepository.findById(postId)
-        .orElseThrow(NotExistPostException::new);
   }
 
 }
