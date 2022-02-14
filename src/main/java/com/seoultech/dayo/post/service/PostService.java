@@ -140,7 +140,7 @@ public class PostService {
 
     List<Follow> follows = followService.findFollowings(member);
     List<Member> members = follows.stream()
-        .map(Follow::getMember)
+        .map(Follow::getFollower)
         .collect(toList());
 
     List<Post> posts = new ArrayList<>();
