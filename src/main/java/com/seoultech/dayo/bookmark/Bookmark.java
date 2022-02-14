@@ -14,7 +14,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class BookMark {
+public class Bookmark {
 
   @EmbeddedId
   private Key key;
@@ -27,10 +27,10 @@ public class BookMark {
   @MapsId("postId")
   private Post post;
 
-  public BookMark(Member member, Post post) {
+  public Bookmark(Member member, Post post) {
     this.member = member;
     this.post = post;
-    key = new BookMark.Key(member.getId(), post.getId());
+    key = new Bookmark.Key(member.getId(), post.getId());
   }
 
   @Embeddable
@@ -45,7 +45,7 @@ public class BookMark {
     }
   }
 
-  protected BookMark() {
+  protected Bookmark() {
   }
 
 }
