@@ -2,7 +2,6 @@ package com.seoultech.dayo.post.controller.dto;
 
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.hashtag.Hashtag;
-import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.postHashtag.PostHashtag;
 import java.time.LocalDateTime;
@@ -31,6 +30,8 @@ public class FeedDto {
 
   private boolean isHeart;
 
+  private String contents;
+
   private List<CommentDto> comments;
 
   private String category;
@@ -46,13 +47,14 @@ public class FeedDto {
     List<String> hashtags = collect.stream()
         .map(Hashtag::getTag)
         .collect(Collectors.toList());
-    
+
     return new FeedDto(post.getId(), post.getImages().get(0).getStoreFileName(),
         post.getMember().getId(), post.getMember().getNickname(),
         post.getMember().getProfileImg().getStoreFileName(),
         post.getHeartCount(),
         post.getCommentCount(),
         isHeart,
+        post.getContents(),
         comments,
         post.getCategory().toString(),
         post.getCreatedDate(),
