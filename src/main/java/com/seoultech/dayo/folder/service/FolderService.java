@@ -109,7 +109,14 @@ public class FolderService {
     if (StringUtils.hasText(request.getPrivacy())) {
       folder.setPrivacy(Privacy.valueOf(request.getPrivacy()));
     }
-    if (request.getThumbnailImage() != null) {
+
+    // 기본이미지
+    if (request.getThumbnailImage() == null && request.getIsFileChange()) {
+      folder.setThumbnailImage(imageService.findDefaultFolderImage());
+    }
+
+    // 변경이미지
+    if (request.getThumbnailImage() != null && request.getIsFileChange()) {
       Image image = imageService.storeFile(request.getThumbnailImage());
       folder.setThumbnailImage(image);
     }
@@ -163,7 +170,7 @@ public class FolderService {
 
     List<Folder> folders = folderRepository.findFoldersByMember(member);
     return folders.contains(folder);
-    
+
   }
 
 }

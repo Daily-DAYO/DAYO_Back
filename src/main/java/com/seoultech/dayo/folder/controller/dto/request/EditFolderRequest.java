@@ -24,4 +24,6 @@ public class EditFolderRequest {
 
   private MultipartFile thumbnailImage;
 
+  private Boolean isFileChange;
+
 }
