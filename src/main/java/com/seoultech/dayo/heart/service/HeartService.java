@@ -45,7 +45,7 @@ public class HeartService {
 
   @Transactional(readOnly = true)
   public ListAllHeartPostResponse listAllHeartPost(Member member) {
-    List<Heart> hearts = heartRepository.findAllByMember(member);
+    List<Heart> hearts = listHeartsByMember(member);
     List<HeartPostDto> collect = hearts.stream()
         .map(HeartPostDto::from)
         .collect(toList());
@@ -55,7 +55,7 @@ public class HeartService {
 
   @Transactional(readOnly = true)
   public ListAllMyHeartPostResponse listAllMyHeartPost(Member member) {
-    List<Heart> hearts = heartRepository.findAllByMember(member);
+    List<Heart> hearts = listHeartsByMember(member);
     List<MyHeartPostDto> collect = hearts.stream()
         .map(MyHeartPostDto::from)
         .collect(toList());
