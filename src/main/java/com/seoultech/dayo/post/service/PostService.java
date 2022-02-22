@@ -1,12 +1,10 @@
 package com.seoultech.dayo.post.service;
 
 
-import com.seoultech.dayo.bookmark.Bookmark;
 import com.seoultech.dayo.bookmark.service.BookmarkService;
 import com.seoultech.dayo.exception.NotExistPostException;
 import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.follow.service.FollowService;
-import com.seoultech.dayo.heart.Heart;
 import com.seoultech.dayo.heart.service.HeartService;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
@@ -17,6 +15,7 @@ import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.Privacy;
+import com.seoultech.dayo.post.controller.dto.DayoPick;
 import com.seoultech.dayo.post.controller.dto.FeedDto;
 import com.seoultech.dayo.post.controller.dto.FeedDto.CommentDto;
 import com.seoultech.dayo.post.controller.dto.PostDto;
@@ -25,8 +24,8 @@ import com.seoultech.dayo.post.controller.dto.response.*;
 import com.seoultech.dayo.post.repository.PostRepository;
 import com.seoultech.dayo.postHashtag.service.PostHashtagService;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -53,20 +52,39 @@ public class PostService {
   private final FollowService followService;
   private final ImageService imageService;
 
+  @Transactional(readOnly = true)
+  public DayoPickPostListResponse dayoPickListWithCategory(Member member, String category) {
+
+    List<Post> postList = postRepository.findAllByCategoryUsingJoinMember(
+        Category.valueOf(category));
+
+    postList.sort(Comparator.comparingInt(Post::getHeartCount));
+
+    Set<Long> likePost = getLikePost(member);
+
+    List<DayoPick> collect = new ArrayList<>();
+
+    for (Post post : postList) {
+      boolean like = likePost.contains(post.getId());
+      if (like) {
+        collect.add(DayoPick.from(post, true));
+      } else {
+        collect.add(DayoPick.from(post, false));
+      }
+    }
+
+    return DayoPickPostListResponse.from(collect);
+
+  }
+
   //    @Cacheable(value = "all")
   @Transactional(readOnly = true)
   public ListAllPostResponse listPostAll(Member member) {
 
     List<Post> postList = postRepository.findAllByUsingJoinMemberOrderByCreateDate();
-    List<Heart> hearts = heartService.listHeartsByMember(member);
-    Set<Long> likePost = hearts.stream()
-        .map(heart -> heart.getPost().getId())
-        .collect(toSet());
 
-    List<Bookmark> bookmarks = bookmarkService.listBookmarksByMember(member);
-    Set<Long> bookmarkPost = bookmarks.stream()
-        .map(bookmark -> bookmark.getPost().getId())
-        .collect(toSet());
+    Set<Long> likePost = getLikePost(member);
+    Set<Long> bookmarkPost = getBookmarkPost(member);
 
     List<PostDto> collect = new ArrayList<>();
 
@@ -95,14 +113,9 @@ public class PostService {
 
     List<Post> postList = postRepository.findAllByCategoryUsingJoinOrderByCreateDate(
         Category.valueOf(category));
-    Set<Long> likePost = heartService.listHeartsByMember(member).stream()
-        .map(heart -> heart.getPost().getId())
-        .collect(toSet());
+    Set<Long> likePost = getLikePost(member);
 
-    List<Bookmark> bookmarks = bookmarkService.listBookmarksByMember(member);
-    Set<Long> bookmarkPost = bookmarks.stream()
-        .map(bookmark -> bookmark.getPost().getId())
-        .collect(toSet());
+    Set<Long> bookmarkPost = getBookmarkPost(member);
 
     List<PostDto> collect = new ArrayList<>();
 
@@ -124,6 +137,12 @@ public class PostService {
     }
 
     return new ListCategoryPostResponse(postList.size(), collect);
+  }
+
+  private Set<Long> getBookmarkPost(Member member) {
+    return bookmarkService.listBookmarksByMember(member).stream()
+        .map(bookmark -> bookmark.getPost().getId())
+        .collect(toSet());
   }
 
   public CreatePostResponse createPost(Member member, Folder folder, CreatePostRequest request)
@@ -194,4 +213,32 @@ public class PostService {
         .orElseThrow(NotExistPostException::new);
   }
 
+  @Transactional(readOnly = true)
+  public DayoPickPostListResponse dayoPickAllList(Member member) {
+
+    List<Post> postList = postRepository.findAllUsingJoinMember();
+
+    postList.sort(Comparator.comparingInt(Post::getHeartCount));
+
+    Set<Long> likePost = getLikePost(member);
+
+    List<DayoPick> collect = new ArrayList<>();
+
+    for (Post post : postList) {
+      boolean like = likePost.contains(post.getId());
+      if (like) {
+        collect.add(DayoPick.from(post, true));
+      } else {
+        collect.add(DayoPick.from(post, false));
+      }
+    }
+
+    return DayoPickPostListResponse.from(collect);
+  }
+
+  private Set<Long> getLikePost(Member member) {
+    return heartService.listHeartsByMember(member).stream()
+        .map(heart -> heart.getPost().getId())
+        .collect(toSet());
+  }
 }

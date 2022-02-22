@@ -7,6 +7,7 @@ import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.service.FolderService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
+import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
 import com.seoultech.dayo.post.controller.dto.response.*;
 import com.seoultech.dayo.post.service.PostService;
@@ -28,6 +29,29 @@ public class PostController {
   private final MemberService memberService;
   private final FolderService folderService;
   private final TokenProvider tokenProvider;
+
+  @GetMapping("/dayopick/all")
+  public ResponseEntity<DayoPickPostListResponse> dayoPickListAll(HttpServletRequest servletRequest) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
+
+    Member member = memberService.findMemberById(memberId);
+
+    return ResponseEntity.ok()
+        .body(postService.dayoPickAllList(member));
+  }
+
+  @GetMapping("/dayopick/{category}")
+  public ResponseEntity<DayoPickPostListResponse> dayoPickList(HttpServletRequest servletRequest,
+      @PathVariable @Valid String category) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
+
+    Member member = memberService.findMemberById(memberId);
+
+    return ResponseEntity.ok()
+        .body(postService.dayoPickListWithCategory(member, category));
+  }
 
   @GetMapping
   public ResponseEntity<ListAllPostResponse> listAllPost(HttpServletRequest servletRequest) {
