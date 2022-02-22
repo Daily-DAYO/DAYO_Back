@@ -15,49 +15,63 @@ import java.util.Date;
 @Component
 public class TokenProvider {
 
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24;
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 30;
+  private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24;
+  private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 30;
 
-    private final Key key;
+  private final Key key;
 
-    public TokenProvider() {
-        byte[] decode = Decoders.BASE64.decode(JwtConfig.JWT_SECRET);
-        this.key = Keys.hmacShaKeyFor(decode);
-    }
+  public TokenProvider() {
+    byte[] decode = Decoders.BASE64.decode(JwtConfig.JWT_SECRET);
+    this.key = Keys.hmacShaKeyFor(decode);
+  }
 
-    public TokenDto generateToken(String id) {
+  public TokenDto generateToken(String id) {
 
-        long now = (new Date()).getTime();
+    long now = (new Date()).getTime();
 
-        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-        String accessToken = Jwts.builder()
-                .setId(id)
-                .setExpiration(accessTokenExpiresIn)
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
+    Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+    String accessToken = Jwts.builder()
+        .setId(id)
+        .setExpiration(accessTokenExpiresIn)
+        .signWith(key, SignatureAlgorithm.HS512)
+        .compact();
 
-        Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
-        String refreshToken = Jwts.builder()
-                .setExpiration(refreshTokenExpiresIn)
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
+    Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
+    String refreshToken = Jwts.builder()
+        .setId(id)
+        .setExpiration(refreshTokenExpiresIn)
+        .signWith(key, SignatureAlgorithm.HS512)
+        .compact();
 
-        return TokenDto.from(accessToken, refreshToken);
-    }
+    return TokenDto.from(accessToken, refreshToken);
+  }
 
-    public String getDataFromToken(String token) {
+  public TokenDto refreshAccessToken(String id) {
+    long now = (new Date()).getTime();
 
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+    Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+    String accessToken = Jwts.builder()
+        .setId(id)
+        .setExpiration(accessTokenExpiresIn)
+        .signWith(key, SignatureAlgorithm.HS512)
+        .compact();
 
-        return claims.get("jti", String.class);
-    }
+    return TokenDto.from(accessToken, "");
+  }
 
-    public String getTokenInHeader(HttpServletRequest servletRequest) {
-        return servletRequest.getHeader("Authorization").substring(7);
-    }
+  public String getDataFromToken(String token) {
+
+    Claims claims = Jwts.parserBuilder()
+        .setSigningKey(key)
+        .build()
+        .parseClaimsJws(token)
+        .getBody();
+
+    return claims.get("jti", String.class);
+  }
+
+  public String getTokenInHeader(HttpServletRequest servletRequest) {
+    return servletRequest.getHeader("Authorization").substring(7);
+  }
 
 }

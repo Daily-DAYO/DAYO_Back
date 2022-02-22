@@ -23,6 +23,7 @@ import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse
 import com.seoultech.dayo.member.controller.dto.response.MemberOAuthResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOtherProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberSignUpResponse;
+import com.seoultech.dayo.member.controller.dto.response.RefreshTokenResponse;
 import com.seoultech.dayo.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -113,6 +114,11 @@ public class MemberService {
       member.setProfileImg(image);
     }
 
+  }
+
+  public RefreshTokenResponse refreshAccessToken(String memberId) {
+    TokenDto tokenDto = tokenProvider.refreshAccessToken(memberId);
+    return RefreshTokenResponse.from(tokenDto.getAccessToken());
   }
 
   public MemberSignUpResponse signUp(MemberSignUpRequest request) throws IOException {

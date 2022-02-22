@@ -8,6 +8,7 @@ import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOtherProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberSignUpResponse;
+import com.seoultech.dayo.member.controller.dto.response.RefreshTokenResponse;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberOAuthResponse;
@@ -80,6 +81,15 @@ public class MemberController {
       @ModelAttribute MemberSignUpRequest request) throws IOException {
     return ResponseEntity.ok()
         .body(memberService.signUp(request));
+  }
+
+  @GetMapping("/refresh")
+  public ResponseEntity<RefreshTokenResponse> refreshToken(HttpServletRequest servletRequest) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
+    return ResponseEntity.ok()
+        .body(memberService.refreshAccessToken(memberId));
+
   }
 
 }
