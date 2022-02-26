@@ -31,7 +31,8 @@ public class PostController {
   private final TokenProvider tokenProvider;
 
   @GetMapping("/dayopick/all")
-  public ResponseEntity<DayoPickPostListResponse> dayoPickListAll(HttpServletRequest servletRequest) {
+  public ResponseEntity<DayoPickPostListResponse> dayoPickListAll(
+      HttpServletRequest servletRequest) {
     String token = tokenProvider.getTokenInHeader(servletRequest);
     String memberId = tokenProvider.getDataFromToken(token);
 
