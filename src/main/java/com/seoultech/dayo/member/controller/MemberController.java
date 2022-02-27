@@ -1,12 +1,13 @@
 package com.seoultech.dayo.member.controller;
 
 import com.seoultech.dayo.config.jwt.TokenProvider;
-import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
+import com.seoultech.dayo.member.controller.dto.request.MemberSignInRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignUpRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOtherProfileResponse;
+import com.seoultech.dayo.member.controller.dto.response.MemberSignInResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberSignUpResponse;
 import com.seoultech.dayo.member.controller.dto.response.RefreshTokenResponse;
 import com.seoultech.dayo.member.service.MemberService;
@@ -81,6 +82,13 @@ public class MemberController {
       @ModelAttribute MemberSignUpRequest request) throws IOException {
     return ResponseEntity.ok()
         .body(memberService.signUp(request));
+  }
+
+  @PostMapping("/signIn")
+  public ResponseEntity<MemberSignInResponse> signInMember(
+      @ModelAttribute MemberSignInRequest request) {
+    return ResponseEntity.ok()
+        .body(memberService.signIn(request));
   }
 
   @GetMapping("/refresh")

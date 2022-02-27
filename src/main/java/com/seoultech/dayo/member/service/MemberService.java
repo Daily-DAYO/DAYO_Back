@@ -17,11 +17,13 @@ import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
+import com.seoultech.dayo.member.controller.dto.request.MemberSignInRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignUpRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOAuthResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOtherProfileResponse;
+import com.seoultech.dayo.member.controller.dto.response.MemberSignInResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberSignUpResponse;
 import com.seoultech.dayo.member.controller.dto.response.RefreshTokenResponse;
 import com.seoultech.dayo.member.repository.MemberRepository;
@@ -80,6 +82,16 @@ public class MemberService {
 
     TokenDto token = tokenProvider.generateToken(member.getId());
     return MemberOAuthResponse.from(token);
+  }
+
+  public MemberSignInResponse signIn(MemberSignInRequest request) {
+
+    Member member = memberRepository.findMemberByEmailAndPassword(
+            request.getEmail(), request.getPassword())
+        .orElseThrow(NotExistMemberException::new);
+
+    TokenDto token = tokenProvider.generateToken(member.getId());
+    return MemberSignInResponse.from(token);
   }
 
   @Transactional(readOnly = true)
