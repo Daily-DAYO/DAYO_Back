@@ -15,6 +15,7 @@ import lombok.Getter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Setter;
 import org.hibernate.annotations.Formula;
 
 @Entity
@@ -28,13 +29,16 @@ public class Post extends BaseTimeEntity {
   @ManyToOne(fetch = FetchType.EAGER)
   private Member member;
 
+  @Setter
   private String contents;
 
   private String thumbnailImage;
 
+  @Setter
   @Enumerated(EnumType.STRING)
   private Category category;
 
+  @Setter
   @Enumerated(EnumType.STRING)
   private Privacy privacy;
 
@@ -78,6 +82,10 @@ public class Post extends BaseTimeEntity {
   public void addFolder(Folder folder) {
     this.folder = folder;
     folder.getPosts().add(this);
+  }
+
+  public void setFolder(Folder folder) {
+    this.folder = folder;
   }
 
   public Post(Member member, String contents, String thumbnailImage, Category category,

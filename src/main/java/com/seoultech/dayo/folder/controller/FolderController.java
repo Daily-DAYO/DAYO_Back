@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,79 +25,84 @@ import java.io.IOException;
 @Slf4j
 public class FolderController {
 
-    private final FolderService folderService;
-    private final MemberService memberService;
-    private final TokenProvider tokenProvider;
+  private final FolderService folderService;
+  private final MemberService memberService;
+  private final TokenProvider tokenProvider;
 
-    @PostMapping
-    public ResponseEntity<CreateFolderResponse> createFolder(HttpServletRequest servletRequest, @ModelAttribute @Valid CreateFolderRequest request) throws IOException {
-        String token = tokenProvider.getTokenInHeader(servletRequest);
-        String memberId = tokenProvider.getDataFromToken(token);
+  @PostMapping
+  public ResponseEntity<CreateFolderResponse> createFolder(HttpServletRequest servletRequest,
+      @ModelAttribute @Valid CreateFolderRequest request) throws IOException {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
 
-        Member member = memberService.findMemberById(memberId);
+    Member member = memberService.findMemberById(memberId);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(folderService.createFolder(member, request));
-    }
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(folderService.createFolder(member, request));
+  }
 
-    @PostMapping("/inPost")
-    public ResponseEntity<CreateFolderInPostResponse> createFolderInPost(HttpServletRequest servletRequest, @RequestBody @Valid CreateFolderInPostRequest request) {
-        String token = tokenProvider.getTokenInHeader(servletRequest);
-        String memberId = tokenProvider.getDataFromToken(token);
+  @PostMapping("/inPost")
+  public ResponseEntity<CreateFolderInPostResponse> createFolderInPost(
+      HttpServletRequest servletRequest, @RequestBody @Valid CreateFolderInPostRequest request) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
 
-        Member member = memberService.findMemberById(memberId);
+    Member member = memberService.findMemberById(memberId);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(folderService.createFolderInPost(member, request));
-    }
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(folderService.createFolderInPost(member, request));
+  }
 
-    @PostMapping("/delete/{folderId}")
-    public ResponseEntity<Void> deleteFolder(@PathVariable @Valid Long folderId) {
-        folderService.deleteFolder(folderId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+  @PostMapping("/delete/{folderId}")
+  public ResponseEntity<Void> deleteFolder(@PathVariable @Valid Long folderId) {
+    folderService.deleteFolder(folderId);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
 
-    @PostMapping("/order")
-    public ResponseEntity<Void> orderFolder(HttpServletRequest servletRequest, @RequestBody EditOrderFolderRequest.EditOrderDto[] request) {
-        String token = tokenProvider.getTokenInHeader(servletRequest);
-        String memberId = tokenProvider.getDataFromToken(token);
+  @PostMapping("/order")
+  public ResponseEntity<Void> orderFolder(HttpServletRequest servletRequest,
+      @RequestBody EditOrderFolderRequest.EditOrderDto[] request) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
 
-        Member member = memberService.findMemberById(memberId);
-        folderService.orderFolder(member, request);
+    Member member = memberService.findMemberById(memberId);
+    folderService.orderFolder(member, request);
 
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
-    @PostMapping("/patch")
-    public ResponseEntity<EditFolderResponse> editFolder(@ModelAttribute EditFolderRequest request) throws IOException {
-        return ResponseEntity.ok()
-                .body(folderService.editFolder(request));
-    }
+  @PostMapping("/patch")
+  public ResponseEntity<EditFolderResponse> editFolder(@ModelAttribute EditFolderRequest request)
+      throws IOException {
+    return ResponseEntity.ok()
+        .body(folderService.editFolder(request));
+  }
 
-    @GetMapping("/my")
-    public ResponseEntity<ListAllMyFolderResponse> listAllMyFolder(HttpServletRequest servletRequest) {
-        String token = tokenProvider.getTokenInHeader(servletRequest);
-        String memberId = tokenProvider.getDataFromToken(token);
+  @GetMapping("/my")
+  public ResponseEntity<ListAllMyFolderResponse> listAllMyFolder(
+      HttpServletRequest servletRequest) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
 
-        Member member = memberService.findMemberById(memberId);
+    Member member = memberService.findMemberById(memberId);
 
-        return ResponseEntity.ok()
-                .body(folderService.listAllMyFolder(member));
-    }
+    return ResponseEntity.ok()
+        .body(folderService.listAllMyFolder(member));
+  }
 
-    @GetMapping("/list/{memberId}")
-    public ResponseEntity<ListAllFolderResponse> listAllFolder(@PathVariable String memberId) {
+  @GetMapping("/list/{memberId}")
+  public ResponseEntity<ListAllFolderResponse> listAllFolder(@PathVariable String memberId) {
 
-        Member member = memberService.findMemberById(memberId);
+    Member member = memberService.findMemberById(memberId);
 
-        return ResponseEntity.ok()
-                .body(folderService.listAllFolder(member));
-    }
+    return ResponseEntity.ok()
+        .body(folderService.listAllFolder(member));
+  }
 
-    @GetMapping("/{folderId}")
-    public ResponseEntity<DetailFolderResponse> detailListFolder(@PathVariable Long folderId) {
-        return ResponseEntity.ok()
-                .body(folderService.detailFolder(folderId));
-    }
+  @GetMapping("/{folderId}")
+  public ResponseEntity<DetailFolderResponse> detailListFolder(@PathVariable Long folderId) {
+    return ResponseEntity.ok()
+        .body(folderService.detailFolder(folderId));
+  }
 
 }

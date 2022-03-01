@@ -9,6 +9,7 @@ import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
+import com.seoultech.dayo.post.controller.dto.request.EditPostRequest;
 import com.seoultech.dayo.post.controller.dto.response.*;
 import com.seoultech.dayo.post.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,25 @@ public class PostController {
 
     return ResponseEntity.ok()
         .body(postService.dayoPickListWithCategory(member, category));
+  }
+
+  @PostMapping("/{postId}/edit")
+  public ResponseEntity<EditPostResponse> editPost(HttpServletRequest servletRequest,
+      @RequestBody EditPostRequest request, @PathVariable Long postId) {
+
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
+
+    Member member = memberService.findMemberById(memberId);
+
+    if (request.getFolderId() != null) {
+      Folder folder = folderService.findFolderById(request.getFolderId());
+      return ResponseEntity.ok()
+          .body(postService.editPost(request, member, folder, postId));
+    }
+
+    return ResponseEntity.ok()
+        .body(postService.editPost(request, member, null, postId));
   }
 
   @GetMapping

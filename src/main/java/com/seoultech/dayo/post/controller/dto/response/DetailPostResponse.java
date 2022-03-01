@@ -36,6 +36,8 @@ public class DetailPostResponse {
 
   private List<String> hashtags;
 
+  private String folderName;
+
   private boolean isHeart;
 
   private int heartCount;
@@ -58,6 +60,7 @@ public class DetailPostResponse {
         collectImages,
         post.getContents(),
         collectHashtags,
+        post.getFolder().getName(),
         isHeart,
         post.getHearts().size(),
         isBookmark

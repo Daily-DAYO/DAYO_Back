@@ -20,6 +20,7 @@ import com.seoultech.dayo.post.controller.dto.FeedDto;
 import com.seoultech.dayo.post.controller.dto.FeedDto.CommentDto;
 import com.seoultech.dayo.post.controller.dto.PostDto;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
+import com.seoultech.dayo.post.controller.dto.request.EditPostRequest;
 import com.seoultech.dayo.post.controller.dto.response.*;
 import com.seoultech.dayo.post.repository.PostRepository;
 import com.seoultech.dayo.postHashtag.service.PostHashtagService;
@@ -139,12 +140,6 @@ public class PostService {
     return new ListCategoryPostResponse(postList.size(), collect);
   }
 
-  private Set<Long> getBookmarkPost(Member member) {
-    return bookmarkService.listBookmarksByMember(member).stream()
-        .map(bookmark -> bookmark.getPost().getId())
-        .collect(toSet());
-  }
-
   public CreatePostResponse createPost(Member member, Folder folder, CreatePostRequest request)
       throws IOException {
 
@@ -160,6 +155,32 @@ public class PostService {
     }
 
     return CreatePostResponse.from(savedPost);
+  }
+
+  public EditPostResponse editPost(EditPostRequest request, Member member, Folder folder, Long postId) {
+
+    Post post = findPostById(postId);
+
+    if (post.getMember().getId().equals(member.getId())) {
+      throw new IllegalStateException("잘못된 접근입니다");
+    }
+    if (request.getCategory() != null) {
+      post.setCategory(Category.valueOf(request.getCategory()));
+    }
+    if (request.getHashtags().size() > 0) {
+      hashtagService.createHashtag(request.getHashtags());
+    }
+    if (request.getContents() != null) {
+      post.setContents(request.getContents());
+    }
+    if (request.getPrivacy() != null) {
+      post.setPrivacy(Privacy.valueOf(request.getPrivacy()));
+    }
+    if (folder != null) {
+      post.addFolder(folder);
+    }
+
+    return EditPostResponse.from(post);
   }
 
   @Transactional(readOnly = true)
@@ -241,4 +262,11 @@ public class PostService {
         .map(heart -> heart.getPost().getId())
         .collect(toSet());
   }
+
+  private Set<Long> getBookmarkPost(Member member) {
+    return bookmarkService.listBookmarksByMember(member).stream()
+        .map(bookmark -> bookmark.getPost().getId())
+        .collect(toSet());
+  }
+
 }
