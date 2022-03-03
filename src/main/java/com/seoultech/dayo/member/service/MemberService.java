@@ -86,8 +86,10 @@ public class MemberService {
 
   public MemberSignInResponse signIn(MemberSignInRequest request) {
 
+    String password = passwordEncoder.encode(request.getPassword());
+
     Member member = memberRepository.findMemberByEmailAndPassword(
-            request.getEmail(), request.getPassword())
+            request.getEmail(), password)
         .orElseThrow(NotExistMemberException::new);
 
     TokenDto token = tokenProvider.generateToken(member.getId());
