@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.monitor.os.OsStats.Mem;
 import org.springframework.http.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,14 +87,18 @@ public class MemberService {
 
   public MemberSignInResponse signIn(MemberSignInRequest request) {
 
-    String password = passwordEncoder.encode(request.getPassword());
-
-    Member member = memberRepository.findMemberByEmailAndPassword(
-            request.getEmail(), password)
+    Member member = memberRepository.findMemberByEmail(
+            request.getEmail())
         .orElseThrow(NotExistMemberException::new);
 
-    TokenDto token = tokenProvider.generateToken(member.getId());
-    return MemberSignInResponse.from(token);
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    if (encoder.matches(request.getPassword(), member.getPassword())) {
+      TokenDto token = tokenProvider.generateToken(member.getId());
+      return MemberSignInResponse.from(token);
+    }
+
+    throw new NotExistMemberException();
   }
 
   @Transactional(readOnly = true)
