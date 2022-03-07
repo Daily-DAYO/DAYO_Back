@@ -53,7 +53,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.6'
 
+
+    implementation group: 'com.google.firebase', name: 'firebase-messaging', version: '23.0.0'
+    implementation group: 'com.google.firebase', name: 'firebase-core', version: '20.1.0'
+    implementation group: 'com.google.auth', name: 'google-auth-library-credentials', version: '1.5.3'
+    implementation group: 'com.google.auth', name: 'google-auth-library-oauth2-http', version: '1.5.3'
+
+
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
 
     implementation 'mysql:mysql-connector-java'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
@@ -61,8 +69,10 @@ dependencies {
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
 
+
     runtime 'io.jsonwebtoken:jjwt-impl:0.11.2'
     runtime 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
