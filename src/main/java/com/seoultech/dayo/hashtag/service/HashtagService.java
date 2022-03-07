@@ -51,7 +51,7 @@ public class HashtagService {
     List<Hashtag> hashtags = hashtagSearchRepository.findHashtagsByTag(tag);
 
     for (Hashtag hashtag : hashtags) {
-      System.out.println(hashtag.getTag());
+      log.info(hashtag.getTag());
     }
   }
 
