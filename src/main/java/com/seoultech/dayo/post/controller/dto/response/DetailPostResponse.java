@@ -36,6 +36,8 @@ public class DetailPostResponse {
 
   private List<String> hashtags;
 
+  private String privacy;
+
   private String folderName;
 
   private boolean isHeart;
@@ -60,6 +62,7 @@ public class DetailPostResponse {
         collectImages,
         post.getContents(),
         collectHashtags,
+        post.getPrivacy().name(),
         post.getFolder().getName(),
         isHeart,
         post.getHearts().size(),
