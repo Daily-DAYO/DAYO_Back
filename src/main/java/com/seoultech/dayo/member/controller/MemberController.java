@@ -1,9 +1,11 @@
 package com.seoultech.dayo.member.controller;
 
 import com.seoultech.dayo.config.jwt.TokenProvider;
+import com.seoultech.dayo.mail.MailService;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignInRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignUpRequest;
+import com.seoultech.dayo.member.controller.dto.response.MemberAuthCodeResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOtherProfileResponse;
@@ -30,6 +32,7 @@ public class MemberController {
 
   private final MemberService memberService;
   private final TokenProvider tokenProvider;
+  private final MailService mailService;
 
   @PostMapping("/kakaoOAuth")
   public ResponseEntity<MemberOAuthResponse> kakaoOAuth(@RequestBody MemberOAuthRequest request) {
@@ -77,6 +80,16 @@ public class MemberController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @GetMapping("/signUp/{email}")
+  public ResponseEntity<MemberAuthCodeResponse> signUpMember(
+      @PathVariable @Valid String email) {
+
+    String authCode = mailService.sendAuthMail(email);
+
+    return ResponseEntity.ok()
+        .body(MemberAuthCodeResponse.from(authCode));
+  }
+
   @PostMapping("/signUp")
   public ResponseEntity<MemberSignUpResponse> signUpMember(
       @ModelAttribute MemberSignUpRequest request) throws IOException {
@@ -86,7 +99,7 @@ public class MemberController {
 
   @PostMapping("/signIn")
   public ResponseEntity<MemberSignInResponse> signInMember(
-      @ModelAttribute MemberSignInRequest request) {
+      @RequestBody MemberSignInRequest request) {
     return ResponseEntity.ok()
         .body(memberService.signIn(request));
   }
