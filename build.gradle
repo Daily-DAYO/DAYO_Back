@@ -54,8 +54,6 @@ dependencies {
     implementation group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.6'
 
 
-    implementation group: 'com.google.firebase', name: 'firebase-messaging', version: '23.0.0'
-    implementation group: 'com.google.firebase', name: 'firebase-core', version: '20.1.0'
     implementation group: 'com.google.auth', name: 'google-auth-library-credentials', version: '1.5.3'
     implementation group: 'com.google.auth', name: 'google-auth-library-oauth2-http', version: '1.5.3'
 

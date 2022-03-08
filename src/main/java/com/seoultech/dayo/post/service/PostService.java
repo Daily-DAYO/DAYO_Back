@@ -25,10 +25,12 @@ import com.seoultech.dayo.post.controller.dto.response.*;
 import com.seoultech.dayo.post.repository.PostRepository;
 import com.seoultech.dayo.postHashtag.service.PostHashtagService;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.cfg.CollectionSecondPass;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,8 +61,6 @@ public class PostService {
     List<Post> postList = postRepository.findAllByCategoryUsingJoinMember(
         Category.valueOf(category));
 
-    postList.sort(Comparator.comparingInt(Post::getHeartCount));
-
     Set<Long> likePost = getLikePost(member);
 
     List<DayoPick> collect = new ArrayList<>();
@@ -73,6 +73,8 @@ public class PostService {
         collect.add(DayoPick.from(post, false));
       }
     }
+
+    collect.sort((a1, a2) -> a2.getHeartCount() - a1.getHeartCount());
 
     return DayoPickPostListResponse.from(collect);
 
@@ -157,7 +159,8 @@ public class PostService {
     return CreatePostResponse.from(savedPost);
   }
 
-  public EditPostResponse editPost(EditPostRequest request, Member member, Folder folder, Long postId) {
+  public EditPostResponse editPost(EditPostRequest request, Member member, Folder folder,
+      Long postId) {
 
     Post post = findPostById(postId);
 
