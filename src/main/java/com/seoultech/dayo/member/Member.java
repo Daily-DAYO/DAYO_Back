@@ -46,6 +46,8 @@ public class Member extends BaseTimeEntity {
   @OneToMany(mappedBy = "member")
   private List<Post> posts = new ArrayList<>();
 
+  private String deviceToken;
+
   @Formula("(select count(1) from follow f where f.member_id = id)")
   private int followingCount;
 

@@ -7,6 +7,7 @@ build/
 docker-compose.yaml
 Dockerfile
 JwtConfig
+FcmConfig
 MailAuthConfiguration
 src/main/resources/application.yml
 

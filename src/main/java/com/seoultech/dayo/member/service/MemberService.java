@@ -8,11 +8,9 @@ import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.exception.ExistEmailException;
 import com.seoultech.dayo.exception.NotExistFollowerException;
 import com.seoultech.dayo.exception.NotExistMemberException;
-import com.seoultech.dayo.folder.repository.FolderRepository;
 import com.seoultech.dayo.folder.service.FolderService;
 import com.seoultech.dayo.follow.service.FollowService;
 import com.seoultech.dayo.image.Image;
-import com.seoultech.dayo.image.repository.ImageRepository;
 import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
@@ -57,7 +55,6 @@ public class MemberService {
   private final PasswordEncoder passwordEncoder;
 
   public MemberOAuthResponse kakaoApi(MemberOAuthRequest request) {
-
     String apiUrl = "https://kapi.kakao.com/v2/user/me";
     String responseBody = get(apiUrl, request.getAccessToken());
 
