@@ -230,7 +230,13 @@ public class PostService {
     return ListFeedResponse.from(feedDtos);
   }
 
-  public void deletePost(Long postId) {
+  public void deletePost(String memberId, Long postId) {
+
+    Post post = findPostById(postId);
+    if (!post.getMember().getId().equals(memberId)) {
+      throw new InvalidPostAccess();
+    }
+
     postRepository.deleteById(postId);
   }
 
