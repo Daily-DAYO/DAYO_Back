@@ -16,7 +16,7 @@ public class HashtagController {
     @GetMapping("/elasticsearch")
     public void find(@RequestParam String tag) {
 
-        hashtagService.findHashtag(tag);
+//        hashtagService.findHashtag(tag);
 
     }
 
