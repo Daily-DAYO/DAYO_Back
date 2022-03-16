@@ -3,19 +3,29 @@ package com.seoultech.dayo.post;
 
 import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.bookmark.Bookmark;
-import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.heart.Heart;
+import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.postHashtag.PostHashtag;
-import lombok.Builder;
-import lombok.Getter;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.Formula;
 
 @Entity

@@ -164,7 +164,7 @@ public class PostService {
 
     Post post = findPostById(postId);
 
-    if (post.getMember().getId().equals(member.getId())) {
+    if (!post.getMember().getId().equals(member.getId())) {
       throw new IllegalStateException("잘못된 접근입니다");
     }
     if (request.getCategory() != null) {
