@@ -76,6 +76,10 @@ public class Member extends BaseTimeEntity {
     this.profileImg = profileImg;
   }
 
+  public void setDeviceToken(String deviceToken) {
+    this.deviceToken = deviceToken;
+  }
+
   public Member(String name, String email, Image profileImg) {
     this.id = UUID.randomUUID().toString();
     this.name = name;

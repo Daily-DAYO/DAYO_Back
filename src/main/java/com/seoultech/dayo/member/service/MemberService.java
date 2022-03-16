@@ -98,6 +98,11 @@ public class MemberService {
     throw new NotExistMemberException();
   }
 
+  public void setDeviceToken(String memberId, String deviceToken) {
+    Member member = findMemberById(memberId);
+    member.setDeviceToken(deviceToken);
+  }
+
   @Transactional(readOnly = true)
   public MemberInfoResponse memberInfo(String memberId) {
     Member member = findMemberById(memberId);

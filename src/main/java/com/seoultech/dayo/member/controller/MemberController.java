@@ -48,6 +48,15 @@ public class MemberController {
         .body(memberService.memberInfo(memberId));
   }
 
+  @GetMapping
+  public ResponseEntity<Void> deviceToken(HttpServletRequest servletRequest,
+      @RequestParam String deviceToken) {
+    String token = tokenProvider.getTokenInHeader(servletRequest);
+    String memberId = tokenProvider.getDataFromToken(token);
+    memberService.setDeviceToken(memberId, deviceToken);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
   @GetMapping("/profile/other/{memberId}")
   public ResponseEntity<MemberOtherProfileResponse> otherProfile(HttpServletRequest servletRequest,
       @PathVariable @Valid String memberId) {
