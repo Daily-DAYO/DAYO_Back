@@ -1,4 +1,4 @@
-package com.seoultech.dayo.config.elasticsearch;
+package com.seoultech.dayo.config;
 
 import com.seoultech.dayo.hashtag.repository.HashtagSearchRepository;
 import org.elasticsearch.client.RestHighLevelClient;
