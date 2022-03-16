@@ -9,8 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.NotNull;
 
 @Getter
-@AllArgsConstructor
-@ToString
 public class EditFolderRequest {
 
   @NotNull

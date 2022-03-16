@@ -5,7 +5,6 @@ import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-@AllArgsConstructor
 public class MemberProfileUpdateRequest {
 
     private String nickname;

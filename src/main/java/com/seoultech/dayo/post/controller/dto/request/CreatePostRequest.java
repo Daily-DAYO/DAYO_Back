@@ -19,7 +19,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
-@AllArgsConstructor
 public class CreatePostRequest {
 
   @NotBlank
