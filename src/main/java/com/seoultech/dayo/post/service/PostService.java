@@ -171,7 +171,8 @@ public class PostService {
       post.setCategory(Category.valueOf(request.getCategory()));
     }
     if (request.getHashtags().size() > 0) {
-      hashtagService.createHashtag(request.getHashtags());
+      List<Hashtag> hashtags = hashtagService.createHashtag(request.getHashtags());
+      postHashtagService.createPostHashtag(post, hashtags);
     }
     if (request.getContents() != null) {
       post.setContents(request.getContents());
