@@ -34,9 +34,8 @@ public class PostController {
   @GetMapping("/dayopick/all")
   public ResponseEntity<DayoPickPostListResponse> dayoPickListAll(
       HttpServletRequest servletRequest) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
 
+    String memberId = servletRequest.getAttribute("memberId").toString();
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()
@@ -46,9 +45,8 @@ public class PostController {
   @GetMapping("/dayopick/{category}")
   public ResponseEntity<DayoPickPostListResponse> dayoPickList(HttpServletRequest servletRequest,
       @PathVariable @Valid String category) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
 
+    String memberId = servletRequest.getAttribute("memberId").toString();
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()
@@ -59,9 +57,7 @@ public class PostController {
   public ResponseEntity<EditPostResponse> editPost(HttpServletRequest servletRequest,
       @RequestBody EditPostRequest request, @PathVariable Long postId) {
 
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
-
+    String memberId = servletRequest.getAttribute("memberId").toString();
     Member member = memberService.findMemberById(memberId);
 
     if (request.getFolderId() != null) {
@@ -76,9 +72,7 @@ public class PostController {
 
   @GetMapping
   public ResponseEntity<ListAllPostResponse> listAllPost(HttpServletRequest servletRequest) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
-
+    String memberId = servletRequest.getAttribute("memberId").toString();
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()
@@ -90,9 +84,7 @@ public class PostController {
       HttpServletRequest servletRequest,
       @PathVariable @Valid String category) {
 
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
-
+    String memberId = servletRequest.getAttribute("memberId").toString();
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()
@@ -102,10 +94,10 @@ public class PostController {
   @PostMapping
   public ResponseEntity<CreatePostResponse> createPost(HttpServletRequest servletRequest,
       @ModelAttribute @Valid CreatePostRequest request) throws IOException {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
 
+    String memberId = servletRequest.getAttribute("memberId").toString();
     Member member = memberService.findMemberById(memberId);
+
     Folder folder = folderService.findFolderById(request.getFolderId());
 
     if (folderService.checkMyFolder(member, folder)) {
@@ -126,17 +118,16 @@ public class PostController {
   @GetMapping("/{postId}")
   public ResponseEntity<DetailPostResponse> detailPost(HttpServletRequest servletRequest,
       @PathVariable @Valid Long postId) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
+
     return ResponseEntity.ok()
         .body(postService.detailPost(memberId, postId));
   }
 
   @GetMapping("/feed/list")
   public ResponseEntity<ListFeedResponse> listFeed(HttpServletRequest servletRequest) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
 
+    String memberId = servletRequest.getAttribute("memberId").toString();
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()

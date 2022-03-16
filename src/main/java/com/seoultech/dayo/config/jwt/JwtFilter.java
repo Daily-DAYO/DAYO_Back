@@ -2,6 +2,7 @@ package com.seoultech.dayo.config.jwt;
 
 import com.seoultech.dayo.exception.InvalidTokenException;
 import com.seoultech.dayo.exception.dto.UnauthorizedFailResponse;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -44,14 +45,17 @@ public class JwtFilter implements Filter {
 
       // 2. validateToken 으로 토큰 유효성 검사
       // todo 리팩토링
-      if (isCheckPath(requestURI) && (!StringUtils.hasText(jwt) || !validateToken(jwt))) {
-        throw new Exception("유효하지 않는 토큰입니다");
+      if (isCheckPath(requestURI) && !StringUtils.hasText(jwt)) {
+        throw new IllegalArgumentException("유효하지 않는 토큰입니다");
       }
-
+      request.setAttribute("memberId", validateToken(jwt));
       chain.doFilter(request, response);
-    } catch (Exception e) {
+    } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e) {
       HttpServletResponse res = (HttpServletResponse) response;
       res.sendError(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+    } catch (Exception e) {
+      HttpServletResponse res = (HttpServletResponse) response;
+      res.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
     }
   }
 
@@ -69,28 +73,31 @@ public class JwtFilter implements Filter {
   }
 
 
-  private boolean validateToken(String token) {
+  private String validateToken(String token) {
 
     byte[] decode = Decoders.BASE64.decode(JwtConfig.JWT_SECRET);
     Key key = Keys.hmacShaKeyFor(decode);
 
     try {
-      Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-      return true;
+      Claims claims = Jwts.parserBuilder()
+          .setSigningKey(key)
+          .build()
+          .parseClaimsJws(token)
+          .getBody();
+
+      return claims.get("jti", String.class);
     } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
       log.info("잘못된 JWT 서명입니다.");
-//            throw new IllegalStateException("잘못된 JWT 서명입니다.");
+      throw new IllegalStateException("잘못된 JWT 서명입니다.");
     } catch (ExpiredJwtException e) {
       log.info("만료된 JWT 토큰입니다.");
-//            throw new IllegalStateException("만료된 JWT 토큰입니다.");
+      throw new IllegalStateException("만료된 JWT 토큰입니다.");
     } catch (UnsupportedJwtException e) {
       log.info("지원되지 않는 JWT 토큰입니다.");
-//            throw new IllegalStateException("지원되지 않는 JWT 토큰입니다.");
+      throw new IllegalStateException("지원되지 않는 JWT 토큰입니다.");
     } catch (IllegalArgumentException e) {
       log.info("JWT 토큰이 잘못되었습니다.");
-//            throw new IllegalStateException("JWT 토큰이 잘못되었습니다.");
+      throw new IllegalStateException("JWT 토큰이 잘못되었습니다.");
     }
-
-    return false;
   }
 }
