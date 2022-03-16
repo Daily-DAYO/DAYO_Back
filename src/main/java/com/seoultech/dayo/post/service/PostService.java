@@ -2,6 +2,7 @@ package com.seoultech.dayo.post.service;
 
 
 import com.seoultech.dayo.bookmark.service.BookmarkService;
+import com.seoultech.dayo.exception.InvalidPostAccess;
 import com.seoultech.dayo.exception.NotExistPostException;
 import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.follow.service.FollowService;
@@ -165,7 +166,7 @@ public class PostService {
     Post post = findPostById(postId);
 
     if (!post.getMember().getId().equals(member.getId())) {
-      throw new IllegalStateException("잘못된 접근입니다");
+      throw new InvalidPostAccess();
     }
     if (request.getCategory() != null) {
       post.setCategory(Category.valueOf(request.getCategory()));
