@@ -30,13 +30,11 @@ public class BookmarkController {
   private final BookmarkService bookmarkService;
   private final MemberService memberService;
   private final PostService postService;
-  private final TokenProvider tokenProvider;
 
   @PostMapping
   public ResponseEntity<CreateBookmarkResponse> createBookmark(HttpServletRequest servletRequest,
       @RequestBody @Valid CreateBookmarkRequest request) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);
     Post post = postService.findPostById(request.getPostId());
@@ -48,8 +46,7 @@ public class BookmarkController {
   @PostMapping("/delete/{postId}")
   public ResponseEntity<Void> deleteBookmark(HttpServletRequest servletRequest,
       @PathVariable Long postId) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
     bookmarkService.deleteBookmark(memberId, postId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
@@ -67,8 +64,7 @@ public class BookmarkController {
   @GetMapping("/list")
   public ResponseEntity<ListAllMyBookmarkPostResponse> listAllMyBookmarkPost(
       HttpServletRequest servletRequest) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);
 

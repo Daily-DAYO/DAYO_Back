@@ -23,13 +23,11 @@ public class FollowController {
 
   private final FollowService followService;
   private final MemberService memberService;
-  private final TokenProvider tokenProvider;
 
   @PostMapping
   public ResponseEntity<CreateFollowResponse> createFollow(HttpServletRequest servletRequest,
       @RequestBody @Valid CreateFollowRequest request) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);
     Member follower = memberService.findFollowerById(request.getFollowerId());
@@ -41,8 +39,7 @@ public class FollowController {
   @PostMapping("/up")
   public ResponseEntity<CreateFollowUpResponse> createFollowUp(HttpServletRequest servletRequest,
       @RequestBody @Valid CreateFollowUpRequest request) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);
     Member follower = memberService.findFollowerById(request.getFollowerId());
@@ -54,8 +51,7 @@ public class FollowController {
   @PostMapping("/delete/{followerId}")
   public ResponseEntity<Void> deleteFollow(HttpServletRequest servletRequest,
       @PathVariable String followerId) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
     followService.deleteFollow(memberId, followerId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
@@ -63,8 +59,7 @@ public class FollowController {
   @GetMapping("/follower/my")
   public ResponseEntity<ListAllMyFollowerResponse> listAllMyFollower(
       HttpServletRequest servletRequest) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);
 
@@ -75,8 +70,7 @@ public class FollowController {
   @GetMapping("/following/my")
   public ResponseEntity<ListAllMyFollowingResponse> listAllMyFollowing(
       HttpServletRequest servletRequest) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);
 
@@ -87,8 +81,7 @@ public class FollowController {
   @GetMapping("/follower/list/{memberId}")
   public ResponseEntity<ListAllFollowerResponse> listAllFollower(HttpServletRequest servletRequest,
       @PathVariable @Valid String memberId) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String myMemberId = tokenProvider.getDataFromToken(token);
+    String myMemberId = servletRequest.getAttribute("memberId").toString();
 
     Member me = memberService.findMemberById(myMemberId);
     Member member = memberService.findMemberById(memberId);
@@ -101,8 +94,7 @@ public class FollowController {
   public ResponseEntity<ListAllFollowingResponse> listAllFollowing(
       HttpServletRequest servletRequest,
       @PathVariable @Valid String memberId) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String myMemberId = tokenProvider.getDataFromToken(token);
+    String myMemberId = servletRequest.getAttribute("memberId").toString();
 
     Member me = memberService.findMemberById(myMemberId);
     Member member = memberService.findMemberById(memberId);

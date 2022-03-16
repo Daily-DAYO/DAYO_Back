@@ -27,13 +27,11 @@ public class FolderController {
 
   private final FolderService folderService;
   private final MemberService memberService;
-  private final TokenProvider tokenProvider;
 
   @PostMapping
   public ResponseEntity<CreateFolderResponse> createFolder(HttpServletRequest servletRequest,
       @ModelAttribute @Valid CreateFolderRequest request) throws IOException {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);
 
@@ -44,8 +42,7 @@ public class FolderController {
   @PostMapping("/inPost")
   public ResponseEntity<CreateFolderInPostResponse> createFolderInPost(
       HttpServletRequest servletRequest, @RequestBody @Valid CreateFolderInPostRequest request) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);
 
@@ -62,8 +59,7 @@ public class FolderController {
   @PostMapping("/order")
   public ResponseEntity<Void> orderFolder(HttpServletRequest servletRequest,
       @RequestBody EditOrderFolderRequest.EditOrderDto[] request) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);
     folderService.orderFolder(member, request);
@@ -81,8 +77,7 @@ public class FolderController {
   @GetMapping("/my")
   public ResponseEntity<ListAllMyFolderResponse> listAllMyFolder(
       HttpServletRequest servletRequest) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);
 

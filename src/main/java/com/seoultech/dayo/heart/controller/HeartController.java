@@ -26,13 +26,11 @@ public class HeartController {
   private final HeartService heartService;
   private final MemberService memberService;
   private final PostService postService;
-  private final TokenProvider tokenProvider;
 
   @PostMapping
   public ResponseEntity<CreateHeartResponse> createHeart(HttpServletRequest servletRequest,
       @RequestBody @Valid CreateHeartRequest request) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);
     Post post = postService.findPostById(request.getPostId());
@@ -44,8 +42,7 @@ public class HeartController {
   @PostMapping("/delete/{postId}")
   public ResponseEntity<Void> deleteHeart(HttpServletRequest servletRequest,
       @PathVariable Long postId) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
     heartService.deleteHeart(memberId, postId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
@@ -63,8 +60,7 @@ public class HeartController {
   @GetMapping("/list")
   public ResponseEntity<ListAllMyHeartPostResponse> listAllMyHeartPost(
       HttpServletRequest servletRequest) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);
 

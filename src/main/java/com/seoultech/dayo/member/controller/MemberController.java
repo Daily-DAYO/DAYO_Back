@@ -31,7 +31,6 @@ import java.io.IOException;
 public class MemberController {
 
   private final MemberService memberService;
-  private final TokenProvider tokenProvider;
   private final MailService mailService;
 
   @PostMapping("/kakaoOAuth")
@@ -42,8 +41,7 @@ public class MemberController {
 
   @GetMapping("/myInfo")
   public ResponseEntity<MemberInfoResponse> memberInfo(HttpServletRequest servletRequest) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
     return ResponseEntity.ok()
         .body(memberService.memberInfo(memberId));
   }
@@ -51,8 +49,7 @@ public class MemberController {
   @GetMapping
   public ResponseEntity<Void> deviceToken(HttpServletRequest servletRequest,
       @RequestParam String deviceToken) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
     memberService.setDeviceToken(memberId, deviceToken);
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -60,16 +57,14 @@ public class MemberController {
   @GetMapping("/profile/other/{memberId}")
   public ResponseEntity<MemberOtherProfileResponse> otherProfile(HttpServletRequest servletRequest,
       @PathVariable @Valid String memberId) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String myMemberId = tokenProvider.getDataFromToken(token);
+    String myMemberId = servletRequest.getAttribute("memberId").toString();
     return ResponseEntity.ok()
         .body(memberService.otherProfile(myMemberId, memberId));
   }
 
   @GetMapping("/profile/my")
   public ResponseEntity<MemberMyProfileResponse> myProfile(HttpServletRequest servletRequest) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
     return ResponseEntity.ok()
         .body(memberService.myProfile(memberId));
   }
@@ -77,8 +72,7 @@ public class MemberController {
   @PostMapping("/update/profile")
   public ResponseEntity<Void> profileUpdate(HttpServletRequest servletRequest,
       @ModelAttribute @Valid MemberProfileUpdateRequest request) throws IOException {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
     memberService.profileUpdate(memberId, request);
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -115,8 +109,7 @@ public class MemberController {
 
   @GetMapping("/refresh")
   public ResponseEntity<RefreshTokenResponse> refreshToken(HttpServletRequest servletRequest) {
-    String token = tokenProvider.getTokenInHeader(servletRequest);
-    String memberId = tokenProvider.getDataFromToken(token);
+    String memberId = servletRequest.getAttribute("memberId").toString();
     return ResponseEntity.ok()
         .body(memberService.refreshAccessToken(memberId));
 

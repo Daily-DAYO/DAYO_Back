@@ -59,19 +59,4 @@ public class TokenProvider {
     return TokenDto.from(accessToken, "");
   }
 
-  public String getDataFromToken(String token) {
-
-    Claims claims = Jwts.parserBuilder()
-        .setSigningKey(key)
-        .build()
-        .parseClaimsJws(token)
-        .getBody();
-
-    return claims.get("jti", String.class);
-  }
-
-  public String getTokenInHeader(HttpServletRequest servletRequest) {
-    return servletRequest.getHeader("Authorization").substring(7);
-  }
-
 }

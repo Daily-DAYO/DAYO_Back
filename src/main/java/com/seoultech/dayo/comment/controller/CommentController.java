@@ -19,31 +19,26 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/comments")
 public class CommentController {
 
-    private final CommentService commentService;
-    private final TokenProvider tokenProvider;
+  private final CommentService commentService;
 
-    @PostMapping
-    public ResponseEntity<CreateCommentResponse> createComment(HttpServletRequest servletRequest, @RequestBody @Valid CreateCommentRequest request) {
-        String memberId = getDataInToken(servletRequest);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(commentService.createComment(memberId, request));
-    }
+  @PostMapping
+  public ResponseEntity<CreateCommentResponse> createComment(HttpServletRequest servletRequest,
+      @RequestBody @Valid CreateCommentRequest request) {
+    String memberId = servletRequest.getAttribute("memberId").toString();
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(commentService.createComment(memberId, request));
+  }
 
-    @PostMapping("/delete/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable @Valid Long commentId) {
-        commentService.deleteComment(commentId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+  @PostMapping("/delete/{commentId}")
+  public ResponseEntity<Void> deleteComment(@PathVariable @Valid Long commentId) {
+    commentService.deleteComment(commentId);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
 
-    @GetMapping("/{postId}")
-    public ResponseEntity<ListAllCommentResponse> listAllComment(@PathVariable @Valid Long postId) {
-        return ResponseEntity.ok()
-                .body(commentService.listAllComment(postId));
-    }
-
-    private String getDataInToken(HttpServletRequest servletRequest) {
-        String token = servletRequest.getHeader("Authorization").substring(7);
-        return tokenProvider.getDataFromToken(token);
-    }
+  @GetMapping("/{postId}")
+  public ResponseEntity<ListAllCommentResponse> listAllComment(@PathVariable @Valid Long postId) {
+    return ResponseEntity.ok()
+        .body(commentService.listAllComment(postId));
+  }
 
 }
