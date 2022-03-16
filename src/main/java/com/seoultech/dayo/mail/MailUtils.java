@@ -9,9 +9,10 @@ import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 public class MailUtils {
-  private JavaMailSender mailSender;
-  private MimeMessage message;
-  private MimeMessageHelper messageHelper;
+
+  private final JavaMailSender mailSender;
+  private final MimeMessage message;
+  private final MimeMessageHelper messageHelper;
 
   public MailUtils(JavaMailSender mailSender) throws MessagingException {
     this.mailSender = mailSender;
@@ -27,7 +28,8 @@ public class MailUtils {
     messageHelper.setText(htmlContent, true);
   }
 
-  public void setFrom(String email, String name) throws UnsupportedEncodingException, MessagingException {
+  public void setFrom(String email, String name)
+      throws UnsupportedEncodingException, MessagingException {
     messageHelper.setFrom(email, name);
   }
 

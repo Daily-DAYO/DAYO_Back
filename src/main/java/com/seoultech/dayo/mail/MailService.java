@@ -41,7 +41,7 @@ public class MailService {
     StringBuilder sb = new StringBuilder();
     int num = 0;
 
-    while(sb.length() < 6) {
+    while (sb.length() < 6) {
       num = random.nextInt(10);
       sb.append(num);
     }
