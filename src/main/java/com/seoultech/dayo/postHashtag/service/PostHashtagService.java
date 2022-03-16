@@ -17,10 +17,10 @@ public class PostHashtagService {
 
     private final PostHashtagRepository postHashtagRepository;
 
-    public List<PostHashtag> createPostHashtag(Post post, List<Hashtag> hashtags) {
-        return postHashtagRepository.saveAll(hashtags.stream()
-                .map(hashtag -> new PostHashtag(post, hashtag))
-                .collect(toList()));
+    public void createPostHashtag(Post post, List<Hashtag> hashtags) {
+        postHashtagRepository.saveAll(hashtags.stream()
+            .map(hashtag -> new PostHashtag(post, hashtag))
+            .collect(toList()));
     }
 
     public List<PostHashtag> saveAll(List<PostHashtag> postHashtags) {
