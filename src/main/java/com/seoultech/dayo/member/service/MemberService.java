@@ -13,6 +13,7 @@ import com.seoultech.dayo.follow.service.FollowService;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.member.Member;
+import com.seoultech.dayo.member.controller.dto.request.DeviceTokenRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignInRequest;
@@ -98,9 +99,9 @@ public class MemberService {
     throw new NotExistMemberException();
   }
 
-  public void setDeviceToken(String memberId, String deviceToken) {
+  public void setDeviceToken(String memberId, DeviceTokenRequest request) {
     Member member = findMemberById(memberId);
-    member.setDeviceToken(deviceToken);
+    member.setDeviceToken(request.getDeviceToken());
   }
 
   @Transactional(readOnly = true)

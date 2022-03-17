@@ -2,6 +2,7 @@ package com.seoultech.dayo.member.controller;
 
 import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.mail.MailService;
+import com.seoultech.dayo.member.controller.dto.request.DeviceTokenRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignInRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignUpRequest;
@@ -44,14 +45,6 @@ public class MemberController {
     String memberId = servletRequest.getAttribute("memberId").toString();
     return ResponseEntity.ok()
         .body(memberService.memberInfo(memberId));
-  }
-
-  @GetMapping
-  public ResponseEntity<Void> deviceToken(HttpServletRequest servletRequest,
-      @RequestParam String deviceToken) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-    memberService.setDeviceToken(memberId, deviceToken);
-    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @GetMapping("/profile/other/{memberId}")
@@ -113,6 +106,14 @@ public class MemberController {
     return ResponseEntity.ok()
         .body(memberService.refreshAccessToken(memberId));
 
+  }
+
+  @PostMapping()
+  public ResponseEntity<Void> deviceToken(@RequestBody DeviceTokenRequest request,
+      HttpServletRequest servletRequest) {
+    String memberId = servletRequest.getAttribute("memberId").toString();
+    memberService.setDeviceToken(memberId, request);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
 }
