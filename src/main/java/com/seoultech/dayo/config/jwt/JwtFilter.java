@@ -45,10 +45,10 @@ public class JwtFilter implements Filter {
 
       // 2. validateToken 으로 토큰 유효성 검사
       // todo 리팩토링
-      if (isCheckPath(requestURI) && !StringUtils.hasText(jwt)) {
-        throw new IllegalArgumentException("유효하지 않는 토큰입니다");
+      if (isCheckPath(requestURI) && (!StringUtils.hasText(jwt) || !validateToken(jwt,
+          httpRequest))) {
+        throw new Exception("유효하지 않는 토큰입니다");
       }
-      request.setAttribute("memberId", validateToken(jwt));
       chain.doFilter(request, response);
     } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e) {
       HttpServletResponse res = (HttpServletResponse) response;
@@ -73,7 +73,7 @@ public class JwtFilter implements Filter {
   }
 
 
-  private String validateToken(String token) {
+  private boolean validateToken(String token, HttpServletRequest servletRequest) {
 
     byte[] decode = Decoders.BASE64.decode(JwtConfig.JWT_SECRET);
     Key key = Keys.hmacShaKeyFor(decode);
@@ -84,8 +84,8 @@ public class JwtFilter implements Filter {
           .build()
           .parseClaimsJws(token)
           .getBody();
-
-      return claims.get("jti", String.class);
+      servletRequest.setAttribute("memberId", claims.get("jti", String.class));
+      return true;
     } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
       log.info("잘못된 JWT 서명입니다.");
       throw new IllegalStateException("잘못된 JWT 서명입니다.");
