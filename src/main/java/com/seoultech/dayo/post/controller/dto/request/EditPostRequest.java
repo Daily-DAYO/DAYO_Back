@@ -15,6 +15,4 @@ public class EditPostRequest {
 
   private String contents;
 
-  private String privacy;
-
 }

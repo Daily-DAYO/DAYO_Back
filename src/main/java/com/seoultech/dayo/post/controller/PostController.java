@@ -29,7 +29,6 @@ public class PostController {
   private final PostService postService;
   private final MemberService memberService;
   private final FolderService folderService;
-  private final TokenProvider tokenProvider;
 
   @GetMapping("/dayopick/all")
   public ResponseEntity<DayoPickPostListResponse> dayoPickListAll(

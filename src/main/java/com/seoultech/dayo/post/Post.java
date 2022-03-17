@@ -5,6 +5,7 @@ import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.bookmark.Bookmark;
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.folder.Folder;
+import com.seoultech.dayo.folder.Privacy;
 import com.seoultech.dayo.heart.Heart;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.member.Member;
@@ -91,6 +92,7 @@ public class Post extends BaseTimeEntity {
 
   public void addFolder(Folder folder) {
     this.folder = folder;
+    this.privacy = folder.getPrivacy();
     folder.getPosts().add(this);
   }
 
@@ -99,26 +101,24 @@ public class Post extends BaseTimeEntity {
   }
 
   public Post(Member member, String contents, String thumbnailImage, Category category,
-      Privacy privacy, List<Image> images) {
+      List<Image> images) {
     this.member = member;
     member.getPosts().add(this);
     this.contents = contents;
     this.thumbnailImage = thumbnailImage;
     this.category = category;
-    this.privacy = privacy;
     this.images = images;
   }
 
   @Builder
   public Post(Long id, Member member, String contents, String thumbnailImage, Category category,
-      Privacy privacy, List<Image> images) {
+      List<Image> images) {
     this.id = id;
     this.member = member;
     member.getPosts().add(this);
     this.contents = contents;
     this.thumbnailImage = thumbnailImage;
     this.category = category;
-    this.privacy = privacy;
     this.images = images;
   }
 

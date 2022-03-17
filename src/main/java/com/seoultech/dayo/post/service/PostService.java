@@ -4,6 +4,7 @@ package com.seoultech.dayo.post.service;
 import com.seoultech.dayo.bookmark.service.BookmarkService;
 import com.seoultech.dayo.exception.InvalidPostAccess;
 import com.seoultech.dayo.exception.NotExistPostException;
+import com.seoultech.dayo.folder.Privacy;
 import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.follow.service.FollowService;
 import com.seoultech.dayo.heart.service.HeartService;
@@ -15,7 +16,6 @@ import com.seoultech.dayo.hashtag.service.HashtagService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
-import com.seoultech.dayo.post.Privacy;
 import com.seoultech.dayo.post.controller.dto.DayoPick;
 import com.seoultech.dayo.post.controller.dto.FeedDto;
 import com.seoultech.dayo.post.controller.dto.FeedDto.CommentDto;
@@ -26,12 +26,10 @@ import com.seoultech.dayo.post.controller.dto.response.*;
 import com.seoultech.dayo.post.repository.PostRepository;
 import com.seoultech.dayo.postHashtag.service.PostHashtagService;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.cfg.CollectionSecondPass;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -177,9 +175,6 @@ public class PostService {
     }
     if (request.getContents() != null) {
       post.setContents(request.getContents());
-    }
-    if (request.getPrivacy() != null) {
-      post.setPrivacy(Privacy.valueOf(request.getPrivacy()));
     }
     if (folder != null) {
       post.addFolder(folder);
