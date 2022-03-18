@@ -8,18 +8,22 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MyFolderDto {
 
-    private Long folderId;
+  private Long folderId;
 
-    private String name;
+  private String name;
 
-    private String subheading;
+  private String subheading;
 
-    private String thumbnailImage;
+  private String thumbnailImage;
 
-    private int postCount;
+  private String privacy;
 
-    public static MyFolderDto from(Folder folder) {
-        return new MyFolderDto(folder.getId(), folder.getName(), folder.getSubheading(), folder.getThumbnailImage().getStoreFileName() ,folder.getPostCount());
-    }
+  private int postCount;
+
+  public static MyFolderDto from(Folder folder) {
+    return new MyFolderDto(folder.getId(), folder.getName(), folder.getSubheading(),
+        folder.getThumbnailImage().getStoreFileName(), folder.getPrivacy().toString(),
+        folder.getPostCount());
+  }
 
 }
