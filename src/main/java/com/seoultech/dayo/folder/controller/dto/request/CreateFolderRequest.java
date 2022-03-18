@@ -12,20 +12,21 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.NotNull;
 
 @Getter
+@AllArgsConstructor
 public class CreateFolderRequest {
 
-    @NotNull
-    private String name;
+  @NotNull
+  private String name;
 
-    private String subheading;
+  private String subheading;
 
-    @NotNull
-    private String privacy;
+  @NotNull
+  private String privacy;
 
-    private MultipartFile thumbnailImage;
+  private MultipartFile thumbnailImage;
 
-    public Folder toEntity(Image image) {
-        return new Folder(this.name, this.subheading, Privacy.valueOf(this.privacy), image);
-    }
+  public Folder toEntity(Image image) {
+    return new Folder(this.name, this.subheading, Privacy.valueOf(this.privacy), image);
+  }
 
 }

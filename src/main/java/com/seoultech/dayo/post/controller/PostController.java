@@ -109,7 +109,8 @@ public class PostController {
   }
 
   @PostMapping("/delete/{postId}")
-  public ResponseEntity<Void> deletePost(HttpServletRequest servletRequest, @PathVariable Long postId) {
+  public ResponseEntity<Void> deletePost(HttpServletRequest servletRequest,
+      @PathVariable Long postId) {
     String memberId = servletRequest.getAttribute("memberId").toString();
 
     postService.deletePost(memberId, postId);

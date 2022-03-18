@@ -6,7 +6,9 @@ import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
@@ -14,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
+@AllArgsConstructor
 public class CreatePostRequest {
 
   @NotBlank

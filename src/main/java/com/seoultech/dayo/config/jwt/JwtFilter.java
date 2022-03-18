@@ -44,7 +44,6 @@ public class JwtFilter implements Filter {
       String requestURI = httpRequest.getRequestURI();
 
       // 2. validateToken 으로 토큰 유효성 검사
-      // todo 리팩토링
       if (isCheckPath(requestURI) && (!StringUtils.hasText(jwt) || !validateToken(jwt,
           httpRequest))) {
         throw new Exception("유효하지 않는 토큰입니다");
