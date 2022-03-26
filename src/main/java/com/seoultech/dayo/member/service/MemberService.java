@@ -13,6 +13,7 @@ import com.seoultech.dayo.follow.service.FollowService;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.member.Member;
+import com.seoultech.dayo.member.controller.dto.request.ChangePasswordRequest;
 import com.seoultech.dayo.member.controller.dto.request.DeviceTokenRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
@@ -161,6 +162,10 @@ public class MemberService {
     return MemberSignUpResponse.from(savedMember);
   }
 
+  public boolean existMemberByEmail(String email) {
+    return memberRepository.existsMemberByEmail(email);
+  }
+
   public Member findMemberById(String memberId) {
     return memberRepository.findById(memberId)
         .orElseThrow(NotExistMemberException::new);
@@ -176,6 +181,12 @@ public class MemberService {
         .ifPresent(member -> {
           throw new ExistEmailException();
         });
+  }
+
+  public void changePassword(ChangePasswordRequest request) {
+    Member member = memberRepository.findMemberByEmail(request.getEmail())
+        .orElseThrow(() -> new IllegalStateException("존재하지 않는 이메일입니다."));
+    member.setPassword(passwordEncoder.encode(request.getPassword()));
   }
 
   private String get(String apiUrl, String accessToken) {

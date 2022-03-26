@@ -2,6 +2,7 @@ package com.seoultech.dayo.member.controller;
 
 import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.mail.MailService;
+import com.seoultech.dayo.member.controller.dto.request.ChangePasswordRequest;
 import com.seoultech.dayo.member.controller.dto.request.DeviceTokenRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignInRequest;
@@ -78,7 +79,7 @@ public class MemberController {
 
   @GetMapping("/signUp/{email}")
   public ResponseEntity<MemberAuthCodeResponse> signUpMember(
-      @PathVariable @Valid String email) {
+      @PathVariable @Email String email) {
 
     String authCode = mailService.sendAuthMail(email);
 
@@ -108,11 +109,26 @@ public class MemberController {
 
   }
 
-  @PostMapping()
+  @PostMapping
   public ResponseEntity<Void> deviceToken(@RequestBody DeviceTokenRequest request,
       HttpServletRequest servletRequest) {
     String memberId = servletRequest.getAttribute("memberId").toString();
     memberService.setDeviceToken(memberId, request);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @GetMapping("/search/{email}")
+  public ResponseEntity<Void> searchPassword(@PathVariable @Email String email) {
+    if (memberService.existMemberByEmail(email)) {
+      mailService.sendAuthMail(email);
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    throw new IllegalStateException("존재하지 않는 이메일입니다.");
+  }
+
+  @PostMapping("/search")
+  public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequest request) {
+    memberService.changePassword(request);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
