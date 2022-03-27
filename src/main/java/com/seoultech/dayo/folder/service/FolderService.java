@@ -152,6 +152,8 @@ public class FolderService {
         .map(FolderDetailDto::from)
         .collect(toList());
 
+    collect.sort((a1, a2) -> a2.getCreateDate().compareTo(a1.getCreateDate()));
+
     return DetailFolderResponse.from(folder, collect);
   }
 

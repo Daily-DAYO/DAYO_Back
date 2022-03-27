@@ -28,6 +28,8 @@ public class PostDto {
 
   private boolean isBookmark;
 
+  private LocalDateTime createDate;
+
   public static PostDto from(Post post, boolean isHeart, boolean isBookmark) {
     return new PostDto(post.getId(),
         post.getThumbnailImage(),
@@ -37,7 +39,8 @@ public class PostDto {
         post.getHearts().size(),
         post.getComments().size(),
         isHeart,
-        isBookmark
+        isBookmark,
+        post.getCreatedDate()
     );
   }
 
