@@ -107,6 +107,8 @@ public class PostService {
 
     }
 
+    collect.sort((a1, a2) -> a2.getCreateDate().compareTo(a1.getCreateDate()));
+
     return new ListAllPostResponse(postList.size(), collect);
   }
 
@@ -259,6 +261,8 @@ public class PostService {
         collect.add(DayoPick.from(post, false));
       }
     }
+
+    collect.sort((a1, a2) -> a2.getHeartCount() - a1.getHeartCount());
 
     return DayoPickPostListResponse.from(collect);
   }
