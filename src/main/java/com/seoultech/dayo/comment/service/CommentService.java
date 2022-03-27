@@ -13,6 +13,8 @@ import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.service.PostService;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,10 +45,12 @@ public class CommentService {
 
     // TODO: refactoring
     if (post.getMember().getDeviceToken() != null) {
+      Map<String, String> data = new HashMap<>();
+      data.put("key1", "value1");
       Note note = new Note(
           "DAYO",
           member.getNickname() + "님이 회원님의 게시글에 댓글을 남겼어요.",
-          null,
+          data,
           null
       );
 

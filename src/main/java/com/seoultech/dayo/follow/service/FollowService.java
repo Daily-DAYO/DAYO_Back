@@ -19,6 +19,8 @@ import com.seoultech.dayo.follow.repository.FollowRepository;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.repository.MemberRepository;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,10 +49,12 @@ public class FollowService {
 
     // TODO: refactoring
     if (follower.getDeviceToken() != null) {
+      Map<String, String> data = new HashMap<>();
+      data.put("key1", "value1");
       Note note = new Note(
           "DAYO",
           member.getNickname() + "님이 회원님을 팔로우해요.",
-          null,
+          data,
           null
       );
 
@@ -73,10 +77,12 @@ public class FollowService {
 
     // TODO: refactoring
     if (follower.getDeviceToken() != null) {
+      Map<String, String> data = new HashMap<>();
+      data.put("key1", "value1");
       Note note = new Note(
           "DAYO",
           member.getNickname() + "님이 회원님을 팔로우해요.",
-          null,
+          data,
           null
       );
 
