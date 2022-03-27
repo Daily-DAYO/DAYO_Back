@@ -1,5 +1,6 @@
 package com.seoultech.dayo.heart.controller;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.heart.controller.dto.request.CreateHeartRequest;
 import com.seoultech.dayo.heart.controller.dto.response.CreateHeartResponse;
@@ -29,7 +30,7 @@ public class HeartController {
 
   @PostMapping
   public ResponseEntity<CreateHeartResponse> createHeart(HttpServletRequest servletRequest,
-      @RequestBody @Valid CreateHeartRequest request) {
+      @RequestBody @Valid CreateHeartRequest request) throws FirebaseMessagingException {
     String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);

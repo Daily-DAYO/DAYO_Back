@@ -1,4 +1,4 @@
-package com.seoultech.dayo.comment.controller.request;
+package com.seoultech.dayo.comment.controller.dto.request;
 
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.member.Member;

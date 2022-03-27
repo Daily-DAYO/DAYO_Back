@@ -1,7 +1,10 @@
 package com.seoultech.dayo.heart.service;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.exception.NotExistPostException;
+import com.seoultech.dayo.fcm.FcmMessageService;
+import com.seoultech.dayo.fcm.Note;
 import com.seoultech.dayo.heart.Heart;
 import com.seoultech.dayo.heart.controller.dto.HeartPostDto;
 import com.seoultech.dayo.heart.controller.dto.MyHeartPostDto;
@@ -31,10 +34,22 @@ import static java.util.stream.Collectors.toList;
 public class HeartService {
 
   private final HeartRepository heartRepository;
+  private final FcmMessageService fcmMessageService;
 
-  public CreateHeartResponse createHeart(Member member, Post post, CreateHeartRequest request) {
+  public CreateHeartResponse createHeart(Member member, Post post, CreateHeartRequest request)
+      throws FirebaseMessagingException {
     Heart heart = request.toEntity(member, post);
     Heart savedHeart = heartRepository.save(heart);
+
+    // TODO: refactoring
+    Note note = new Note(
+        "DAYO",
+        member.getNickname() + "님이 회원님의 게시글을 좋아해요.",
+        null,
+        null
+    );
+
+    fcmMessageService.sendMessage(note, post.getMember().getDeviceToken());
 
     return CreateHeartResponse.from(savedHeart);
   }

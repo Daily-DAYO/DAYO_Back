@@ -1,7 +1,10 @@
 package com.seoultech.dayo.follow.controller;
 
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.seoultech.dayo.config.jwt.TokenProvider;
+import com.seoultech.dayo.fcm.FcmMessageService;
+import com.seoultech.dayo.fcm.Note;
 import com.seoultech.dayo.follow.controller.dto.request.CreateFollowRequest;
 import com.seoultech.dayo.follow.controller.dto.request.CreateFollowUpRequest;
 import com.seoultech.dayo.follow.controller.dto.response.*;
@@ -26,7 +29,7 @@ public class FollowController {
 
   @PostMapping
   public ResponseEntity<CreateFollowResponse> createFollow(HttpServletRequest servletRequest,
-      @RequestBody @Valid CreateFollowRequest request) {
+      @RequestBody @Valid CreateFollowRequest request) throws FirebaseMessagingException {
     String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);
@@ -38,7 +41,7 @@ public class FollowController {
 
   @PostMapping("/up")
   public ResponseEntity<CreateFollowUpResponse> createFollowUp(HttpServletRequest servletRequest,
-      @RequestBody @Valid CreateFollowUpRequest request) {
+      @RequestBody @Valid CreateFollowUpRequest request) throws FirebaseMessagingException {
     String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);

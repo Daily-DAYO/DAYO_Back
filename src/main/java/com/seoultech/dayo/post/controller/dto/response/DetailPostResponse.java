@@ -1,20 +1,14 @@
 package com.seoultech.dayo.post.controller.dto.response;
 
 
-import com.seoultech.dayo.comment.Comment;
-import com.seoultech.dayo.comment.controller.response.ListAllCommentResponse;
 import com.seoultech.dayo.image.Image;
-import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
-import com.seoultech.dayo.postHashtag.PostHashtag;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 

@@ -1,4 +1,4 @@
-package com.seoultech.dayo.comment.controller.response;
+package com.seoultech.dayo.comment.controller.dto.response;
 
 
 import lombok.AllArgsConstructor;

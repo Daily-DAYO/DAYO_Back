@@ -1,9 +1,7 @@
-package com.seoultech.dayo.comment.controller.response;
+package com.seoultech.dayo.comment.controller.dto.response;
 
 import com.seoultech.dayo.comment.Comment;
-import com.seoultech.dayo.member.Member;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

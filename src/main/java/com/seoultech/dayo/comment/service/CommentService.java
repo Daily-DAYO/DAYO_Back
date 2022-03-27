@@ -1,27 +1,23 @@
 package com.seoultech.dayo.comment.service;
 
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.seoultech.dayo.comment.Comment;
-import com.seoultech.dayo.comment.controller.response.ListAllCommentResponse;
+import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponse;
 import com.seoultech.dayo.comment.repository.CommentRepository;
-import com.seoultech.dayo.comment.controller.request.CreateCommentRequest;
-import com.seoultech.dayo.comment.controller.response.CreateCommentResponse;
-import com.seoultech.dayo.config.jwt.TokenProvider;
-import com.seoultech.dayo.exception.NotExistMemberException;
-import com.seoultech.dayo.exception.NotExistPostException;
+import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequest;
+import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
+import com.seoultech.dayo.fcm.FcmMessageService;
+import com.seoultech.dayo.fcm.Note;
 import com.seoultech.dayo.member.Member;
-import com.seoultech.dayo.member.repository.MemberRepository;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Post;
-import com.seoultech.dayo.post.repository.PostRepository;
 import com.seoultech.dayo.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -33,8 +29,10 @@ public class CommentService {
   private final CommentRepository commentRepository;
   private final MemberService memberService;
   private final PostService postService;
+  private final FcmMessageService messageService;
 
-  public CreateCommentResponse createComment(String memberId, CreateCommentRequest request) {
+  public CreateCommentResponse createComment(String memberId, CreateCommentRequest request)
+      throws FirebaseMessagingException {
 
     Post post = postService.findPostById(request.getPostId());
     Member member = memberService.findMemberById(memberId);
@@ -42,6 +40,16 @@ public class CommentService {
     Comment comment = request.toEntity(member);
     Comment savedComment = commentRepository.save(comment);
     savedComment.addPost(post);
+
+    // TODO: refactoring
+    Note note = new Note(
+        "DAYO",
+        member.getNickname() + "님이 회원님의 게시글에 댓글을 남겼어요.",
+        null,
+        null
+    );
+
+    messageService.sendMessage(note, post.getMember().getDeviceToken());
 
     return new CreateCommentResponse(savedComment.getId());
   }

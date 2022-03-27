@@ -1,9 +1,12 @@
 package com.seoultech.dayo.follow.service;
 
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.seoultech.dayo.exception.NotExistFollowException;
 import com.seoultech.dayo.exception.NotExistFollowerException;
 import com.seoultech.dayo.exception.NotExistMemberException;
+import com.seoultech.dayo.fcm.FcmMessageService;
+import com.seoultech.dayo.fcm.Note;
 import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.follow.controller.dto.FollowerDto;
 import com.seoultech.dayo.follow.controller.dto.FollowingDto;
@@ -34,18 +37,29 @@ import static java.util.stream.Collectors.toSet;
 public class FollowService {
 
   private final FollowRepository followRepository;
+  private final FcmMessageService fcmMessageService;
 
   public CreateFollowResponse createFollow(Member member, Member follower,
-      CreateFollowRequest request) {
+      CreateFollowRequest request) throws FirebaseMessagingException {
 
     Follow follow = request.toEntity(member, follower);
     Follow savedFollow = followRepository.save(follow);
+
+    // TODO: refactoring
+    Note note = new Note(
+        "DAYO",
+        member.getNickname() + "님이 회원님을 팔로우해요.",
+        null,
+        null
+    );
+
+    fcmMessageService.sendMessage(note, follower.getDeviceToken());
 
     return CreateFollowResponse.from(savedFollow);
   }
 
   public CreateFollowUpResponse createFollowUp(Member member, Member follower,
-      CreateFollowUpRequest request) {
+      CreateFollowUpRequest request) throws FirebaseMessagingException {
 
     Optional<Follow> followOptional = followRepository.findFollowByMemberAndFollower(follower,
         member);
@@ -54,6 +68,16 @@ public class FollowService {
 
     Follow follow = request.toEntity(member, follower);
     Follow savedFollow = followRepository.save(follow);
+
+    // TODO: refactoring
+    Note note = new Note(
+        "DAYO",
+        member.getNickname() + "님이 회원님을 팔로우해요.",
+        null,
+        null
+    );
+
+    fcmMessageService.sendMessage(note, follower.getDeviceToken());
 
     return CreateFollowUpResponse.from(savedFollow);
   }

@@ -1,11 +1,11 @@
 package com.seoultech.dayo.comment.controller;
 
 
-import com.seoultech.dayo.comment.controller.request.CreateCommentRequest;
-import com.seoultech.dayo.comment.controller.response.CreateCommentResponse;
-import com.seoultech.dayo.comment.controller.response.ListAllCommentResponse;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequest;
+import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
+import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponse;
 import com.seoultech.dayo.comment.service.CommentService;
-import com.seoultech.dayo.config.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ public class CommentController {
 
   @PostMapping
   public ResponseEntity<CreateCommentResponse> createComment(HttpServletRequest servletRequest,
-      @RequestBody @Valid CreateCommentRequest request) {
+      @RequestBody @Valid CreateCommentRequest request) throws FirebaseMessagingException {
     String memberId = servletRequest.getAttribute("memberId").toString();
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(commentService.createComment(memberId, request));
