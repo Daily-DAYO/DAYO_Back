@@ -42,14 +42,15 @@ public class HeartService {
     Heart savedHeart = heartRepository.save(heart);
 
     // TODO: refactoring
-    Note note = new Note(
-        "DAYO",
-        member.getNickname() + "님이 회원님의 게시글을 좋아해요.",
-        null,
-        null
-    );
-
-    fcmMessageService.sendMessage(note, post.getMember().getDeviceToken());
+    if (post.getMember().getDeviceToken() != null) {
+      Note note = new Note(
+          "DAYO",
+          member.getNickname() + "님이 회원님의 게시글을 좋아해요.",
+          null,
+          null
+      );
+      fcmMessageService.sendMessage(note, post.getMember().getDeviceToken());
+    }
 
     return CreateHeartResponse.from(savedHeart);
   }

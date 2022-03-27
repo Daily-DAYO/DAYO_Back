@@ -42,14 +42,16 @@ public class CommentService {
     savedComment.addPost(post);
 
     // TODO: refactoring
-    Note note = new Note(
-        "DAYO",
-        member.getNickname() + "님이 회원님의 게시글에 댓글을 남겼어요.",
-        null,
-        null
-    );
+    if (post.getMember().getDeviceToken() != null) {
+      Note note = new Note(
+          "DAYO",
+          member.getNickname() + "님이 회원님의 게시글에 댓글을 남겼어요.",
+          null,
+          null
+      );
 
-    messageService.sendMessage(note, post.getMember().getDeviceToken());
+      messageService.sendMessage(note, post.getMember().getDeviceToken());
+    }
 
     return new CreateCommentResponse(savedComment.getId());
   }

@@ -46,14 +46,16 @@ public class FollowService {
     Follow savedFollow = followRepository.save(follow);
 
     // TODO: refactoring
-    Note note = new Note(
-        "DAYO",
-        member.getNickname() + "님이 회원님을 팔로우해요.",
-        null,
-        null
-    );
+    if (follower.getDeviceToken() != null) {
+      Note note = new Note(
+          "DAYO",
+          member.getNickname() + "님이 회원님을 팔로우해요.",
+          null,
+          null
+      );
 
-    fcmMessageService.sendMessage(note, follower.getDeviceToken());
+      fcmMessageService.sendMessage(note, follower.getDeviceToken());
+    }
 
     return CreateFollowResponse.from(savedFollow);
   }
@@ -70,14 +72,16 @@ public class FollowService {
     Follow savedFollow = followRepository.save(follow);
 
     // TODO: refactoring
-    Note note = new Note(
-        "DAYO",
-        member.getNickname() + "님이 회원님을 팔로우해요.",
-        null,
-        null
-    );
+    if (follower.getDeviceToken() != null) {
+      Note note = new Note(
+          "DAYO",
+          member.getNickname() + "님이 회원님을 팔로우해요.",
+          null,
+          null
+      );
 
-    fcmMessageService.sendMessage(note, follower.getDeviceToken());
+      fcmMessageService.sendMessage(note, follower.getDeviceToken());
+    }
 
     return CreateFollowUpResponse.from(savedFollow);
   }
