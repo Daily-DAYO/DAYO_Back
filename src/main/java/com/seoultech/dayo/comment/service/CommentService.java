@@ -46,10 +46,10 @@ public class CommentService {
     // TODO: refactoring
     if (post.getMember().getDeviceToken() != null) {
       Map<String, String> data = new HashMap<>();
-      data.put("key1", "value1");
+      data.put("body", member.getNickname() + "님이 회원님의 게시글에 댓글을 남겼어요.");
       Note note = new Note(
           "DAYO",
-          member.getNickname() + "님이 회원님의 게시글에 댓글을 남겼어요.",
+          null,
           data,
           null
       );
