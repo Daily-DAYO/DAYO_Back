@@ -7,8 +7,8 @@ import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponse
 import com.seoultech.dayo.comment.repository.CommentRepository;
 import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequest;
 import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
-import com.seoultech.dayo.fcm.FcmMessageService;
-import com.seoultech.dayo.fcm.Note;
+import com.seoultech.dayo.config.fcm.FcmMessageService;
+import com.seoultech.dayo.config.fcm.Note;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Post;

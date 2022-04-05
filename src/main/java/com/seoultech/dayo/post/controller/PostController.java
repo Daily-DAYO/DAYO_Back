@@ -1,13 +1,11 @@
 package com.seoultech.dayo.post.controller;
 
 
-import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.exception.InvalidFolderAccess;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.service.FolderService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
-import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
 import com.seoultech.dayo.post.controller.dto.request.EditPostRequest;
 import com.seoultech.dayo.post.controller.dto.response.*;
@@ -36,7 +34,6 @@ public class PostController {
 
     String memberId = servletRequest.getAttribute("memberId").toString();
     Member member = memberService.findMemberById(memberId);
-
     return ResponseEntity.ok()
         .body(postService.dayoPickAllList(member));
   }

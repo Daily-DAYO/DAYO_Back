@@ -2,9 +2,6 @@ package com.seoultech.dayo.follow.controller;
 
 
 import com.google.firebase.messaging.FirebaseMessagingException;
-import com.seoultech.dayo.config.jwt.TokenProvider;
-import com.seoultech.dayo.fcm.FcmMessageService;
-import com.seoultech.dayo.fcm.Note;
 import com.seoultech.dayo.follow.controller.dto.request.CreateFollowRequest;
 import com.seoultech.dayo.follow.controller.dto.request.CreateFollowUpRequest;
 import com.seoultech.dayo.follow.controller.dto.response.*;

@@ -1,4 +1,4 @@
-package com.seoultech.dayo.fcm;
+package com.seoultech.dayo.config.fcm;
 
 import java.util.Map;
 import lombok.AllArgsConstructor;

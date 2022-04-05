@@ -3,10 +3,8 @@ package com.seoultech.dayo.follow.service;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.seoultech.dayo.exception.NotExistFollowException;
-import com.seoultech.dayo.exception.NotExistFollowerException;
-import com.seoultech.dayo.exception.NotExistMemberException;
-import com.seoultech.dayo.fcm.FcmMessageService;
-import com.seoultech.dayo.fcm.Note;
+import com.seoultech.dayo.config.fcm.FcmMessageService;
+import com.seoultech.dayo.config.fcm.Note;
 import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.follow.controller.dto.FollowerDto;
 import com.seoultech.dayo.follow.controller.dto.FollowingDto;
@@ -17,7 +15,6 @@ import com.seoultech.dayo.follow.controller.dto.request.CreateFollowUpRequest;
 import com.seoultech.dayo.follow.controller.dto.response.*;
 import com.seoultech.dayo.follow.repository.FollowRepository;
 import com.seoultech.dayo.member.Member;
-import com.seoultech.dayo.member.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;

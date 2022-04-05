@@ -1,10 +1,8 @@
 package com.seoultech.dayo.heart.service;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
-import com.seoultech.dayo.exception.NotExistMemberException;
-import com.seoultech.dayo.exception.NotExistPostException;
-import com.seoultech.dayo.fcm.FcmMessageService;
-import com.seoultech.dayo.fcm.Note;
+import com.seoultech.dayo.config.fcm.FcmMessageService;
+import com.seoultech.dayo.config.fcm.Note;
 import com.seoultech.dayo.heart.Heart;
 import com.seoultech.dayo.heart.controller.dto.HeartPostDto;
 import com.seoultech.dayo.heart.controller.dto.MyHeartPostDto;
@@ -14,11 +12,7 @@ import com.seoultech.dayo.heart.controller.dto.response.ListAllHeartPostResponse
 import com.seoultech.dayo.heart.controller.dto.response.ListAllMyHeartPostResponse;
 import com.seoultech.dayo.heart.repository.HeartRepository;
 import com.seoultech.dayo.member.Member;
-import com.seoultech.dayo.member.repository.MemberRepository;
-import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Post;
-import com.seoultech.dayo.post.repository.PostRepository;
-import com.seoultech.dayo.post.service.PostService;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
