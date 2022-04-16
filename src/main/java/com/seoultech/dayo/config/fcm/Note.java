@@ -15,13 +15,14 @@ public class Note {
   private Map<String, String> data;
   private String image;
 
-  public Alarm toEntity(Member member) {
+  public Alarm toEntity(Member member, Long postId) {
     return new Alarm(
         member,
         false,
         this.subject,
         this.content,
-        this.image
+        this.image,
+        postId
     );
   }
 

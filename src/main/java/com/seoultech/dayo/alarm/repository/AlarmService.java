@@ -14,8 +14,8 @@ public class AlarmService {
 
   private final AlarmRepository alarmRepository;
 
-  public void save(Note note, Member member) {
-    alarmRepository.save(note.toEntity(member));
+  public void save(Note note, Member member, Long postId) {
+    alarmRepository.save(note.toEntity(member, postId));
   }
 
 }

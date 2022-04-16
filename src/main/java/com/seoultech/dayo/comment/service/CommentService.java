@@ -56,7 +56,7 @@ public class CommentService {
           null
       );
 
-      alarmService.save(note, post.getMember());
+      alarmService.save(note, post.getMember(), post.getId());
       messageService.sendMessage(note, post.getMember().getDeviceToken());
     }
 

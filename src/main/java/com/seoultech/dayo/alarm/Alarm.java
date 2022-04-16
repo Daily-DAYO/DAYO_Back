@@ -2,6 +2,7 @@ package com.seoultech.dayo.alarm;
 
 import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.member.Member;
+import com.seoultech.dayo.post.Post;
 import java.util.Map;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,6 +20,8 @@ public class Alarm extends BaseTimeEntity {
   @ManyToOne
   private Member member;
 
+  private Long postId;
+
   private boolean isCheck;
 
   private String subject;
@@ -27,12 +30,14 @@ public class Alarm extends BaseTimeEntity {
 
   private String image;
 
-  public Alarm(Member member, boolean isCheck, String subject, String content, String image) {
+  public Alarm(Member member, boolean isCheck, String subject, String content, String image,
+      Long postId) {
     this.member = member;
     this.isCheck = isCheck;
     this.subject = subject;
     this.content = content;
     this.image = image;
+    this.postId = postId;
   }
 
   protected Alarm() {

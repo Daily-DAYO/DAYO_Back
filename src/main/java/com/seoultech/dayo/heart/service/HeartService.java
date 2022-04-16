@@ -1,6 +1,7 @@
 package com.seoultech.dayo.heart.service;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
+import com.seoultech.dayo.alarm.repository.AlarmService;
 import com.seoultech.dayo.config.fcm.FcmMessageService;
 import com.seoultech.dayo.config.fcm.Note;
 import com.seoultech.dayo.heart.Heart;
@@ -30,6 +31,7 @@ public class HeartService {
 
   private final HeartRepository heartRepository;
   private final FcmMessageService fcmMessageService;
+  private final AlarmService alarmService;
 
   public CreateHeartResponse createHeart(Member member, Post post, CreateHeartRequest request)
       throws FirebaseMessagingException {
@@ -46,6 +48,8 @@ public class HeartService {
           data,
           null
       );
+
+      alarmService.save(note, post.getMember(), post.getId());
       fcmMessageService.sendMessage(note, post.getMember().getDeviceToken());
     }
 
