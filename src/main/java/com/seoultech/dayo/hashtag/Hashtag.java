@@ -2,7 +2,6 @@ package com.seoultech.dayo.hashtag;
 
 import com.seoultech.dayo.postHashtag.PostHashtag;
 import lombok.Getter;
-import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import java.util.List;
 @Entity
 @Getter
 @Table(indexes = @Index(name = "i_tag", columnList = "tag"))
-@Document(indexName = "hashtags")
 public class Hashtag {
 
   @Id

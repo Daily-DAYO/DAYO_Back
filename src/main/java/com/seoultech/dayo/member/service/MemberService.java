@@ -29,7 +29,6 @@ import com.seoultech.dayo.member.controller.dto.response.RefreshTokenResponse;
 import com.seoultech.dayo.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.monitor.os.OsStats.Mem;
 import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
