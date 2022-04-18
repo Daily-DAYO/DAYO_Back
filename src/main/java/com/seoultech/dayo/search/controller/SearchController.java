@@ -3,6 +3,7 @@ package com.seoultech.dayo.search.controller;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.search.Search;
+import com.seoultech.dayo.search.controller.dto.response.SearchHistoryResponse;
 import com.seoultech.dayo.search.controller.dto.response.SearchResultResponse;
 import com.seoultech.dayo.search.service.SearchService;
 import javax.servlet.http.HttpServletRequest;
@@ -29,4 +30,16 @@ public class SearchController {
     return ResponseEntity.ok()
         .body(searchService.search(member,tag));
   }
+
+  @GetMapping("/history")
+  public ResponseEntity<SearchHistoryResponse> searchHistory(HttpServletRequest servletRequest) {
+    String memberId = servletRequest.getAttribute("memberId").toString();
+    Member member = memberService.findMemberById(memberId);
+
+    return ResponseEntity.ok()
+        .body(searchService.searchHistory(member));
+  }
+
+
+
 }

@@ -9,6 +9,8 @@ import com.seoultech.dayo.postHashtag.PostHashtag;
 import com.seoultech.dayo.postHashtag.service.PostHashtagService;
 import com.seoultech.dayo.search.Search;
 import com.seoultech.dayo.search.controller.dto.SearchDto;
+import com.seoultech.dayo.search.controller.dto.SearchHistoryDto;
+import com.seoultech.dayo.search.controller.dto.response.SearchHistoryResponse;
 import com.seoultech.dayo.search.controller.dto.response.SearchResultResponse;
 import com.seoultech.dayo.search.repository.SearchRepository;
 import java.util.ArrayList;
@@ -41,8 +43,17 @@ public class SearchService {
           .map(postHashtag -> SearchDto.from(postHashtag.getPost()))
           .collect(toList());
     }
-    return SearchResultResponse.from(collect);
 
+    return SearchResultResponse.from(collect);
+  }
+
+  public SearchHistoryResponse searchHistory(Member member) {
+    List<Search> searches = searchRepository.findSearchesByMember(member);
+    List<SearchHistoryDto> collect = searches.stream()
+        .map(SearchHistoryDto::from)
+        .collect(toList());
+
+    return SearchHistoryResponse.from(collect);
   }
 
 
