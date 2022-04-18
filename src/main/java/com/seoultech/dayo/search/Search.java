@@ -19,4 +19,11 @@ public class Search {
 
   private String content;
 
+  public Search(Member member, String content) {
+    this.member = member;
+    this.content = content;
+  }
+
+  protected Search() {
+  }
 }

@@ -15,22 +15,25 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class PostHashtagService {
 
-    private final PostHashtagRepository postHashtagRepository;
+  private final PostHashtagRepository postHashtagRepository;
 
-    public void createPostHashtag(Post post, List<Hashtag> hashtags) {
-        postHashtagRepository.saveAll(hashtags.stream()
-            .map(hashtag -> new PostHashtag(post, hashtag))
-            .collect(toList()));
-    }
+  public void createPostHashtag(Post post, List<Hashtag> hashtags) {
+    postHashtagRepository.saveAll(hashtags.stream()
+        .map(hashtag -> new PostHashtag(post, hashtag))
+        .collect(toList()));
+  }
 
-    public List<PostHashtag> saveAll(List<PostHashtag> postHashtags) {
-        return postHashtagRepository.saveAll(postHashtags);
-    }
+  public List<PostHashtag> saveAll(List<PostHashtag> postHashtags) {
+    return postHashtagRepository.saveAll(postHashtags);
+  }
 
-    public PostHashtag save(PostHashtag postHashtag) {
-        return postHashtagRepository.save(postHashtag);
-    }
+  public PostHashtag save(PostHashtag postHashtag) {
+    return postHashtagRepository.save(postHashtag);
+  }
 
-//    public PostHashtag findPostHashtagByKey(Post post, Hashtag hashtag)
+  public List<PostHashtag> findPostHashtags(Hashtag hashtag) {
+    return postHashtagRepository.findPostHashtagsByHashtag(hashtag);
+  }
+
 
 }
