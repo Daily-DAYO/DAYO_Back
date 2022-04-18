@@ -8,10 +8,12 @@ import lombok.Getter;
 @Getter
 public class SearchHistoryDto {
 
+  private Long searchId;
+
   private String history;
 
   public static SearchHistoryDto from(Search search) {
-    return new SearchHistoryDto(search.getContent());
+    return new SearchHistoryDto(search.getId(), search.getContent());
   }
 
 }

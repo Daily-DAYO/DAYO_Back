@@ -56,5 +56,8 @@ public class SearchService {
     return SearchHistoryResponse.from(collect);
   }
 
+  public void deleteSearchHistory(Long searchId) {
+    searchRepository.deleteById(searchId);
+  }
 
 }
