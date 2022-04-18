@@ -43,7 +43,7 @@ public class HashtagService {
   }
 
   public Optional<Hashtag> findHashtag(String tag) {
-    return hashtagRepository.findByTag("%" + tag + "%");
+    return hashtagRepository.findByTag(tag);
   }
 
 }
