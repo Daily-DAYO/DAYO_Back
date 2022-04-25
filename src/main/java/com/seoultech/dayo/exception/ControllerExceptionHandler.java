@@ -26,7 +26,8 @@ public class ControllerExceptionHandler {
       NotExistPostCategoryException.class,
       InvalidFolderAccess.class,
       InvalidPostAccess.class,
-      ExistEmailException.class
+      ExistEmailException.class,
+      IncorrectPasswordException.class
   })
   public ResponseEntity<BadRequestFailResponse> badRequest(Exception e) {
     return ResponseEntity.badRequest()
