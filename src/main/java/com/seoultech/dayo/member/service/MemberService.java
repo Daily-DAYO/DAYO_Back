@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.seoultech.dayo.config.jwt.TokenDto;
 import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.exception.ExistEmailException;
+import com.seoultech.dayo.exception.IncorrectPasswordException;
 import com.seoultech.dayo.exception.NotExistFollowerException;
 import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.folder.service.FolderService;
@@ -96,7 +97,7 @@ public class MemberService {
       return MemberSignInResponse.from(token);
     }
 
-    throw new NotExistMemberException();
+    throw new IncorrectPasswordException();
   }
 
   public void setDeviceToken(String memberId, DeviceTokenRequest request) {
