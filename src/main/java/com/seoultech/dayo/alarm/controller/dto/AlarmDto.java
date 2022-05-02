@@ -9,6 +9,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class AlarmDto {
 
+  private Long alarmId;
+
   private String content;
 
   private boolean isCheck;
@@ -20,7 +22,7 @@ public class AlarmDto {
   private LocalDateTime createdTime;
 
   public static AlarmDto from(Alarm alarm) {
-    return new AlarmDto(alarm.getContent(), alarm.isCheck(), alarm.getPostId(),
+    return new AlarmDto(alarm.getId(), alarm.getContent(), alarm.isCheck(), alarm.getPostId(),
         alarm.getNickname(), alarm.getCreatedDate());
   }
 
