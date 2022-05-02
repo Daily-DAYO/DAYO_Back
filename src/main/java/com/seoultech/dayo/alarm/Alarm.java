@@ -9,8 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class Alarm extends BaseTimeEntity {
 
   @Id
@@ -30,14 +32,17 @@ public class Alarm extends BaseTimeEntity {
 
   private String image;
 
+  private String nickname;
+
   public Alarm(Member member, boolean isCheck, String subject, String content, String image,
-      Long postId) {
+      Long postId, String nickname) {
     this.member = member;
     this.isCheck = isCheck;
     this.subject = subject;
     this.content = content;
     this.image = image;
     this.postId = postId;
+    this.nickname = nickname;
   }
 
   protected Alarm() {

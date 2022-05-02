@@ -1,7 +1,7 @@
 package com.seoultech.dayo.heart.service;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
-import com.seoultech.dayo.alarm.repository.AlarmService;
+import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.config.fcm.FcmMessageService;
 import com.seoultech.dayo.config.fcm.Note;
 import com.seoultech.dayo.heart.Heart;
@@ -44,12 +44,12 @@ public class HeartService {
       data.put("body", member.getNickname() + "님이 회원님의 게시글을 좋아해요.");
       Note note = new Note(
           "DAYO",
-          null,
+          "님이 회원님의 게시글을 좋아해요.",
           data,
           null
       );
 
-      alarmService.save(note, post.getMember(), post.getId());
+      alarmService.save(note, post.getMember(), post.getId(), member.getNickname());
       fcmMessageService.sendMessage(note, post.getMember().getDeviceToken());
     }
 

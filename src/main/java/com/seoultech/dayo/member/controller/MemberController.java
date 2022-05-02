@@ -132,4 +132,12 @@ public class MemberController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @PostMapping("/resign")
+  public ResponseEntity<Void> resign(HttpServletRequest servletRequest) {
+    String memberId = servletRequest.getAttribute("memberId").toString();
+
+    memberService.resign(memberId);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
 }

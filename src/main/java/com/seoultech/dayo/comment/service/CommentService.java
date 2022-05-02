@@ -2,7 +2,7 @@ package com.seoultech.dayo.comment.service;
 
 
 import com.google.firebase.messaging.FirebaseMessagingException;
-import com.seoultech.dayo.alarm.repository.AlarmService;
+import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponse;
 import com.seoultech.dayo.comment.repository.CommentRepository;
@@ -51,12 +51,12 @@ public class CommentService {
       data.put("body", member.getNickname() + "님이 회원님의 게시글에 댓글을 남겼어요.");
       Note note = new Note(
           "DAYO",
-          null,
+          "님이 회원님의 게시글에 댓글을 남겼어요.",
           data,
           null
       );
 
-      alarmService.save(note, post.getMember(), post.getId());
+      alarmService.save(note, post.getMember(), post.getId(), member.getNickname());
       messageService.sendMessage(note, post.getMember().getDeviceToken());
     }
 

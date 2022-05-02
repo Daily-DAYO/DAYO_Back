@@ -40,10 +40,16 @@ public class Member extends BaseTimeEntity {
   @OneToOne
   private Image profileImg;
 
-  @OneToMany(mappedBy = "member")
+  @OneToMany(
+      mappedBy = "member",
+      orphanRemoval = true
+  )
   private List<Folder> folders = new ArrayList<>();
 
-  @OneToMany(mappedBy = "member")
+  @OneToMany(
+      mappedBy = "member",
+      orphanRemoval = true
+  )
   private List<Post> posts = new ArrayList<>();
 
   private String deviceToken;

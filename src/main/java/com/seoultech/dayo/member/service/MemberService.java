@@ -189,6 +189,10 @@ public class MemberService {
     member.setPassword(passwordEncoder.encode(request.getPassword()));
   }
 
+  public void resign(String memberId) {
+    memberRepository.deleteById(memberId);
+  }
+
   private String get(String apiUrl, String accessToken) {
 
     try {
