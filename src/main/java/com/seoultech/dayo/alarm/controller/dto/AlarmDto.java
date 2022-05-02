@@ -1,6 +1,7 @@
 package com.seoultech.dayo.alarm.controller.dto;
 
 import com.seoultech.dayo.alarm.Alarm;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,9 +17,11 @@ public class AlarmDto {
 
   private String nickname;
 
+  private LocalDateTime createdTime;
+
   public static AlarmDto from(Alarm alarm) {
     return new AlarmDto(alarm.getContent(), alarm.isCheck(), alarm.getPostId(),
-        alarm.getNickname());
+        alarm.getNickname(), alarm.getCreatedDate());
   }
 
 }
