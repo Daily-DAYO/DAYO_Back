@@ -126,7 +126,7 @@ public class MemberController {
     throw new IllegalStateException("존재하지 않는 이메일입니다.");
   }
 
-  @PostMapping("/search")
+  @PostMapping("/changePassword")
   public ResponseEntity<Void> changePassword(@RequestBody ChangePasswordRequest request) {
     memberService.changePassword(request);
     return new ResponseEntity<>(HttpStatus.OK);
