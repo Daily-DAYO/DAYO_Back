@@ -5,6 +5,7 @@ import com.seoultech.dayo.alarm.controller.dto.AlarmDto;
 import com.seoultech.dayo.alarm.controller.dto.response.ListAllAlarmResponse;
 import com.seoultech.dayo.alarm.repository.AlarmRepository;
 import com.seoultech.dayo.config.fcm.Note;
+import com.seoultech.dayo.exception.NotExistAlarmException;
 import com.seoultech.dayo.member.Member;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +32,18 @@ public class AlarmService {
         .collect(Collectors.toList());
 
     return ListAllAlarmResponse.from(collect);
+  }
+
+  public void isCheckAlarm(Long alarmId) {
+
+    Alarm alarm = alarmRepository.findById(alarmId)
+        .orElseThrow(NotExistAlarmException::new);
+
+    if (alarm.getIsCheck()) {
+      return;
+    }
+
+    alarm.setCheck(true);
   }
 
 }

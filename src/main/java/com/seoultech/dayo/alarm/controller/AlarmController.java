@@ -6,8 +6,11 @@ import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,6 +29,12 @@ public class AlarmController {
 
     return ResponseEntity.ok()
         .body(alarmService.listAll(member));
+  }
+
+  @PostMapping("/{alarmId}")
+  public ResponseEntity<Void> isCheckAlarm(@PathVariable Long alarmId) {
+    alarmService.isCheckAlarm(alarmId);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }

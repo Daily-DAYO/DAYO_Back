@@ -4,7 +4,9 @@ import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,12 +21,12 @@ public class Alarm extends BaseTimeEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private Member member;
 
   private Long postId;
 
-  private boolean isCheck;
+  private Boolean isCheck;
 
   private String subject;
 
@@ -34,7 +36,11 @@ public class Alarm extends BaseTimeEntity {
 
   private String nickname;
 
-  public Alarm(Member member, boolean isCheck, String subject, String content, String image,
+  public void setCheck(Boolean check) {
+    isCheck = check;
+  }
+
+  public Alarm(Member member, Boolean isCheck, String subject, String content, String image,
       Long postId, String nickname) {
     this.member = member;
     this.isCheck = isCheck;
