@@ -22,7 +22,7 @@ public class AlarmDto {
   private LocalDateTime createdTime;
 
   public static AlarmDto from(Alarm alarm) {
-    return new AlarmDto(alarm.getId(), alarm.getContent(), alarm.isCheck(), alarm.getPostId(),
+    return new AlarmDto(alarm.getId(), alarm.getContent(), alarm.getIsCheck(), alarm.getPostId(),
         alarm.getNickname(), alarm.getCreatedDate());
   }
 
