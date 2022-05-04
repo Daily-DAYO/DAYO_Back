@@ -15,6 +15,7 @@ import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.controller.dto.request.ChangePasswordRequest;
+import com.seoultech.dayo.member.controller.dto.request.CheckPasswordRequest;
 import com.seoultech.dayo.member.controller.dto.request.DeviceTokenRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
@@ -191,6 +192,16 @@ public class MemberService {
 
   public void resign(String memberId) {
     memberRepository.deleteById(memberId);
+  }
+
+  public void checkPassword(CheckPasswordRequest request, String memberId) {
+
+    Member member = memberRepository.findById(memberId)
+        .orElseThrow(NotExistMemberException::new);
+
+    if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
+      throw new IncorrectPasswordException();
+    }
   }
 
   private String get(String apiUrl, String accessToken) {

@@ -3,6 +3,7 @@ package com.seoultech.dayo.member.controller;
 import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.mail.MailService;
 import com.seoultech.dayo.member.controller.dto.request.ChangePasswordRequest;
+import com.seoultech.dayo.member.controller.dto.request.CheckPasswordRequest;
 import com.seoultech.dayo.member.controller.dto.request.DeviceTokenRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignInRequest;
@@ -138,6 +139,15 @@ public class MemberController {
 
     memberService.resign(memberId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  @GetMapping("/checkPassword")
+  public ResponseEntity<Void> checkPassword(@RequestBody CheckPasswordRequest request,
+      HttpServletRequest servletRequest) {
+    String memberId = servletRequest.getAttribute("memberId").toString();
+
+    memberService.checkPassword(request, memberId);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
 }
