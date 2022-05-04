@@ -141,7 +141,7 @@ public class MemberController {
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
-  @GetMapping("/checkPassword")
+  @PostMapping("/checkPassword")
   public ResponseEntity<Void> checkPassword(@RequestBody CheckPasswordRequest request,
       HttpServletRequest servletRequest) {
     String memberId = servletRequest.getAttribute("memberId").toString();
