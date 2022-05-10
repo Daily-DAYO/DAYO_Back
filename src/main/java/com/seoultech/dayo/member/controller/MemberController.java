@@ -133,6 +133,12 @@ public class MemberController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @PostMapping("/setting/changePassword")
+  public ResponseEntity<Void> changePasswordInSetting(@RequestBody ChangePasswordRequest request) {
+    memberService.changePassword(request);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
   @PostMapping("/resign")
   public ResponseEntity<Void> resign(HttpServletRequest servletRequest) {
     String memberId = servletRequest.getAttribute("memberId").toString();
