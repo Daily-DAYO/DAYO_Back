@@ -39,18 +39,19 @@ public class HeartService {
     Heart heart = request.toEntity(member, post);
     Heart savedHeart = heartRepository.save(heart);
 
+    Map<String, String> data = new HashMap<>();
+    data.put("body", member.getNickname() + "님이 회원님의 게시글을 좋아해요.");
+    Note note = new Note(
+        "DAYO",
+        "님이 회원님의 게시글을 좋아해요.",
+        data,
+        null
+    );
+
+    alarmService.save(note, post.getMember(), post.getId(), member.getNickname(), Category.HEART);
+    
     // TODO: refactoring
     if (post.getMember().getDeviceToken() != null) {
-      Map<String, String> data = new HashMap<>();
-      data.put("body", member.getNickname() + "님이 회원님의 게시글을 좋아해요.");
-      Note note = new Note(
-          "DAYO",
-          "님이 회원님의 게시글을 좋아해요.",
-          data,
-          null
-      );
-
-      alarmService.save(note, post.getMember(), post.getId(), member.getNickname(), Category.HEART);
       fcmMessageService.sendMessage(note, post.getMember().getDeviceToken());
     }
 

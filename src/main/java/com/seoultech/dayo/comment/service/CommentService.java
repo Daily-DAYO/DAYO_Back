@@ -46,19 +46,20 @@ public class CommentService {
     Comment savedComment = commentRepository.save(comment);
     savedComment.addPost(post);
 
-    // TODO: need refactoring
-    if (post.getMember().getDeviceToken() != null && post.getMember().getId().equals(memberId)) {
-      Map<String, String> data = new HashMap<>();
-      data.put("body", member.getNickname() + "님이 회원님의 게시글에 댓글을 남겼어요.");
-      Note note = new Note(
-          "DAYO",
-          "님이 회원님의 게시글에 댓글을 남겼어요.",
-          data,
-          null
-      );
+    Map<String, String> data = new HashMap<>();
+    data.put("body", member.getNickname() + "님이 회원님의 게시글에 댓글을 남겼어요.");
+    Note note = new Note(
+        "DAYO",
+        "님이 회원님의 게시글에 댓글을 남겼어요.",
+        data,
+        null
+    );
 
-      alarmService.save(note, post.getMember(), post.getId(), member.getNickname(),
-          Category.COMMENT);
+    alarmService.save(note, post.getMember(), post.getId(), member.getNickname(),
+        Category.COMMENT);
+
+    // TODO: need refactoring
+    if (post.getMember().getDeviceToken() != null) {
       messageService.sendMessage(note, post.getMember().getDeviceToken());
     }
 
