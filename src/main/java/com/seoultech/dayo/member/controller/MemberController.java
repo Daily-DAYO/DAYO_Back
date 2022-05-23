@@ -1,6 +1,5 @@
 package com.seoultech.dayo.member.controller;
 
-import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.mail.MailService;
 import com.seoultech.dayo.member.controller.dto.request.ChangePasswordRequest;
 import com.seoultech.dayo.member.controller.dto.request.CheckPasswordRequest;
@@ -8,6 +7,7 @@ import com.seoultech.dayo.member.controller.dto.request.DeviceTokenRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignInRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignUpRequest;
+import com.seoultech.dayo.member.controller.dto.request.MemberResignRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberAuthCodeResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse;
@@ -140,10 +140,11 @@ public class MemberController {
   }
 
   @PostMapping("/resign")
-  public ResponseEntity<Void> resign(HttpServletRequest servletRequest) {
+  public ResponseEntity<Void> resign(MemberResignRequest request,
+      HttpServletRequest servletRequest) {
     String memberId = servletRequest.getAttribute("memberId").toString();
 
-    memberService.resign(memberId);
+    memberService.resign(memberId, request);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 

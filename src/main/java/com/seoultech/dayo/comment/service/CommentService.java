@@ -45,8 +45,8 @@ public class CommentService {
     Comment savedComment = commentRepository.save(comment);
     savedComment.addPost(post);
 
-    // TODO: refactoring
-    if (post.getMember().getDeviceToken() != null) {
+    // TODO: need refactoring
+    if (post.getMember().getDeviceToken() != null && post.getMember().getId().equals(memberId)) {
       Map<String, String> data = new HashMap<>();
       data.put("body", member.getNickname() + "님이 회원님의 게시글에 댓글을 남겼어요.");
       Note note = new Note(

@@ -21,6 +21,7 @@ import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignInRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignUpRequest;
+import com.seoultech.dayo.member.controller.dto.request.MemberResignRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOAuthResponse;
@@ -29,6 +30,8 @@ import com.seoultech.dayo.member.controller.dto.response.MemberSignInResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberSignUpResponse;
 import com.seoultech.dayo.member.controller.dto.response.RefreshTokenResponse;
 import com.seoultech.dayo.member.repository.MemberRepository;
+import com.seoultech.dayo.resign.Resign;
+import com.seoultech.dayo.resign.repository.ResignRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -56,6 +59,7 @@ public class MemberService {
   private final RestTemplate restTemplate;
   private final FollowService followService;
   private final PasswordEncoder passwordEncoder;
+  private final ResignRepository resignRepository;
 
   public MemberOAuthResponse kakaoApi(MemberOAuthRequest request) {
     String apiUrl = "https://kapi.kakao.com/v2/user/me";
@@ -190,8 +194,9 @@ public class MemberService {
     member.setPassword(passwordEncoder.encode(request.getPassword()));
   }
 
-  public void resign(String memberId) {
+  public void resign(String memberId, MemberResignRequest request) {
     memberRepository.deleteById(memberId);
+    resignRepository.save(new Resign(request.getContent()));
   }
 
   public void checkPassword(CheckPasswordRequest request, String memberId) {
