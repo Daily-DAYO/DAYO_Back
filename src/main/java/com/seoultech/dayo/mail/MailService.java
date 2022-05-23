@@ -25,7 +25,7 @@ public class MailService {
       sendMail.setText("<h1>[이메일 인증]</h1>"
           + "<p>6자리 여기요~</p>"
           + authKey);
-      sendMail.setFrom("jdyj1235@gmail.com", "관리자");
+      sendMail.setFrom("jdyj@naver.com", "관리자");
       sendMail.setTo(email);
       sendMail.send();
     } catch (MessagingException | UnsupportedEncodingException e) {
