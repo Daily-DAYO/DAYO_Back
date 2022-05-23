@@ -24,6 +24,8 @@ public class Alarm extends BaseTimeEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Member member;
 
+  private Category category;
+
   private Long postId;
 
   private Boolean isCheck;
@@ -40,9 +42,11 @@ public class Alarm extends BaseTimeEntity {
     isCheck = check;
   }
 
-  public Alarm(Member member, Boolean isCheck, String subject, String content, String image,
+  public Alarm(Member member, Category category, Boolean isCheck, String subject, String content,
+      String image,
       Long postId, String nickname) {
     this.member = member;
+    this.category = category;
     this.isCheck = isCheck;
     this.subject = subject;
     this.content = content;

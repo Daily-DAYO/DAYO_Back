@@ -2,6 +2,7 @@ package com.seoultech.dayo.comment.service;
 
 
 import com.google.firebase.messaging.FirebaseMessagingException;
+import com.seoultech.dayo.alarm.Category;
 import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponse;
@@ -56,7 +57,8 @@ public class CommentService {
           null
       );
 
-      alarmService.save(note, post.getMember(), post.getId(), member.getNickname());
+      alarmService.save(note, post.getMember(), post.getId(), member.getNickname(),
+          Category.COMMENT);
       messageService.sendMessage(note, post.getMember().getDeviceToken());
     }
 

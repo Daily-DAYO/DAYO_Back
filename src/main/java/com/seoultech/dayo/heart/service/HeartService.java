@@ -1,6 +1,7 @@
 package com.seoultech.dayo.heart.service;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
+import com.seoultech.dayo.alarm.Category;
 import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.config.fcm.FcmMessageService;
 import com.seoultech.dayo.config.fcm.Note;
@@ -49,7 +50,7 @@ public class HeartService {
           null
       );
 
-      alarmService.save(note, post.getMember(), post.getId(), member.getNickname());
+      alarmService.save(note, post.getMember(), post.getId(), member.getNickname(), Category.HEART);
       fcmMessageService.sendMessage(note, post.getMember().getDeviceToken());
     }
 
