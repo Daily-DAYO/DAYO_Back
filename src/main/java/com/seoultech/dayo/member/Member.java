@@ -3,6 +3,7 @@ package com.seoultech.dayo.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.seoultech.dayo.BaseTimeEntity;
+import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.image.Image;
@@ -51,6 +52,12 @@ public class Member extends BaseTimeEntity {
       orphanRemoval = true
   )
   private List<Post> posts = new ArrayList<>();
+
+  @OneToMany(
+      mappedBy = "member",
+      orphanRemoval = true
+  )
+  private List<Comment> comments = new ArrayList<>();
 
   private String deviceToken;
 
