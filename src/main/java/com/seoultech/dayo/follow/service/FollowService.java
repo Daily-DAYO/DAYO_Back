@@ -43,17 +43,17 @@ public class FollowService {
     Follow follow = request.toEntity(member, follower);
     Follow savedFollow = followRepository.save(follow);
 
+    Map<String, String> data = new HashMap<>();
+    data.put("body", member.getNickname() + "님이 회원님을 팔로우해요.");
+    Note note = new Note(
+        "DAYO",
+        null,
+        data,
+        null
+    );
+
     // TODO: refactoring
     if (follower.getDeviceToken() != null) {
-      Map<String, String> data = new HashMap<>();
-      data.put("body", member.getNickname() + "님이 회원님을 팔로우해요.");
-      Note note = new Note(
-          "DAYO",
-          null,
-          data,
-          null
-      );
-
       fcmMessageService.sendMessage(note, follower.getDeviceToken());
     }
 
@@ -71,17 +71,17 @@ public class FollowService {
     Follow follow = request.toEntity(member, follower);
     Follow savedFollow = followRepository.save(follow);
 
+    Map<String, String> data = new HashMap<>();
+    data.put("body", member.getNickname() + "님이 회원님을 팔로우해요.");
+    Note note = new Note(
+        "DAYO",
+        null,
+        data,
+        null
+    );
+
     // TODO: refactoring
     if (follower.getDeviceToken() != null) {
-      Map<String, String> data = new HashMap<>();
-      data.put("body", member.getNickname() + "님이 회원님을 팔로우해요.");
-      Note note = new Note(
-          "DAYO",
-          null,
-          data,
-          null
-      );
-
       fcmMessageService.sendMessage(note, follower.getDeviceToken());
     }
 
