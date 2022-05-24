@@ -4,5 +4,6 @@ public enum Category {
 
   COMMENT,
   HEART,
-  NOTICE
+  NOTICE,
+  FOLLOW
 }

@@ -56,7 +56,7 @@ public class CommentService {
           null
       );
 
-      alarmService.save(note, post.getMember(), post.getId(), member.getNickname(),
+      alarmService.saveAlarmPost(note, post.getMember(), post.getId(), member.getNickname(),
           Category.COMMENT);
 
       // TODO: need refactoring

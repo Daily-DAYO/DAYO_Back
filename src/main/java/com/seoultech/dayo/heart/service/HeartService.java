@@ -49,7 +49,7 @@ public class HeartService {
           null
       );
 
-      alarmService.save(note, post.getMember(), post.getId(), member.getNickname(), Category.HEART);
+      alarmService.saveAlarmPost(note, post.getMember(), post.getId(), member.getNickname(), Category.HEART);
 
       // TODO: refactoring
       if (post.getMember().getDeviceToken() != null) {

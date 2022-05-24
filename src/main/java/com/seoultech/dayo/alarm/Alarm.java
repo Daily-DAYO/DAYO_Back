@@ -55,6 +55,17 @@ public class Alarm extends BaseTimeEntity {
     this.nickname = nickname;
   }
 
+  public Alarm(Member member, Category category, Boolean isCheck, String subject,
+      String content, String image, String nickname) {
+    this.member = member;
+    this.category = category;
+    this.isCheck = isCheck;
+    this.subject = subject;
+    this.content = content;
+    this.image = image;
+    this.nickname = nickname;
+  }
+
   protected Alarm() {
   }
 }

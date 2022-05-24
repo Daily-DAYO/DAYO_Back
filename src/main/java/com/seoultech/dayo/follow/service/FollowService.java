@@ -2,6 +2,8 @@ package com.seoultech.dayo.follow.service;
 
 
 import com.google.firebase.messaging.FirebaseMessagingException;
+import com.seoultech.dayo.alarm.Category;
+import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.exception.NotExistFollowException;
 import com.seoultech.dayo.config.fcm.FcmMessageService;
 import com.seoultech.dayo.config.fcm.Note;
@@ -36,6 +38,7 @@ public class FollowService {
 
   private final FollowRepository followRepository;
   private final FcmMessageService fcmMessageService;
+  private final AlarmService alarmService;
 
   public CreateFollowResponse createFollow(Member member, Member follower,
       CreateFollowRequest request) throws FirebaseMessagingException {
@@ -51,6 +54,8 @@ public class FollowService {
         data,
         null
     );
+
+    alarmService.saveAlarmFollow(note, follower, follower.getNickname(), Category.FOLLOW);
 
     // TODO: refactoring
     if (follower.getDeviceToken() != null) {
@@ -79,6 +84,8 @@ public class FollowService {
         data,
         null
     );
+
+    alarmService.saveAlarmFollow(note, follower, follower.getNickname(), Category.FOLLOW);
 
     // TODO: refactoring
     if (follower.getDeviceToken() != null) {

@@ -21,8 +21,13 @@ public class AlarmService {
 
   private final AlarmRepository alarmRepository;
 
-  public void save(Note note, Member member, Long postId, String nickname, Category category) {
-    alarmRepository.save(note.toEntity(member, postId, nickname, category));
+  public void saveAlarmPost(Note note, Member member, Long postId, String nickname,
+      Category category) {
+    alarmRepository.save(note.toEntityWithPostId(member, postId, nickname, category));
+  }
+
+  public void saveAlarmFollow(Note note, Member member, String nickname, Category category) {
+    alarmRepository.save(note.toEntityWithoutPostId(member, nickname, category));
   }
 
   public ListAllAlarmResponse listAll(Member member) {

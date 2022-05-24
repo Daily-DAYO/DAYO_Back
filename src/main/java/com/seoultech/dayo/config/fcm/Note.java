@@ -16,7 +16,7 @@ public class Note {
   private Map<String, String> data;
   private String image;
 
-  public Alarm toEntity(Member member, Long postId, String nickname, Category category) {
+  public Alarm toEntityWithPostId(Member member, Long postId, String nickname, Category category) {
     return new Alarm(
         member,
         category,
@@ -25,6 +25,18 @@ public class Note {
         this.content,
         this.image,
         postId,
+        nickname
+    );
+  }
+
+  public Alarm toEntityWithoutPostId(Member member, String nickname, Category category) {
+    return new Alarm(
+        member,
+        category,
+        false,
+        this.subject,
+        this.content,
+        this.image,
         nickname
     );
   }
