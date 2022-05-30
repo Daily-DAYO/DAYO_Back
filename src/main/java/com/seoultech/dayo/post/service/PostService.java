@@ -148,7 +148,7 @@ public class PostService {
 
     List<MultipartFile> files = request.getFiles();
     List<Image> images = imageService.storeFiles(files);
-
+    log.info("category = {}", request.getCategory());
     Post savedPost = postRepository.save(request.toEntity(member, images));
     savedPost.addFolder(folder);
 
