@@ -1,7 +1,5 @@
 package com.seoultech.dayo.config.jwt;
 
-import com.seoultech.dayo.exception.InvalidTokenException;
-import com.seoultech.dayo.exception.dto.UnauthorizedFailResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -88,16 +86,16 @@ public class JwtFilter implements Filter {
       return true;
     } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
       log.info("잘못된 JWT 서명입니다.");
-      throw new IllegalStateException("잘못된 JWT 서명입니다.");
+      throw e;
     } catch (ExpiredJwtException e) {
       log.info("만료된 JWT 토큰입니다.");
-      throw new IllegalStateException("만료된 JWT 토큰입니다.");
+      throw e;
     } catch (UnsupportedJwtException e) {
       log.info("지원되지 않는 JWT 토큰입니다.");
-      throw new IllegalStateException("지원되지 않는 JWT 토큰입니다.");
+      throw e;
     } catch (IllegalArgumentException e) {
       log.info("JWT 토큰이 잘못되었습니다.");
-      throw new IllegalStateException("JWT 토큰이 잘못되었습니다.");
+      throw e;
     }
   }
 }
