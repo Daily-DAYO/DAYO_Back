@@ -36,17 +36,18 @@ public class CreatePostRequest {
   private List<MultipartFile> files;
 
   public Post toEntity(Member member, List<Image> images) {
-//    if (Category.find(category)) {
-    return Post.builder()
-        .member(member)
-        .contents(contents)
-        .thumbnailImage(images.get(0).getStoreFileName())
-        .category(Category.valueOf(category))
-        .images(images)
-        .build();
-//    } else {
-//      throw new NotExistPostCategoryException();
-//    }
+    if (Category.find(category)) {
+      return Post.builder()
+          .member(member)
+          .contents(contents)
+          .thumbnailImage(images.get(0).getStoreFileName())
+          .category(Category.valueOf(category))
+          .images(images)
+          .build();
+    } else {
+      throw new NotExistPostCategoryException();
+    }
+
 
   }
 
