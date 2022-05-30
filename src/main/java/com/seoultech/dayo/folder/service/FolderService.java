@@ -49,6 +49,10 @@ public class FolderService {
       image = imageService.storeFile(thumbnailImage);
     }
 
+    String privacy = request.getPrivacy();
+    String parsedPrivacy = privacy.substring(1, privacy.length() - 1);
+    request.setPrivacy(parsedPrivacy);
+
     Folder savedFolder = folderRepository.save(request.toEntity(image));
     List<Folder> folders = folderRepository.findFoldersByMember(member);
 

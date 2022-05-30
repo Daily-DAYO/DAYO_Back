@@ -8,6 +8,7 @@ import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,7 @@ public class CreatePostRequest {
   private Long folderId;
 
   @NotNull
+  @Setter
   private String category;
 
   private List<String> tags;
