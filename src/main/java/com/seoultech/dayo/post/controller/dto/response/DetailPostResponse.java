@@ -16,6 +16,8 @@ import static java.util.stream.Collectors.toList;
 @AllArgsConstructor
 public class DetailPostResponse {
 
+  private String memberId;
+
   private String nickname;
 
   private String profileImg;
@@ -51,7 +53,9 @@ public class DetailPostResponse {
         .map(postHashtag -> postHashtag.getHashtag().getTag())
         .collect(toList());
 
-    return new DetailPostResponse(post.getMember().getNickname(),
+    return new DetailPostResponse(
+        post.getMember().getId(),
+        post.getMember().getNickname(),
         post.getMember().getProfileImg().getStoreFileName(),
         post.getCreatedDate(),
         post.getCategory(),
