@@ -9,6 +9,7 @@ import com.seoultech.dayo.post.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
+@Slf4j
 public class CreatePostRequest {
 
   @NotBlank
@@ -34,8 +36,8 @@ public class CreatePostRequest {
   private List<MultipartFile> files;
 
   public Post toEntity(Member member, List<Image> images) {
-
     if (Category.find(category)) {
+      log.info("들어오나?");
       return Post.builder()
           .member(member)
           .contents(contents)
