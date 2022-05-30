@@ -37,7 +37,6 @@ public class CreatePostRequest {
 
   public Post toEntity(Member member, List<Image> images) {
     if (Category.find(category)) {
-      log.info("들어오나?");
       return Post.builder()
           .member(member)
           .contents(contents)
