@@ -111,7 +111,9 @@ public class FolderService {
       folder.setSubheading(request.getSubheading());
     }
     if (StringUtils.hasText(request.getPrivacy())) {
-      folder.setPrivacy(Privacy.valueOf(request.getPrivacy()));
+      String privacy = request.getPrivacy();
+      String parsedPrivacy = privacy.substring(1, privacy.length() - 1);
+      folder.setPrivacy(Privacy.valueOf(parsedPrivacy));
     }
 
     // 기본이미지
