@@ -61,6 +61,10 @@ public class BookmarkService {
     return ListAllMyBookmarkPostResponse.from(collect);
   }
 
+  public void deleteAllByMember(Member member) {
+    bookmarkRepository.deleteAllByMember(member);
+  }
+
   public List<Bookmark> listBookmarksByMember(Member member) {
     return bookmarkRepository.findAllByMember(member);
   }

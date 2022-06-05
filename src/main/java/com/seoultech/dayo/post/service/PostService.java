@@ -271,6 +271,10 @@ public class PostService {
     return DayoPickPostListResponse.from(collect);
   }
 
+  public void deleteAllByMember(Member member) {
+    postRepository.deleteAllByMember(member);
+  }
+
   private Set<Long> getLikePost(Member member) {
     return heartService.listHeartsByMember(member).stream()
         .map(heart -> heart.getPost().getId())

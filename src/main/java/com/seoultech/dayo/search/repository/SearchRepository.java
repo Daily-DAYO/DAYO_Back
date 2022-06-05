@@ -9,4 +9,6 @@ public interface SearchRepository extends JpaRepository<Search, Long> {
 
   List<Search> findSearchesByMember(Member member);
 
+  void deleteAllByMember(Member member);
+
 }

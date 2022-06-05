@@ -60,4 +60,7 @@ public class SearchService {
     searchRepository.deleteById(searchId);
   }
 
+  public void deleteAllByMember(Member member) {
+    searchRepository.deleteAllByMember(member);
+  }
 }

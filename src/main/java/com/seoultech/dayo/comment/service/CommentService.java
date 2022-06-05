@@ -31,22 +31,20 @@ import static java.util.stream.Collectors.toList;
 public class CommentService {
 
   private final CommentRepository commentRepository;
-  private final MemberService memberService;
   private final PostService postService;
   private final FcmMessageService messageService;
   private final AlarmService alarmService;
 
-  public CreateCommentResponse createComment(String memberId, CreateCommentRequest request)
+  public CreateCommentResponse createComment(Member member, CreateCommentRequest request)
       throws FirebaseMessagingException {
 
     Post post = postService.findPostById(request.getPostId());
-    Member member = memberService.findMemberById(memberId);
 
     Comment comment = request.toEntity(member);
     Comment savedComment = commentRepository.save(comment);
     savedComment.addPost(post);
 
-    if (!post.getMember().getId().equals(memberId)) {
+    if (!post.getMember().getId().equals(member.getId())) {
       Map<String, String> data = new HashMap<>();
       data.put("body", member.getNickname() + "님이 회원님의 게시글에 댓글을 남겼어요.");
       Note note = new Note(
@@ -81,6 +79,10 @@ public class CommentService {
 
   public void deleteComment(Long commentId) {
     commentRepository.deleteById(commentId);
+  }
+
+  public void deleteAllByMember(Member member) {
+    commentRepository.deleteAllByMember(member);
   }
 
 }

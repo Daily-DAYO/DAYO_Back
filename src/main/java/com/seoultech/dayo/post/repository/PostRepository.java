@@ -1,5 +1,6 @@
 package com.seoultech.dayo.post.repository;
 
+import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,5 +26,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
   @Query("select p from Post p join fetch p.member")
   List<Post> findAllUsingJoinMember();
+
+  void deleteAllByMember(Member member);
 
 }

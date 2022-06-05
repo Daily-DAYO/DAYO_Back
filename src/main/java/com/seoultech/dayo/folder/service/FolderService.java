@@ -181,4 +181,8 @@ public class FolderService {
 
   }
 
+  public void deleteAllByMember(Member member) {
+    folderRepository.deleteAllByMember(member);
+  }
+
 }

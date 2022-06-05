@@ -25,7 +25,7 @@ public class JwtFilter implements Filter {
   public static final String BEARER_PREFIX = "Bearer ";
   private static final String[] whitelist = {"/images",
       "/api/v1/members/signUp", "/api/v1/members/duplicate/email/**", "/api/v1/members/kakaoOAuth",
-      "/api/v1/members/signIn", "/api/v1/members/signUp/**", "api/v1/members/refresh",
+      "/api/v1/members/signIn", "/api/v1/members/signUp/**", "/api/v1/members/refresh",
       "/api/v1/members/changePassword", "/api/v1/members/search/**",
       "/docs/api-doc.html", "/favicon.ico",
       "/swagger-resources/**", "/v3/api-docs", "/swagger*/**", "/webjars/**", "/swagger-resources",

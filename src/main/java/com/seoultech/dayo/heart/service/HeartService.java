@@ -49,7 +49,8 @@ public class HeartService {
           null
       );
 
-      alarmService.saveAlarmPost(note, post.getMember(), post.getId(), member.getNickname(), Category.HEART);
+      alarmService.saveAlarmPost(note, post.getMember(), post.getId(), member.getNickname(),
+          Category.HEART);
 
       // TODO: refactoring
       if (post.getMember().getDeviceToken() != null) {
@@ -89,6 +90,10 @@ public class HeartService {
 
   public boolean isHeart(String memberId, Long postId) {
     return heartRepository.existsHeartByKey(new Heart.Key(memberId, postId));
+  }
+
+  public void deleteAllByMember(Member member) {
+    heartRepository.deleteAllByMember(member);
   }
 
 }

@@ -9,4 +9,6 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
   List<Alarm> findAllByMember(Member member);
 
+  void deleteAllByMember(Member member);
+
 }

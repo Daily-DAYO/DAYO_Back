@@ -9,10 +9,14 @@ import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Follow.Key> {
 
-    List<Follow> findFollowsByMember(Member member);
+  List<Follow> findFollowsByMember(Member member);
 
-    List<Follow> findFollowsByFollower(Member follower);
+  List<Follow> findFollowsByFollower(Member follower);
 
-    Optional<Follow> findFollowByMemberAndFollower(Member member, Member follower);
+  Optional<Follow> findFollowByMemberAndFollower(Member member, Member follower);
+
+  void deleteAllByMember(Member member);
+
+  void deleteAllByFollower(Member follower);
 
 }

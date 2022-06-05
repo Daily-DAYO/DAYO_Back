@@ -6,6 +6,8 @@ import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequest;
 import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
 import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponse;
 import com.seoultech.dayo.comment.service.CommentService;
+import com.seoultech.dayo.member.Member;
+import com.seoultech.dayo.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +22,16 @@ import javax.validation.Valid;
 public class CommentController {
 
   private final CommentService commentService;
+  private final MemberService memberService;
 
   @PostMapping
   public ResponseEntity<CreateCommentResponse> createComment(HttpServletRequest servletRequest,
       @RequestBody @Valid CreateCommentRequest request) throws FirebaseMessagingException {
     String memberId = servletRequest.getAttribute("memberId").toString();
+    Member member = memberService.findMemberById(memberId);
+
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(commentService.createComment(memberId, request));
+        .body(commentService.createComment(member, request));
   }
 
   @PostMapping("/delete/{commentId}")

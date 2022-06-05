@@ -9,8 +9,10 @@ import java.util.Optional;
 
 public interface FolderRepository extends JpaRepository<Folder, Long> {
 
-    List<Folder> findFoldersByMember(Member member);
+  List<Folder> findFoldersByMember(Member member);
 
-    List<Folder> findFoldersByMemberOrderByOrderIndex(Member member);
+  List<Folder> findFoldersByMemberOrderByOrderIndex(Member member);
+
+  void deleteAllByMember(Member member);
 
 }

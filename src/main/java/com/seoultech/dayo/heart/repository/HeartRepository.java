@@ -8,8 +8,10 @@ import java.util.List;
 
 public interface HeartRepository extends JpaRepository<Heart, Heart.Key> {
 
-    List<Heart> findAllByMember(Member member);
+  List<Heart> findAllByMember(Member member);
 
-    boolean existsHeartByKey(Heart.Key key);
+  boolean existsHeartByKey(Heart.Key key);
+
+  void deleteAllByMember(Member member);
 
 }

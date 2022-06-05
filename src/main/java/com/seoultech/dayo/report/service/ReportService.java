@@ -27,4 +27,8 @@ public class ReportService {
 
   }
 
+  public void deleteAllByMember(Member member) {
+    reportRepository.deleteAllByMember(member);
+  }
+
 }

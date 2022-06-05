@@ -12,11 +12,13 @@ import org.springframework.stereotype.Service;
 public class InquiryService {
 
   private final InquiryRepository inquiryRepository;
-  private final MemberService memberService;
 
-  public void create(CreateInquiryRequest request, String memberId) {
-    Member member = memberService.findMemberById(memberId);
+  public void create(CreateInquiryRequest request, Member member) {
     inquiryRepository.save(request.toEntity(member));
+  }
+
+  public void deleteAllByMember(Member member) {
+    inquiryRepository.deleteAllByMember(member);
   }
 
 

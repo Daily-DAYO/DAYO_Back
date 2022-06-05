@@ -2,6 +2,8 @@ package com.seoultech.dayo.inquiry.controller;
 
 import com.seoultech.dayo.inquiry.controller.dto.request.CreateInquiryRequest;
 import com.seoultech.dayo.inquiry.service.InquiryService;
+import com.seoultech.dayo.member.Member;
+import com.seoultech.dayo.member.service.MemberService;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,13 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class InquiryController {
 
   private final InquiryService inquiryService;
+  private final MemberService memberService;
 
   @PostMapping
   public ResponseEntity<Void> create(HttpServletRequest servletRequest,
       CreateInquiryRequest request) {
 
     String memberId = servletRequest.getAttribute("memberId").toString();
-    inquiryService.create(request, memberId);
+    Member member = memberService.findMemberById(memberId);
+
+    inquiryService.create(request, member);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 

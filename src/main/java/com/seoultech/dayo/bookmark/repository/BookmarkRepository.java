@@ -11,4 +11,6 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Bookmark.Key
 
   boolean existsBookmarkByKey(Bookmark.Key key);
 
+  void deleteAllByMember(Member member);
+
 }

@@ -52,4 +52,8 @@ public class AlarmService {
     alarm.setCheck(true);
   }
 
+  public void deleteAllByMember(Member member) {
+    alarmRepository.deleteAllByMember(member);
+  }
+
 }

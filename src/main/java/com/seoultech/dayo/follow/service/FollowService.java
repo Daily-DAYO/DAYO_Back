@@ -173,4 +173,9 @@ public class FollowService {
     return followRepository.existsById(new Follow.Key(memberId, followerId));
   }
 
+  public void deleteAllByMember(Member member) {
+    followRepository.deleteAllByMember(member);
+    followRepository.deleteAllByFollower(member);
+  }
+
 }

@@ -3,6 +3,9 @@ package com.seoultech.dayo.member.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.seoultech.dayo.alarm.service.AlarmService;
+import com.seoultech.dayo.bookmark.service.BookmarkService;
+import com.seoultech.dayo.comment.service.CommentService;
 import com.seoultech.dayo.config.jwt.TokenDto;
 import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.exception.ExistEmailException;
@@ -11,8 +14,10 @@ import com.seoultech.dayo.exception.NotExistFollowerException;
 import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.folder.service.FolderService;
 import com.seoultech.dayo.follow.service.FollowService;
+import com.seoultech.dayo.heart.service.HeartService;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
+import com.seoultech.dayo.inquiry.service.InquiryService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.controller.dto.request.ChangePasswordRequest;
 import com.seoultech.dayo.member.controller.dto.request.CheckPasswordRequest;
@@ -30,8 +35,11 @@ import com.seoultech.dayo.member.controller.dto.response.MemberSignInResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberSignUpResponse;
 import com.seoultech.dayo.member.controller.dto.response.RefreshTokenResponse;
 import com.seoultech.dayo.member.repository.MemberRepository;
+import com.seoultech.dayo.post.service.PostService;
+import com.seoultech.dayo.report.service.ReportService;
 import com.seoultech.dayo.resign.Resign;
 import com.seoultech.dayo.resign.repository.ResignRepository;
+import com.seoultech.dayo.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -60,6 +68,14 @@ public class MemberService {
   private final FollowService followService;
   private final PasswordEncoder passwordEncoder;
   private final ResignRepository resignRepository;
+  private final BookmarkService bookmarkService;
+  private final AlarmService alarmService;
+  private final CommentService commentService;
+  private final HeartService heartService;
+  private final InquiryService inquiryService;
+  private final ReportService reportService;
+  private final SearchService searchService;
+  private final PostService postService;
 
   public MemberOAuthResponse kakaoApi(MemberOAuthRequest request) {
     String apiUrl = "https://kapi.kakao.com/v2/user/me";
@@ -195,6 +211,19 @@ public class MemberService {
   }
 
   public void resign(String memberId, MemberResignRequest request) {
+    Member member = findMemberById(memberId);
+
+    bookmarkService.deleteAllByMember(member);
+    alarmService.deleteAllByMember(member);
+    commentService.deleteAllByMember(member);
+    folderService.deleteAllByMember(member);
+    followService.deleteAllByMember(member);
+    heartService.deleteAllByMember(member);
+    inquiryService.deleteAllByMember(member);
+    reportService.deleteAllByMember(member);
+    searchService.deleteAllByMember(member);
+    postService.deleteAllByMember(member);
+
     memberRepository.deleteById(memberId);
     resignRepository.save(new Resign(request.getContent()));
   }

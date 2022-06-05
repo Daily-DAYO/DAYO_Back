@@ -31,6 +31,15 @@ public class BookmarkController {
   private final MemberService memberService;
   private final PostService postService;
 
+  @PostMapping("/test")
+  public ResponseEntity<Void> deleteAll(HttpServletRequest servletRequest) {
+    String memberId = servletRequest.getAttribute("memberId").toString();
+
+    Member member = memberService.findMemberById(memberId);
+    bookmarkService.deleteAllByMember(member);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
   @PostMapping
   public ResponseEntity<CreateBookmarkResponse> createBookmark(HttpServletRequest servletRequest,
       @RequestBody @Valid CreateBookmarkRequest request) {
