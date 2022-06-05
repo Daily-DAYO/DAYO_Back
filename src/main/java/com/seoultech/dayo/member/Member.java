@@ -8,6 +8,7 @@ import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.post.Post;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import org.hibernate.annotations.Formula;
 
@@ -55,6 +56,8 @@ public class Member extends BaseTimeEntity {
 
   private String deviceToken;
 
+  private LocalDateTime modifiedDateDeviceToken;
+
   @Formula("(select count(1) from follow f where f.member_id = id)")
   private int followingCount;
 
@@ -89,6 +92,7 @@ public class Member extends BaseTimeEntity {
 
   public void setDeviceToken(String deviceToken) {
     this.deviceToken = deviceToken;
+    this.modifiedDateDeviceToken = LocalDateTime.now();
   }
 
   public Member(String name, String email, Image profileImg) {

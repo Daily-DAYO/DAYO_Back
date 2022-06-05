@@ -213,6 +213,7 @@ public class MemberService {
   public void resign(String memberId, MemberResignRequest request) {
     Member member = findMemberById(memberId);
 
+    // TODO: refactoring
     bookmarkService.deleteAllByMember(member);
     alarmService.deleteAllByMember(member);
     commentService.deleteAllByMember(member);
