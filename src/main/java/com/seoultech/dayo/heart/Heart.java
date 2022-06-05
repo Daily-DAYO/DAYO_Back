@@ -5,6 +5,7 @@ import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -35,6 +36,7 @@ public class Heart extends BaseTimeEntity {
   @Embeddable
   @AllArgsConstructor
   @Getter
+  @EqualsAndHashCode
   public static class Key implements Serializable {
 
     private String memberId;

@@ -3,6 +3,7 @@ package com.seoultech.dayo.postHashtag;
 import com.seoultech.dayo.hashtag.Hashtag;
 import com.seoultech.dayo.post.Post;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -36,6 +37,7 @@ public class PostHashtag {
     @Embeddable
     @AllArgsConstructor
     @Getter
+    @EqualsAndHashCode
     public static class Key implements Serializable {
         private Long hashtagId;
         private Long postId;

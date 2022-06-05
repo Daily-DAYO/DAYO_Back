@@ -17,12 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class SearchService {
 
   private final SearchRepository searchRepository;
@@ -34,7 +36,6 @@ public class SearchService {
     searchRepository.save(search);
 
     Optional<Hashtag> hashtag = hashtagService.findHashtag(tag);
-
     List<SearchDto> collect = new ArrayList<>();
 
     if (hashtag.isPresent()) {

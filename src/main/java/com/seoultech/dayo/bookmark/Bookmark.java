@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Entity
@@ -36,6 +37,7 @@ public class Bookmark {
   @Embeddable
   @AllArgsConstructor
   @Getter
+  @EqualsAndHashCode
   public static class Key implements Serializable {
 
     private String memberId;
