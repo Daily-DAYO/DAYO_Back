@@ -1,6 +1,6 @@
 package com.seoultech.dayo.alarm;
 
-public enum Category {
+public enum Topic {
 
   COMMENT,
   HEART,

@@ -1,7 +1,7 @@
 package com.seoultech.dayo.alarm.service;
 
 import com.seoultech.dayo.alarm.Alarm;
-import com.seoultech.dayo.alarm.Category;
+import com.seoultech.dayo.alarm.Topic;
 import com.seoultech.dayo.alarm.controller.dto.AlarmDto;
 import com.seoultech.dayo.alarm.controller.dto.response.ListAllAlarmResponse;
 import com.seoultech.dayo.alarm.repository.AlarmRepository;
@@ -22,11 +22,11 @@ public class AlarmService {
   private final AlarmRepository alarmRepository;
 
   public void saveAlarmPost(Note note, Member member, Long postId, String nickname,
-      Category category) {
+      Topic category) {
     alarmRepository.save(note.toEntityWithPostId(member, postId, nickname, category));
   }
 
-  public void saveAlarmFollow(Note note, Member member, String nickname, Category category) {
+  public void saveAlarmFollow(Note note, Member member, String nickname, Topic category) {
     alarmRepository.save(note.toEntityWithoutPostId(member, nickname, category));
   }
 

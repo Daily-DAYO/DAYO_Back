@@ -1,7 +1,7 @@
 package com.seoultech.dayo.config.fcm;
 
 import com.seoultech.dayo.alarm.Alarm;
-import com.seoultech.dayo.alarm.Category;
+import com.seoultech.dayo.alarm.Topic;
 import com.seoultech.dayo.member.Member;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ public class Note {
   private Map<String, String> data;
   private String image;
 
-  public Alarm toEntityWithPostId(Member member, Long postId, String nickname, Category category) {
+  public Alarm toEntityWithPostId(Member member, Long postId, String nickname, Topic category) {
     return new Alarm(
         member,
         category,
@@ -29,7 +29,7 @@ public class Note {
     );
   }
 
-  public Alarm toEntityWithoutPostId(Member member, String nickname, Category category) {
+  public Alarm toEntityWithoutPostId(Member member, String nickname, Topic category) {
     return new Alarm(
         member,
         category,

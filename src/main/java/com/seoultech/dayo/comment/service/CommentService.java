@@ -2,7 +2,7 @@ package com.seoultech.dayo.comment.service;
 
 
 import com.google.firebase.messaging.FirebaseMessagingException;
-import com.seoultech.dayo.alarm.Category;
+import com.seoultech.dayo.alarm.Topic;
 import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponse;
@@ -12,7 +12,6 @@ import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
 import com.seoultech.dayo.config.fcm.FcmMessageService;
 import com.seoultech.dayo.config.fcm.Note;
 import com.seoultech.dayo.member.Member;
-import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.service.PostService;
 import java.util.HashMap;
@@ -55,11 +54,12 @@ public class CommentService {
       );
 
       alarmService.saveAlarmPost(note, post.getMember(), post.getId(), member.getNickname(),
-          Category.COMMENT);
+          Topic.COMMENT);
 
       // TODO: need refactoring
       if (post.getMember().getDeviceToken() != null) {
-        messageService.sendMessage(note, post.getMember().getDeviceToken());
+        messageService.sendMessage(note, post.getMember().getDeviceToken(),
+            Topic.COMMENT);
       }
     }
 

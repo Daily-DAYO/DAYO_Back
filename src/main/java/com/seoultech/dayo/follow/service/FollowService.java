@@ -2,7 +2,7 @@ package com.seoultech.dayo.follow.service;
 
 
 import com.google.firebase.messaging.FirebaseMessagingException;
-import com.seoultech.dayo.alarm.Category;
+import com.seoultech.dayo.alarm.Topic;
 import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.exception.NotExistFollowException;
 import com.seoultech.dayo.config.fcm.FcmMessageService;
@@ -55,11 +55,11 @@ public class FollowService {
         null
     );
 
-    alarmService.saveAlarmFollow(note, follower, follower.getNickname(), Category.FOLLOW);
+    alarmService.saveAlarmFollow(note, follower, follower.getNickname(), Topic.FOLLOW);
 
     // TODO: refactoring
     if (follower.getDeviceToken() != null) {
-      fcmMessageService.sendMessage(note, follower.getDeviceToken());
+      fcmMessageService.sendMessage(note, follower.getDeviceToken(), Topic.FOLLOW);
     }
 
     return CreateFollowResponse.from(savedFollow);
@@ -85,11 +85,11 @@ public class FollowService {
         null
     );
 
-    alarmService.saveAlarmFollow(note, follower, follower.getNickname(), Category.FOLLOW);
+    alarmService.saveAlarmFollow(note, follower, follower.getNickname(), Topic.FOLLOW);
 
     // TODO: refactoring
     if (follower.getDeviceToken() != null) {
-      fcmMessageService.sendMessage(note, follower.getDeviceToken());
+      fcmMessageService.sendMessage(note, follower.getDeviceToken(), Topic.FOLLOW);
     }
 
     return CreateFollowUpResponse.from(savedFollow);
