@@ -17,11 +17,14 @@ import com.seoultech.dayo.follow.controller.dto.request.CreateFollowUpRequest;
 import com.seoultech.dayo.follow.controller.dto.response.*;
 import com.seoultech.dayo.follow.repository.FollowRepository;
 import com.seoultech.dayo.member.Member;
+import com.seoultech.dayo.utils.KafkaProducer;
+import com.seoultech.dayo.utils.json.JsonData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +42,7 @@ public class FollowService {
   private final FollowRepository followRepository;
   private final FcmMessageService fcmMessageService;
   private final AlarmService alarmService;
+  private final KafkaProducer kafkaProducer;
 
   public CreateFollowResponse createFollow(Member member, Member follower,
       CreateFollowRequest request) throws FirebaseMessagingException {
@@ -46,21 +50,7 @@ public class FollowService {
     Follow follow = request.toEntity(member, follower);
     Follow savedFollow = followRepository.save(follow);
 
-    Map<String, String> data = new HashMap<>();
-    data.put("body", member.getNickname() + "님이 회원님을 팔로우해요.");
-    Note note = new Note(
-        "DAYO",
-        null,
-        data,
-        null
-    );
-
-    alarmService.saveAlarmFollow(note, follower, follower.getNickname(), Topic.FOLLOW);
-
-    // TODO: refactoring
-    if (follower.getDeviceToken() != null) {
-      fcmMessageService.sendMessage(note, follower.getDeviceToken(), Topic.FOLLOW);
-    }
+    sendAlarmToFollower(member, follower);
 
     return CreateFollowResponse.from(savedFollow);
   }
@@ -76,21 +66,7 @@ public class FollowService {
     Follow follow = request.toEntity(member, follower);
     Follow savedFollow = followRepository.save(follow);
 
-    Map<String, String> data = new HashMap<>();
-    data.put("body", member.getNickname() + "님이 회원님을 팔로우해요.");
-    Note note = new Note(
-        "DAYO",
-        null,
-        data,
-        null
-    );
-
-    alarmService.saveAlarmFollow(note, follower, follower.getNickname(), Topic.FOLLOW);
-
-    // TODO: refactoring
-    if (follower.getDeviceToken() != null) {
-      fcmMessageService.sendMessage(note, follower.getDeviceToken(), Topic.FOLLOW);
-    }
+    sendAlarmToFollower(member, follower);
 
     return CreateFollowUpResponse.from(savedFollow);
   }
@@ -176,6 +152,33 @@ public class FollowService {
   public void deleteAllByMember(Member member) {
     followRepository.deleteAllByMember(member);
     followRepository.deleteAllByFollower(member);
+  }
+
+  private void sendAlarmToFollower(Member member, Member follower)
+      throws FirebaseMessagingException {
+    Map<String, String> data = makeMessage(member, follower);
+    Note note = Note.makeNote(data);
+
+    alarmService.saveAlarmFollow(note, follower, follower.getNickname(), Topic.FOLLOW);
+
+    if (canSendMessage(follower)) {
+      JsonData jsonData = new JsonData();
+      String message = jsonData.make(data);
+      kafkaProducer.sendMessage(Topic.FOLLOW, message);
+      fcmMessageService.sendMessage(note, follower.getDeviceToken(), Topic.FOLLOW);
+    }
+  }
+
+  private Map<String, String> makeMessage(Member member, Member follower) {
+    Map<String, String> data = new HashMap<>();
+    data.put("subject", "DAYO");
+    data.put("body", member.getNickname() + "님이 회원님을 팔로우해요.");
+    data.put("deviceToken", follower.getDeviceToken());
+    return data;
+  }
+
+  private boolean canSendMessage(Member member) {
+    return member.getDeviceToken() != null;
   }
 
 }

@@ -15,9 +15,12 @@ import com.seoultech.dayo.heart.controller.dto.response.ListAllMyHeartPostRespon
 import com.seoultech.dayo.heart.repository.HeartRepository;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
+import com.seoultech.dayo.utils.KafkaProducer;
+import com.seoultech.dayo.utils.json.JsonData;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,30 +36,14 @@ public class HeartService {
   private final HeartRepository heartRepository;
   private final FcmMessageService fcmMessageService;
   private final AlarmService alarmService;
+  private final KafkaProducer kafkaProducer;
 
   public CreateHeartResponse createHeart(Member member, Post post, CreateHeartRequest request)
       throws FirebaseMessagingException {
     Heart heart = request.toEntity(member, post);
     Heart savedHeart = heartRepository.save(heart);
 
-    if (!post.getMember().getId().equals(member.getId())) {
-      Map<String, String> data = new HashMap<>();
-      data.put("body", member.getNickname() + "님이 회원님의 게시글을 좋아해요.");
-      Note note = new Note(
-          "DAYO",
-          "님이 회원님의 게시글을 좋아해요.",
-          data,
-          null
-      );
-
-      alarmService.saveAlarmPost(note, post.getMember(), post.getId(), member.getNickname(),
-          Topic.HEART);
-
-      // TODO: refactoring
-      if (post.getMember().getDeviceToken() != null) {
-        fcmMessageService.sendMessage(note, post.getMember().getDeviceToken(), Topic.HEART);
-      }
-    }
+    sendAlarmToPostOwner(member, post);
     return CreateHeartResponse.from(savedHeart);
   }
 
@@ -94,6 +81,39 @@ public class HeartService {
 
   public void deleteAllByMember(Member member) {
     heartRepository.deleteAllByMember(member);
+  }
+
+  private void sendAlarmToPostOwner(Member member, Post post) throws FirebaseMessagingException {
+    if (isNotMyPost(member, post)) {
+      Map<String, String> data = makeMessage(member, post);
+      Note note = Note.makeNote(data);
+
+      alarmService.saveAlarmPost(note, post.getMember(), post.getId(), member.getNickname(),
+          Topic.HEART);
+
+      if (canSendMessage(post)) {
+        JsonData jsonData = new JsonData();
+        String message = jsonData.make(data);
+        fcmMessageService.sendMessage(note, post.getMember().getDeviceToken(), Topic.HEART);
+        kafkaProducer.sendMessage(Topic.HEART, message);
+      }
+    }
+  }
+
+  private Map<String, String> makeMessage(Member member, Post post) {
+    Map<String, String> data = new HashMap<>();
+    data.put("subject", "DAYO");
+    data.put("body", member.getNickname() + "님이 회원님의 게시글을 좋아해요.");
+    data.put("deviceToken", post.getMember().getDeviceToken());
+    return data;
+  }
+
+  private boolean canSendMessage(Post post) {
+    return post.getMember().getDeviceToken() != null;
+  }
+
+  private boolean isNotMyPost(Member member, Post post) {
+    return !post.getMember().getId().equals(member.getId());
   }
 
 }
