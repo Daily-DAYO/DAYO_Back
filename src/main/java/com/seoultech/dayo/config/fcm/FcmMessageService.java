@@ -30,7 +30,7 @@ public class FcmMessageService {
         .setToken(token)
         .setNotification(notification)
         .putAllData(note.getData())
-        .setTopic(topic.toString())
+//        .setTopic(topic.toString())
         .build();
 
     return firebaseMessaging.send(message);
