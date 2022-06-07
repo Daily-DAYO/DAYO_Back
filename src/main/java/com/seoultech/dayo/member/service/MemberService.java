@@ -34,6 +34,7 @@ import com.seoultech.dayo.member.controller.dto.response.MemberOAuthResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOtherProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberSignInResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberSignUpResponse;
+import com.seoultech.dayo.member.controller.dto.response.ReceiveAlarmResponse;
 import com.seoultech.dayo.member.controller.dto.response.RefreshTokenResponse;
 import com.seoultech.dayo.member.repository.MemberRepository;
 import com.seoultech.dayo.post.service.PostService;
@@ -243,6 +244,11 @@ public class MemberService {
   public void changeReceiveAlarm(ChangeReceiveAlarmRequest request, String memberId) {
     Member member = findMemberById(memberId);
     member.setOnReceiveAlarm(request.getOnReceiveAlarm());
+  }
+
+  public ReceiveAlarmResponse showReceiveAlarm(String memberId) {
+    Member member = findMemberById(memberId);
+    return ReceiveAlarmResponse.from(member);
   }
 
   private String get(String apiUrl, String accessToken) {

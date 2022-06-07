@@ -15,6 +15,7 @@ import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse
 import com.seoultech.dayo.member.controller.dto.response.MemberOtherProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberSignInResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberSignUpResponse;
+import com.seoultech.dayo.member.controller.dto.response.ReceiveAlarmResponse;
 import com.seoultech.dayo.member.controller.dto.response.RefreshTokenResponse;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
@@ -165,6 +166,14 @@ public class MemberController {
 
     memberService.changeReceiveAlarm(request, memberId);
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @GetMapping("/receiveAlarm")
+  public ResponseEntity<ReceiveAlarmResponse> showReceiveAlarm(HttpServletRequest servletRequest) {
+    String memberId = servletRequest.getAttribute("memberId").toString();
+
+    return ResponseEntity.ok()
+        .body(memberService.showReceiveAlarm(memberId));
   }
 
 }
