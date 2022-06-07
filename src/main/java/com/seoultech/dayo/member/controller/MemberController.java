@@ -2,6 +2,7 @@ package com.seoultech.dayo.member.controller;
 
 import com.seoultech.dayo.mail.MailService;
 import com.seoultech.dayo.member.controller.dto.request.ChangePasswordRequest;
+import com.seoultech.dayo.member.controller.dto.request.ChangeReceiveAlarmRequest;
 import com.seoultech.dayo.member.controller.dto.request.CheckPasswordRequest;
 import com.seoultech.dayo.member.controller.dto.request.DeviceTokenRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
@@ -154,6 +155,15 @@ public class MemberController {
     String memberId = servletRequest.getAttribute("memberId").toString();
 
     memberService.checkPassword(request, memberId);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @PostMapping("/changeReceiveAlarm")
+  public ResponseEntity<Void> changeReceiveAlarm(@RequestBody ChangeReceiveAlarmRequest request,
+      HttpServletRequest servletRequest) {
+    String memberId = servletRequest.getAttribute("memberId").toString();
+
+    memberService.changeReceiveAlarm(request, memberId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 

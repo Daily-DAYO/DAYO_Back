@@ -20,6 +20,7 @@ import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.inquiry.service.InquiryService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.controller.dto.request.ChangePasswordRequest;
+import com.seoultech.dayo.member.controller.dto.request.ChangeReceiveAlarmRequest;
 import com.seoultech.dayo.member.controller.dto.request.CheckPasswordRequest;
 import com.seoultech.dayo.member.controller.dto.request.DeviceTokenRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
@@ -237,6 +238,11 @@ public class MemberService {
     if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
       throw new IncorrectPasswordException();
     }
+  }
+
+  public void changeReceiveAlarm(ChangeReceiveAlarmRequest request, String memberId) {
+    Member member = findMemberById(memberId);
+    member.setOnReceiveAlarm(request.getOnReceiveAlarm());
   }
 
   private String get(String apiUrl, String accessToken) {

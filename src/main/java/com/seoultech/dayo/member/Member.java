@@ -42,6 +42,8 @@ public class Member extends BaseTimeEntity {
   @OneToOne
   private Image profileImg;
 
+  private Boolean onReceiveAlarm;
+
   @OneToMany(
       mappedBy = "member",
       orphanRemoval = true
@@ -93,6 +95,10 @@ public class Member extends BaseTimeEntity {
   public void setDeviceToken(String deviceToken) {
     this.deviceToken = deviceToken;
     this.modifiedDateDeviceToken = LocalDateTime.now();
+  }
+
+  public void setOnReceiveAlarm(Boolean onReceiveAlarm) {
+    this.onReceiveAlarm = onReceiveAlarm;
   }
 
   public Member(String name, String email, Image profileImg) {
