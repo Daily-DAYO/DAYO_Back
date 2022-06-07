@@ -1,11 +1,9 @@
 package com.seoultech.dayo.follow.service;
 
 
-import com.google.firebase.messaging.FirebaseMessagingException;
 import com.seoultech.dayo.alarm.Topic;
 import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.exception.NotExistFollowException;
-import com.seoultech.dayo.config.fcm.FcmMessageService;
 import com.seoultech.dayo.config.fcm.Note;
 import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.follow.controller.dto.FollowerDto;
@@ -24,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,12 +37,11 @@ import static java.util.stream.Collectors.toSet;
 public class FollowService {
 
   private final FollowRepository followRepository;
-  private final FcmMessageService fcmMessageService;
   private final AlarmService alarmService;
   private final KafkaProducer kafkaProducer;
 
   public CreateFollowResponse createFollow(Member member, Member follower,
-      CreateFollowRequest request) throws FirebaseMessagingException {
+      CreateFollowRequest request) {
 
     Follow follow = request.toEntity(member, follower);
     Follow savedFollow = followRepository.save(follow);
@@ -56,7 +52,7 @@ public class FollowService {
   }
 
   public CreateFollowUpResponse createFollowUp(Member member, Member follower,
-      CreateFollowUpRequest request) throws FirebaseMessagingException {
+      CreateFollowUpRequest request) {
 
     Optional<Follow> followOptional = followRepository.findFollowByMemberAndFollower(follower,
         member);
@@ -154,8 +150,7 @@ public class FollowService {
     followRepository.deleteAllByFollower(member);
   }
 
-  private void sendAlarmToFollower(Member member, Member follower)
-      throws FirebaseMessagingException {
+  private void sendAlarmToFollower(Member member, Member follower) {
     Map<String, String> data = makeMessage(member, follower);
     Note note = Note.makeNote(data);
 
@@ -165,7 +160,6 @@ public class FollowService {
       JsonData jsonData = new JsonData();
       String message = jsonData.make(data);
       kafkaProducer.sendMessage(Topic.FOLLOW, message);
-      fcmMessageService.sendMessage(note, follower.getDeviceToken(), Topic.FOLLOW);
     }
   }
 

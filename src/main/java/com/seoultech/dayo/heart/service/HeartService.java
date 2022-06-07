@@ -1,9 +1,7 @@
 package com.seoultech.dayo.heart.service;
 
-import com.google.firebase.messaging.FirebaseMessagingException;
 import com.seoultech.dayo.alarm.Topic;
 import com.seoultech.dayo.alarm.service.AlarmService;
-import com.seoultech.dayo.config.fcm.FcmMessageService;
 import com.seoultech.dayo.config.fcm.Note;
 import com.seoultech.dayo.heart.Heart;
 import com.seoultech.dayo.heart.controller.dto.HeartPostDto;
@@ -20,7 +18,6 @@ import com.seoultech.dayo.utils.json.JsonData;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,12 +31,10 @@ import static java.util.stream.Collectors.toList;
 public class HeartService {
 
   private final HeartRepository heartRepository;
-  private final FcmMessageService fcmMessageService;
   private final AlarmService alarmService;
   private final KafkaProducer kafkaProducer;
 
-  public CreateHeartResponse createHeart(Member member, Post post, CreateHeartRequest request)
-      throws FirebaseMessagingException {
+  public CreateHeartResponse createHeart(Member member, Post post, CreateHeartRequest request) {
     Heart heart = request.toEntity(member, post);
     Heart savedHeart = heartRepository.save(heart);
 
@@ -83,7 +78,7 @@ public class HeartService {
     heartRepository.deleteAllByMember(member);
   }
 
-  private void sendAlarmToPostOwner(Member member, Post post) throws FirebaseMessagingException {
+  private void sendAlarmToPostOwner(Member member, Post post) {
     if (isNotMyPost(member, post)) {
       Map<String, String> data = makeMessage(member, post);
       Note note = Note.makeNote(data);
@@ -94,7 +89,6 @@ public class HeartService {
       if (canSendMessage(post)) {
         JsonData jsonData = new JsonData();
         String message = jsonData.make(data);
-        fcmMessageService.sendMessage(note, post.getMember().getDeviceToken(), Topic.HEART);
         kafkaProducer.sendMessage(Topic.HEART, message);
       }
     }

@@ -1,8 +1,6 @@
 package com.seoultech.dayo.comment.service;
 
 
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.gson.JsonParser;
 import com.seoultech.dayo.alarm.Topic;
 import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.comment.Comment;
@@ -10,7 +8,6 @@ import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponse
 import com.seoultech.dayo.comment.repository.CommentRepository;
 import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequest;
 import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
-import com.seoultech.dayo.config.fcm.FcmMessageService;
 import com.seoultech.dayo.config.fcm.Note;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
@@ -20,7 +17,6 @@ import com.seoultech.dayo.utils.json.JsonData;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,12 +31,10 @@ public class CommentService {
 
   private final CommentRepository commentRepository;
   private final PostService postService;
-  private final FcmMessageService messageService;
   private final AlarmService alarmService;
   private final KafkaProducer kafkaProducer;
 
-  public CreateCommentResponse createComment(Member member, CreateCommentRequest request)
-      throws FirebaseMessagingException {
+  public CreateCommentResponse createComment(Member member, CreateCommentRequest request) {
 
     Post post = postService.findPostById(request.getPostId());
 
@@ -71,7 +65,7 @@ public class CommentService {
     commentRepository.deleteAllByMember(member);
   }
 
-  private void sendAlarmToPostOwner(Member member, Post post) throws FirebaseMessagingException {
+  private void sendAlarmToPostOwner(Member member, Post post) {
     if (isNotMyPost(member, post)) {
       Map<String, String> data = makeMessage(member, post);
       Note note = Note.makeNote(data);
@@ -83,12 +77,10 @@ public class CommentService {
         JsonData jsonData = new JsonData();
         String message = jsonData.make(data);
         kafkaProducer.sendMessage(Topic.COMMENT, message);
-        messageService.sendMessage(note, post.getMember().getDeviceToken(),
-            Topic.COMMENT);
       }
     }
   }
-  
+
   private Map<String, String> makeMessage(Member member, Post post) {
     Map<String, String> data = new HashMap<>();
     data.put("subject", "DAYO");
