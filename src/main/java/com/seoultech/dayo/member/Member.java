@@ -106,6 +106,7 @@ public class Member extends BaseTimeEntity {
     this.name = name;
     this.email = email;
     this.profileImg = profileImg;
+    this.onReceiveAlarm = true;
   }
 
   public Member(String nickname, String email, String password,
@@ -115,12 +116,14 @@ public class Member extends BaseTimeEntity {
     this.email = email;
     this.password = password;
     this.profileImg = profileImg;
+    this.onReceiveAlarm = true;
   }
 
   public Member(String name, String email) {
     this.id = UUID.randomUUID().toString();
     this.name = name;
     this.email = email;
+    this.onReceiveAlarm = true;
   }
 
   protected Member() {
