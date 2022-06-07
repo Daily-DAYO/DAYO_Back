@@ -49,9 +49,7 @@ public class FolderService {
       image = imageService.storeFile(thumbnailImage);
     }
 
-    String privacy = request.getPrivacy();
-    String parsedPrivacy = privacy.substring(1, privacy.length() - 1);
-    request.setPrivacy(parsedPrivacy);
+    request.setPrivacy(request.getPrivacy());
 
     Folder savedFolder = folderRepository.save(request.toEntity(image));
     List<Folder> folders = folderRepository.findFoldersByMember(member);
@@ -111,9 +109,7 @@ public class FolderService {
       folder.setSubheading(request.getSubheading());
     }
     if (StringUtils.hasText(request.getPrivacy())) {
-      String privacy = request.getPrivacy();
-      String parsedPrivacy = privacy.substring(1, privacy.length() - 1);
-      folder.setPrivacy(Privacy.valueOf(parsedPrivacy));
+      folder.setPrivacy(Privacy.valueOf(request.getPrivacy()));
     }
 
     // 기본이미지
