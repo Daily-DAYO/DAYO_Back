@@ -251,6 +251,11 @@ public class MemberService {
     return ReceiveAlarmResponse.from(member);
   }
 
+  public void logout(String memberId) {
+    Member member = findMemberById(memberId);
+    member.setDeviceToken(null);
+  }
+
   private String get(String apiUrl, String accessToken) {
 
     try {

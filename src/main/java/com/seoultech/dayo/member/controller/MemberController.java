@@ -176,4 +176,12 @@ public class MemberController {
         .body(memberService.showReceiveAlarm(memberId));
   }
 
+  @PostMapping("/logout")
+  public ResponseEntity<Void> logout(HttpServletRequest servletRequest) {
+    String memberId = servletRequest.getAttribute("memberId").toString();
+
+    memberService.logout(memberId);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
 }
