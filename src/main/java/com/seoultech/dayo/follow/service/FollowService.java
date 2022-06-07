@@ -172,7 +172,7 @@ public class FollowService {
   }
 
   private boolean canSendMessage(Member member) {
-    return member.getDeviceToken() != null;
+    return member.getDeviceToken() != null && member.getOnReceiveAlarm();
   }
 
 }

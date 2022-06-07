@@ -103,7 +103,7 @@ public class HeartService {
   }
 
   private boolean canSendMessage(Post post) {
-    return post.getMember().getDeviceToken() != null;
+    return post.getMember().getDeviceToken() != null && post.getMember().getOnReceiveAlarm();
   }
 
   private boolean isNotMyPost(Member member, Post post) {
