@@ -3,6 +3,8 @@ package com.seoultech.dayo.alarm;
 import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.member.Member;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +23,7 @@ public class Alarm extends BaseTimeEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Member member;
 
+  @Enumerated(EnumType.STRING)
   private Topic category;
 
   private Long postId;

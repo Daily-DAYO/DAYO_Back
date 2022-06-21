@@ -29,7 +29,6 @@ public class JwtFilter implements Filter {
       "/api/v1/members/changePassword", "/api/v1/members/search/**",
       "/docs/api-doc.html", "/favicon.ico",
       "/swagger-resources/**", "/v3/api-docs", "/swagger*/**", "/webjars/**", "/swagger-resources",
-      "/alarm**", "/kafka/**",
       "/images/**"};
 
   @Override
