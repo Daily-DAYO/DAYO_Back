@@ -70,7 +70,7 @@ public class CommentService {
       Map<String, String> data = makeMessage(member, post);
       Note note = Note.makeNote(data);
 
-      alarmService.saveAlarmPost(note, post.getMember(), post.getId(), member.getNickname(),
+      alarmService.saveAlarmPost(note, post.getMember(), post.getId(), member,
           Topic.COMMENT);
 
       if (canSendMessage(post)) {
@@ -85,6 +85,7 @@ public class CommentService {
     Map<String, String> data = new HashMap<>();
     data.put("subject", "DAYO");
     data.put("body", member.getNickname() + "님이 회원님의 게시글에 댓글을 남겼어요.");
+    data.put("content", "님이 회원님의 게시글에 댓글을 남겼어요.");
     data.put("deviceToken", post.getMember().getDeviceToken());
     return data;
   }

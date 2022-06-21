@@ -21,17 +21,18 @@ public class AlarmService {
 
   private final AlarmRepository alarmRepository;
 
-  public void saveAlarmPost(Note note, Member member, Long postId, String nickname,
+  public void saveAlarmPost(Note note, Member member, Long postId, Member sender,
       Topic category) {
-    alarmRepository.save(note.toEntityWithPostId(member, postId, nickname, category));
+    alarmRepository.save(note.toEntityWithPostId(member, postId, sender, category));
   }
 
-  public void saveAlarmFollow(Note note, Member member, String nickname, Topic category) {
-    alarmRepository.save(note.toEntityWithoutPostId(member, nickname, category));
+  public void saveAlarmFollow(Note note, Member member, Member sender, Topic category) {
+    alarmRepository.save(note.toEntityWithoutPostId(member, sender, category));
   }
 
   public ListAllAlarmResponse listAll(Member member) {
     List<Alarm> alarmList = alarmRepository.findAllByMember(member);
+    alarmList.stream();
     List<AlarmDto> collect = alarmList.stream()
         .map(AlarmDto::from)
         .sorted((a1, a2) -> a2.getCreatedTime().compareTo(a1.getCreatedTime()))

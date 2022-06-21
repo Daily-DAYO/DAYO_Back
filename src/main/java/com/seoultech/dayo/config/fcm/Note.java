@@ -22,13 +22,13 @@ public class Note {
     Map<String, String> tempData = new HashMap<>(collect);
     return new Note(
         "DAYO",
-        null,
+        tempData.get("content"),
         tempData,
         null
     );
   }
 
-  public Alarm toEntityWithPostId(Member member, Long postId, String nickname, Topic category) {
+  public Alarm toEntityWithPostId(Member member, Long postId, Member sender, Topic category) {
     return new Alarm(
         member,
         category,
@@ -37,11 +37,11 @@ public class Note {
         this.content,
         this.image,
         postId,
-        nickname
+        sender
     );
   }
 
-  public Alarm toEntityWithoutPostId(Member member, String nickname, Topic category) {
+  public Alarm toEntityWithoutPostId(Member member, Member sender, Topic category) {
     return new Alarm(
         member,
         category,
@@ -49,7 +49,7 @@ public class Note {
         this.subject,
         this.content,
         this.image,
-        nickname
+        sender
     );
   }
 

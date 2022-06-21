@@ -154,7 +154,7 @@ public class FollowService {
     Map<String, String> data = makeMessage(member, follower);
     Note note = Note.makeNote(data);
 
-    alarmService.saveAlarmFollow(note, follower, follower.getNickname(), Topic.FOLLOW);
+    alarmService.saveAlarmFollow(note, follower, member, Topic.FOLLOW);
 
     if (canSendMessage(follower)) {
       JsonData jsonData = new JsonData();
@@ -167,6 +167,7 @@ public class FollowService {
     Map<String, String> data = new HashMap<>();
     data.put("subject", "DAYO");
     data.put("body", member.getNickname() + "님이 회원님을 팔로우해요.");
+    data.put("content", "님이 회원님을 팔로우해요.");
     data.put("deviceToken", follower.getDeviceToken());
     return data;
   }

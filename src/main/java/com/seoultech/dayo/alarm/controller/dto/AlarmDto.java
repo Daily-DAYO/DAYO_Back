@@ -23,10 +23,12 @@ public class AlarmDto {
 
   private LocalDateTime createdTime;
 
+  private String memberId;
+
   public static AlarmDto from(Alarm alarm) {
     return new AlarmDto(alarm.getId(), alarm.getContent(), alarm.getCategory().toString(),
         alarm.getIsCheck(), alarm.getPostId(),
-        alarm.getNickname(), alarm.getCreatedDate());
+        alarm.getSender().getNickname(), alarm.getCreatedDate(), alarm.getSender().getId());
   }
 
 }

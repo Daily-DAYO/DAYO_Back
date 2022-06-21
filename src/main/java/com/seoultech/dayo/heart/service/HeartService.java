@@ -83,7 +83,7 @@ public class HeartService {
       Map<String, String> data = makeMessage(member, post);
       Note note = Note.makeNote(data);
 
-      alarmService.saveAlarmPost(note, post.getMember(), post.getId(), member.getNickname(),
+      alarmService.saveAlarmPost(note, post.getMember(), post.getId(), member,
           Topic.HEART);
 
       if (canSendMessage(post)) {
@@ -98,6 +98,7 @@ public class HeartService {
     Map<String, String> data = new HashMap<>();
     data.put("subject", "DAYO");
     data.put("body", member.getNickname() + "님이 회원님의 게시글을 좋아해요.");
+    data.put("content", "님이 회원님의 게시글을 좋아해요.");
     data.put("deviceToken", post.getMember().getDeviceToken());
     return data;
   }

@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import lombok.Getter;
 
 @Entity
@@ -36,7 +37,8 @@ public class Alarm extends BaseTimeEntity {
 
   private String image;
 
-  private String nickname;
+  @ManyToOne
+  private Member sender;
 
   public void setCheck(Boolean check) {
     isCheck = check;
@@ -44,7 +46,7 @@ public class Alarm extends BaseTimeEntity {
 
   public Alarm(Member member, Topic category, Boolean isCheck, String subject, String content,
       String image,
-      Long postId, String nickname) {
+      Long postId, Member sender) {
     this.member = member;
     this.category = category;
     this.isCheck = isCheck;
@@ -52,18 +54,18 @@ public class Alarm extends BaseTimeEntity {
     this.content = content;
     this.image = image;
     this.postId = postId;
-    this.nickname = nickname;
+    this.sender = sender;
   }
 
   public Alarm(Member member, Topic category, Boolean isCheck, String subject,
-      String content, String image, String nickname) {
+      String content, String image, Member sender) {
     this.member = member;
     this.category = category;
     this.isCheck = isCheck;
     this.subject = subject;
     this.content = content;
     this.image = image;
-    this.nickname = nickname;
+    this.sender = sender;
   }
 
   protected Alarm() {
