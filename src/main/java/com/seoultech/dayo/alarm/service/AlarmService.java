@@ -32,7 +32,6 @@ public class AlarmService {
 
   public ListAllAlarmResponse listAll(Member member) {
     List<Alarm> alarmList = alarmRepository.findAllByMember(member);
-    alarmList.stream();
     List<AlarmDto> collect = alarmList.stream()
         .map(AlarmDto::from)
         .sorted((a1, a2) -> a2.getCreatedTime().compareTo(a1.getCreatedTime()))

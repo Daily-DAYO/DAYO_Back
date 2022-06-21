@@ -169,6 +169,8 @@ public class FollowService {
     data.put("body", member.getNickname() + "님이 회원님을 팔로우해요.");
     data.put("content", "님이 회원님을 팔로우해요.");
     data.put("deviceToken", follower.getDeviceToken());
+    data.put("memberId", member.getId());
+    data.put("topic", Topic.FOLLOW.toString());
     return data;
   }
 

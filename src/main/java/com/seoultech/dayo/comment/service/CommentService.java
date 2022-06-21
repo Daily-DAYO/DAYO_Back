@@ -87,6 +87,8 @@ public class CommentService {
     data.put("body", member.getNickname() + "님이 회원님의 게시글에 댓글을 남겼어요.");
     data.put("content", "님이 회원님의 게시글에 댓글을 남겼어요.");
     data.put("deviceToken", post.getMember().getDeviceToken());
+    data.put("postId", post.getId().toString());
+    data.put("topic", Topic.COMMENT.toString());
     return data;
   }
 

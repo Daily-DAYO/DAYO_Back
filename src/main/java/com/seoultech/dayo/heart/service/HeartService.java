@@ -100,6 +100,8 @@ public class HeartService {
     data.put("body", member.getNickname() + "님이 회원님의 게시글을 좋아해요.");
     data.put("content", "님이 회원님의 게시글을 좋아해요.");
     data.put("deviceToken", post.getMember().getDeviceToken());
+    data.put("postId", post.getId().toString());
+    data.put("topic", Topic.HEART.toString());
     return data;
   }
 

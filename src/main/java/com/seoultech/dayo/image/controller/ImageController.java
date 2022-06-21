@@ -20,19 +20,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImageController {
 
-    private final ImageService imageService;
+  private final ImageService imageService;
 
-    @GetMapping(value = "/{filename}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
-        return new UrlResource("file:"+imageService.getFullPath(filename));
-    }
+  @GetMapping(value = "/{filename}", produces = MediaType.IMAGE_JPEG_VALUE)
+  public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
+    return new UrlResource("file:" + imageService.getFullPath(filename));
+  }
 
-    @PostMapping
-    public ResponseEntity uploadImage(MultipartHttpServletRequest servletRequest) throws IOException {
-        List<MultipartFile> images = servletRequest.getFiles("files");
-        imageService.storeFiles(images);
-        return new ResponseEntity(HttpStatus.OK);
-    }
+  @PostMapping
+  public ResponseEntity uploadImage(MultipartHttpServletRequest servletRequest) throws IOException {
+    List<MultipartFile> images = servletRequest.getFiles("files");
+    imageService.storeFiles(images);
+    return new ResponseEntity(HttpStatus.OK);
+  }
 
 
 }
