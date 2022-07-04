@@ -89,6 +89,7 @@ public class CommentService {
     data.put("deviceToken", post.getMember().getDeviceToken());
     data.put("postId", post.getId().toString());
     data.put("topic", Topic.COMMENT.toString());
+    data.put("image", post.getThumbnailImage());
     return data;
   }
 

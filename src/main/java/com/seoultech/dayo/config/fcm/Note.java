@@ -24,7 +24,7 @@ public class Note {
         "DAYO",
         tempData.get("content"),
         tempData,
-        null
+        tempData.get("image")
     );
   }
 

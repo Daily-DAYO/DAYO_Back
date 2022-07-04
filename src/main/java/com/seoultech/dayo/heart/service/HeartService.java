@@ -102,6 +102,7 @@ public class HeartService {
     data.put("deviceToken", post.getMember().getDeviceToken());
     data.put("postId", post.getId().toString());
     data.put("topic", Topic.HEART.toString());
+    data.put("image", post.getThumbnailImage());
     return data;
   }
 
