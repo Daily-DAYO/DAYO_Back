@@ -89,7 +89,7 @@ class CommentServiceTests {
     commentService.createComment(member, request);
 
     verify(kafkaProducer, times(0)).sendMessage(Topic.COMMENT,
-        "{\"subject\":\"DAYO\",\"topic\":\"COMMENT\",\"postId\":\"2\",\"body\":\"재영님이 회원님의 게시글에 댓글을 남겼어요.\",\"content\":\"님이 회원님의 게시글에 댓글을 남겼어요.\",\"deviceToken\":\"test\"}");
+        "{\"image\":\"testimage\",\"subject\":\"DAYO\",\"topic\":\"COMMENT\",\"postId\":\"2\",\"body\":\"재영님이 회원님의 게시글에 댓글을 남겼어요.\",\"content\":\"님이 회원님의 게시글에 댓글을 남겼어요.\",\"deviceToken\":\"test\"}");
   }
 
   @Test
@@ -107,7 +107,7 @@ class CommentServiceTests {
     commentService.createComment(member, request);
 
     verify(kafkaProducer, times(1)).sendMessage(Topic.COMMENT,
-        "{\"subject\":\"DAYO\",\"topic\":\"COMMENT\",\"postId\":\"2\",\"body\":\"재영님이 회원님의 게시글에 댓글을 남겼어요.\",\"content\":\"님이 회원님의 게시글에 댓글을 남겼어요.\",\"deviceToken\":\"test\"}"
+        "{\"image\":\"testimage\",\"subject\":\"DAYO\",\"topic\":\"COMMENT\",\"postId\":\"2\",\"body\":\"재영님이 회원님의 게시글에 댓글을 남겼어요.\",\"content\":\"님이 회원님의 게시글에 댓글을 남겼어요.\",\"deviceToken\":\"test\"}"
     );
   }
 
