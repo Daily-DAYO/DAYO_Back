@@ -139,9 +139,6 @@ public class FollowService {
 
   public void deleteFollow(Member member, Member follower) {
     followRepository.deleteFollowByMemberAndFollower(member, follower);
-    Follow follow = followRepository.findFollowByMemberAndFollower(follower, member)
-        .orElseThrow(NotExistFollowException::new);
-    follow.setIsAccept(false);
   }
 
   public boolean isFollow(String memberId, String followerId) {
