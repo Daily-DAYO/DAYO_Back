@@ -8,6 +8,7 @@ import com.seoultech.dayo.folder.controller.dto.MyFolderDto;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderInPostRequest;
 import com.seoultech.dayo.folder.controller.dto.request.EditFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.request.EditOrderFolderRequest;
+import com.seoultech.dayo.folder.controller.dto.request.EditOrderFolderRequest.EditOrderDto;
 import com.seoultech.dayo.folder.controller.dto.response.*;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
@@ -126,13 +127,13 @@ public class FolderService {
     return EditFolderResponse.from(folder);
   }
 
-  public void orderFolder(Member member, EditOrderFolderRequest.EditOrderDto[] request) {
+  public void orderFolder(Member member, EditOrderFolderRequest request) {
 
     List<Folder> folders = folderRepository.findFoldersByMember(member);
 
     //TODO 리팩토링
     for (Folder folder : folders) {
-      for (EditOrderFolderRequest.EditOrderDto editOrderDto : request) {
+      for (EditOrderDto editOrderDto : request.getData()) {
         if (folder.getId().equals(editOrderDto.getFolderId())) {
           folder.setOrderIndex(editOrderDto.getOrderIndex());
           break;
@@ -152,9 +153,8 @@ public class FolderService {
 
     List<FolderDetailDto> collect = folder.getPosts().stream()
         .map(FolderDetailDto::from)
+        .sorted((a1, a2) -> a2.getCreateDate().compareTo(a1.getCreateDate()))
         .collect(toList());
-
-    collect.sort((a1, a2) -> a2.getCreateDate().compareTo(a1.getCreateDate()));
 
     return DetailFolderResponse.from(folder, collect);
   }

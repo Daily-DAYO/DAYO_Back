@@ -52,7 +52,10 @@ public class FollowController {
   public ResponseEntity<Void> deleteFollow(HttpServletRequest servletRequest,
       @PathVariable String followerId) {
     String memberId = servletRequest.getAttribute("memberId").toString();
-    followService.deleteFollow(memberId, followerId);
+    Member member = memberService.findMemberById(memberId);
+    Member follower = memberService.findFollowerById(followerId);
+
+    followService.deleteFollow(member, follower);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 

@@ -19,4 +19,6 @@ public interface FollowRepository extends JpaRepository<Follow, Follow.Key> {
 
   void deleteAllByFollower(Member follower);
 
+  void deleteFollowByMemberAndFollower(Member member, Member follower);
+
 }

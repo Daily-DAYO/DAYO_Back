@@ -54,9 +54,9 @@ public class FollowService {
   public CreateFollowUpResponse createFollowUp(Member member, Member follower,
       CreateFollowUpRequest request) {
 
-    Optional<Follow> followOptional = followRepository.findFollowByMemberAndFollower(follower,
-        member);
-    Follow presentFollow = followOptional.orElseThrow(NotExistFollowException::new);
+    Follow presentFollow = followRepository.findFollowByMemberAndFollower(follower,
+        member).orElseThrow(NotExistFollowException::new);
+
     presentFollow.setIsAccept(true);
 
     Follow follow = request.toEntity(member, follower);
@@ -137,8 +137,11 @@ public class FollowService {
     return followRepository.findFollowsByMember(member);
   }
 
-  public void deleteFollow(String memberId, String followerId) {
-    followRepository.deleteById(new Follow.Key(memberId, followerId));
+  public void deleteFollow(Member member, Member follower) {
+    followRepository.deleteFollowByMemberAndFollower(member, follower);
+    Follow follow = followRepository.findFollowByMemberAndFollower(follower, member)
+        .orElseThrow(NotExistFollowException::new);
+    follow.setIsAccept(false);
   }
 
   public boolean isFollow(String memberId, String followerId) {

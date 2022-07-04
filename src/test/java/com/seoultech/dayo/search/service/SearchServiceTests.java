@@ -12,6 +12,7 @@ import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.postHashtag.PostHashtag;
 import com.seoultech.dayo.postHashtag.service.PostHashtagService;
+import com.seoultech.dayo.search.Search;
 import com.seoultech.dayo.search.controller.dto.response.SearchHistoryResponse;
 import com.seoultech.dayo.search.controller.dto.response.SearchResultResponse;
 import com.seoultech.dayo.search.repository.SearchRepository;
@@ -38,6 +39,8 @@ class SearchServiceTests {
   @Mock
   PostHashtagService postHashtagService;
 
+  @Mock
+  SearchRepository searchRepository;
 
   @InjectMocks
   SearchService searchService;
@@ -46,6 +49,7 @@ class SearchServiceTests {
   Hashtag hashtag;
   PostHashtag postHashtag;
   Post post;
+  Search search;
 
   List<PostHashtag> postHashtagList = new ArrayList<>();
 
@@ -55,6 +59,7 @@ class SearchServiceTests {
     hashtag = new Hashtag("테스트");
     post = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
     postHashtag = new PostHashtag(post, hashtag);
+    search = new Search(member, hashtag.getTag());
   }
 
   @Test
@@ -63,6 +68,7 @@ class SearchServiceTests {
     postHashtagList.add(postHashtag);
     given(hashtagService.findHashtag(any())).willReturn(Optional.of(hashtag));
     given(postHashtagService.findPostHashtags(hashtag)).willReturn(postHashtagList);
+    given(searchRepository.save(any())).willReturn(search);
 
     SearchResultResponse response = searchService.search(member, "테스트");
 
@@ -74,6 +80,7 @@ class SearchServiceTests {
   void searchTest2() {
     given(hashtagService.findHashtag(any())).willReturn(Optional.empty());
     given(postHashtagService.findPostHashtags(any())).willReturn(postHashtagList);
+    given(searchRepository.save(any())).willReturn(search);
 
     SearchResultResponse response = searchService.search(member, "테스트");
 

@@ -58,7 +58,7 @@ public class FolderController {
 
   @PostMapping("/order")
   public ResponseEntity<Void> orderFolder(HttpServletRequest servletRequest,
-      @RequestBody EditOrderFolderRequest.EditOrderDto[] request) {
+      @RequestBody EditOrderFolderRequest request) {
     String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);

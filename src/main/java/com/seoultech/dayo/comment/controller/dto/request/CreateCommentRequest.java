@@ -11,16 +11,17 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
+@AllArgsConstructor
 public class CreateCommentRequest {
 
-    @NotBlank
-    private String contents;
+  @NotBlank
+  private String contents;
 
-    @NotNull
-    private Long postId;
+  @NotNull
+  private Long postId;
 
-    public Comment toEntity(Member member) {
-        return new Comment(member, this.contents);
-    }
+  public Comment toEntity(Member member) {
+    return new Comment(member, this.contents);
+  }
 
 }

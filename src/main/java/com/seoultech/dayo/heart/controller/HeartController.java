@@ -30,7 +30,7 @@ public class HeartController {
 
   @PostMapping
   public ResponseEntity<CreateHeartResponse> createHeart(HttpServletRequest servletRequest,
-      @RequestBody @Valid CreateHeartRequest request) throws FirebaseMessagingException {
+      @RequestBody @Valid CreateHeartRequest request) {
     String memberId = servletRequest.getAttribute("memberId").toString();
 
     Member member = memberService.findMemberById(memberId);
