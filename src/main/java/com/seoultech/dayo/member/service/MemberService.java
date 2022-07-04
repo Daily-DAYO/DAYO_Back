@@ -157,6 +157,8 @@ public class MemberService {
     }
     if (request.getProfileImg() != null) {
       Image image = imageService.storeFile(request.getProfileImg());
+      imageService.resizeFile(image.getStoreFileName(), 17, 17);
+      imageService.resizeFile(image.getStoreFileName(), 37, 37);
       member.setProfileImg(image);
     }
 

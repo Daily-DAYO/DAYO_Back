@@ -148,6 +148,7 @@ public class PostService {
 
     List<MultipartFile> files = request.getFiles();
     List<Image> images = imageService.storeFiles(files);
+    imageService.resizeFile(images.get(0).getStoreFileName(), 220, 220);
 
     request.setCategory(request.getCategory());
 
