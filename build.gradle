@@ -52,7 +52,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.kafka:spring-kafka'
-    implementation 'org.springframework.boot:spring-bbot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 
     implementation group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.6'
 
