@@ -101,12 +101,10 @@ class FolderServiceTests {
 
     List<EditOrderDto> data = makeEditOrderDtoList();
 
-    EditOrderFolderRequest request = new EditOrderFolderRequest(data);
-
     List<Folder> folderList = makeFolderList();
     given(folderRepository.findFoldersByMember(member)).willReturn(folderList);
 
-    folderService.orderFolder(member, request);
+    folderService.orderFolder(member, data.toArray(new EditOrderDto[0]));
 
     assertThat(member.getFolders().get(0).getOrderIndex()).isEqualTo(2);
     assertThat(member.getFolders().get(1).getOrderIndex()).isEqualTo(3);

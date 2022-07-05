@@ -127,13 +127,13 @@ public class FolderService {
     return EditFolderResponse.from(folder);
   }
 
-  public void orderFolder(Member member, EditOrderFolderRequest request) {
+  public void orderFolder(Member member, EditOrderFolderRequest.EditOrderDto[] request) {
 
     List<Folder> folders = folderRepository.findFoldersByMember(member);
 
     //TODO 리팩토링
     for (Folder folder : folders) {
-      for (EditOrderDto editOrderDto : request.getData()) {
+      for (EditOrderDto editOrderDto : request) {
         if (folder.getId().equals(editOrderDto.getFolderId())) {
           folder.setOrderIndex(editOrderDto.getOrderIndex());
           break;
