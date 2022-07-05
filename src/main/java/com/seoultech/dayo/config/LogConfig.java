@@ -18,40 +18,31 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Slf4j
 public class LogConfig {
 
-  @Around("within(com.seoultech.dayo..*)")
+  @Around("within(com.seoultech.dayo..controller..*)")
   public Object logging(ProceedingJoinPoint pjp) throws Throwable {
 
-    String params = getRequestParams();
+    String params = "";
+    HttpServletRequest request = // 5
+        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+
+    Map<String, String[]> paramMap = request.getParameterMap();
+    if (!paramMap.isEmpty()) {
+      params = "[" + paramMapToString(paramMap) + "]";
+    }
 
     long startTime = System.currentTimeMillis();
 
-    log.info("Request : {}({}) = {}", pjp.getSignature().getDeclaringTypeName(),
-        pjp.getSignature().getName(), params);
+    log.info("Request : {}({})", request.getRequestURI(),
+        params);
 
     Object result = pjp.proceed();
 
     long endTime = System.currentTimeMillis();
 
-    log.info("Response : {}({}) = {} ({}ms)", pjp.getSignature().getDeclaringTypeName(),
-        pjp.getSignature().getName(), result, endTime - startTime);
+    log.info("Response : {}({}) = {} ({}ms)", request.getRequestURI(),
+        params, result, endTime - startTime);
 
     return result;
-  }
-
-  private String getRequestParams() {
-    String params = null;
-    RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-
-    if (requestAttributes != null) {
-      HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
-
-      Map<String, String[]> paramMap = request.getParameterMap();
-      if (!paramMap.isEmpty()) {
-        params = "[" + paramMapToString(paramMap) + "]";
-      }
-    }
-
-    return params;
   }
 
   private String paramMapToString(Map<String, String[]> paramMap) {
