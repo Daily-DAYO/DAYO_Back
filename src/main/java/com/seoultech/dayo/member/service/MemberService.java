@@ -10,6 +10,7 @@ import com.seoultech.dayo.config.jwt.TokenDto;
 import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.exception.ExistEmailException;
 import com.seoultech.dayo.exception.IncorrectPasswordException;
+import com.seoultech.dayo.exception.NotExistEmailException;
 import com.seoultech.dayo.exception.NotExistFollowerException;
 import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.folder.service.FolderService;
@@ -210,7 +211,7 @@ public class MemberService {
 
   public void changePassword(ChangePasswordRequest request) {
     Member member = memberRepository.findMemberByEmail(request.getEmail())
-        .orElseThrow(() -> new IllegalStateException("존재하지 않는 이메일입니다."));
+        .orElseThrow(NotExistEmailException::new);
     member.setPassword(passwordEncoder.encode(request.getPassword()));
   }
 

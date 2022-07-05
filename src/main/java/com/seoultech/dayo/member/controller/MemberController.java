@@ -1,5 +1,6 @@
 package com.seoultech.dayo.member.controller;
 
+import com.seoultech.dayo.exception.NotExistEmailException;
 import com.seoultech.dayo.mail.MailService;
 import com.seoultech.dayo.member.controller.dto.request.ChangePasswordRequest;
 import com.seoultech.dayo.member.controller.dto.request.ChangeReceiveAlarmRequest;
@@ -126,7 +127,7 @@ public class MemberController {
       mailService.sendAuthMail(email);
       return new ResponseEntity<>(HttpStatus.OK);
     }
-    throw new IllegalStateException("존재하지 않는 이메일입니다.");
+    throw new NotExistEmailException();
   }
 
   @PostMapping("/changePassword")
