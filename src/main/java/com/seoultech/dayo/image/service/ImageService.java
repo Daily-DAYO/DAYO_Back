@@ -109,7 +109,7 @@ public class ImageService {
   private String renameFile(String fileName, int width, int height) {
     int pos = fileName.lastIndexOf(".");
     String ext = extractExt(fileName);
-    return fileName.substring(0, pos) + "_" + width + "x" + height + ext;
+    return fileName.substring(0, pos) + "_" + width + "x" + height + "." + ext;
   }
 
   @Data
