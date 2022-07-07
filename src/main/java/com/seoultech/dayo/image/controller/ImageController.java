@@ -22,7 +22,7 @@ public class ImageController {
 
   private final ImageService imageService;
 
-  @GetMapping(value = "/{filename}", produces = MediaType.IMAGE_JPEG_VALUE)
+  @GetMapping(value = "/{filename}", produces = MediaType.IMAGE_PNG_VALUE)
   public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
     return new UrlResource("file:" + imageService.getFullPath(filename));
   }
