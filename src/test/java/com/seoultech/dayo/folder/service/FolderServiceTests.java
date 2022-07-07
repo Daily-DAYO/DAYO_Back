@@ -1,5 +1,6 @@
 package com.seoultech.dayo.folder.service;
 
+import static com.seoultech.dayo.image.Category.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -141,7 +142,7 @@ class FolderServiceTests {
   @NotNull
   private List<Folder> makeFolderList() {
 
-    Image image = new Image("test", "test");
+    Image image = new Image("test", "test", FOLDER);
 
     List<Folder> folderList = new ArrayList<>();
     Folder folder1 = new Folder(2L, "테스트폴더", "테스트폴더 부제목", Privacy.ALL, image);

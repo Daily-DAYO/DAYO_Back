@@ -1,5 +1,6 @@
 package com.seoultech.dayo.image.service;
 
+import com.seoultech.dayo.image.Category;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.repository.ImageRepository;
 import java.awt.image.BufferedImage;
@@ -51,14 +52,15 @@ public class ImageService {
     }
 
     List<Image> images = collect.stream()
-        .map((name) -> new Image(name.getOriginalFilename(), name.getStoreFileName()))
+        .map(
+            (name) -> new Image(name.getOriginalFilename(), name.getStoreFileName(), Category.POST))
         .collect(Collectors.toList());
     imageRepository.saveAll(images);
 
     return images;
   }
 
-  public Image storeFile(MultipartFile multipartFile) throws IOException {
+  public Image storeFile(MultipartFile multipartFile, Category category) throws IOException {
     File folder = new File(fileDir);
     if (!folder.exists()) {
       folder.mkdir();
@@ -66,7 +68,7 @@ public class ImageService {
     String originalFilename = multipartFile.getOriginalFilename();
     String storeFilename = createStoreFileName(originalFilename);
     multipartFile.transferTo(new File(getFullPath(storeFilename)));
-    Image image = new Image(originalFilename, storeFilename);
+    Image image = new Image(originalFilename, storeFilename, category);
     return imageRepository.save(image);
   }
 

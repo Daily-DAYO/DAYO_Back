@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class CreateCommentRequest {
 
   @NotBlank

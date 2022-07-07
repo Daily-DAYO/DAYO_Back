@@ -28,5 +28,32 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
+#server log setting
+logging:
+  file:
+    name: /Users/jojaeyeong/Desktop/tomcat/test_server.log
+  level:
+    '*': info
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss
+    file: '%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p}
+      ${PID:- } --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}'
+    level: '%5p'
+
+#tomcat access log setting
+server:
+  port: 8080
+  tomcat:
+    accesslog:
+      directory: /Users/jojaeyeong/Desktop/tomcat
+      enabled: true
+      file-date-format: .yyyy-MM-dd
+      max-days: 14
+      pattern: '%h %l %u %t "%r" %s %b %D'
+      prefix: test_access
+      rotate: true
+      suffix: .log
+
+
 file:
   dir: /Users/jojaeyeong/Desktop/upload/

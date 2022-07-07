@@ -10,6 +10,7 @@ import com.seoultech.dayo.folder.controller.dto.request.EditFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.request.EditOrderFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.request.EditOrderFolderRequest.EditOrderDto;
 import com.seoultech.dayo.folder.controller.dto.response.*;
+import com.seoultech.dayo.image.Category;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.folder.Folder;
@@ -47,7 +48,7 @@ public class FolderService {
     if (thumbnailImage == null) {
       image = imageService.findDefaultFolderImage();
     } else {
-      image = imageService.storeFile(thumbnailImage);
+      image = imageService.storeFile(thumbnailImage, Category.FOLDER);
     }
 
     request.setPrivacy(request.getPrivacy());
@@ -120,7 +121,7 @@ public class FolderService {
 
     // 변경이미지
     if (request.getThumbnailImage() != null && request.getIsFileChange()) {
-      Image image = imageService.storeFile(request.getThumbnailImage());
+      Image image = imageService.storeFile(request.getThumbnailImage(), Category.FOLDER);
       folder.setThumbnailImage(image);
     }
 

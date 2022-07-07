@@ -16,6 +16,7 @@ import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.folder.service.FolderService;
 import com.seoultech.dayo.follow.service.FollowService;
 import com.seoultech.dayo.heart.service.HeartService;
+import com.seoultech.dayo.image.Category;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.inquiry.service.InquiryService;
@@ -157,7 +158,7 @@ public class MemberService {
       member.setNickname(request.getNickname());
     }
     if (request.getProfileImg() != null) {
-      Image image = imageService.storeFile(request.getProfileImg());
+      Image image = imageService.storeFile(request.getProfileImg(), Category.PROFILE);
       imageService.resizeFile(image.getStoreFileName(), 17, 17);
       imageService.resizeFile(image.getStoreFileName(), 37, 37);
       member.setProfileImg(image);
@@ -176,7 +177,9 @@ public class MemberService {
 
     Image image;
     if (request.getProfileImg() != null) {
-      image = imageService.storeFile(request.getProfileImg());
+      image = imageService.storeFile(request.getProfileImg(), Category.PROFILE);
+      imageService.resizeFile(image.getStoreFileName(), 17, 17);
+      imageService.resizeFile(image.getStoreFileName(), 37, 37);
     } else {
       image = imageService.findDefaultProfileImage();
     }
