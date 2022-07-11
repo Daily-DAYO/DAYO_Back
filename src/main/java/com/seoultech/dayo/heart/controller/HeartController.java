@@ -44,7 +44,11 @@ public class HeartController {
   public ResponseEntity<Void> deleteHeart(HttpServletRequest servletRequest,
       @PathVariable Long postId) {
     String memberId = servletRequest.getAttribute("memberId").toString();
-    heartService.deleteHeart(memberId, postId);
+
+    Member member = memberService.findMemberById(memberId);
+    Post post = postService.findPostById(postId);
+
+    heartService.deleteHeart(member, post);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 

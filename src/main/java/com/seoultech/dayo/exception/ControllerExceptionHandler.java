@@ -30,6 +30,9 @@ public class ControllerExceptionHandler {
       IncorrectPasswordException.class,
       NotExistEmailException.class,
       NotExistFolderException.class,
+      NotExistHeartException.class,
+      NotExistBookmarkException.class,
+      NotExistCommentException.class
   })
   public ResponseEntity<BadRequestFailResponse> badRequest(Exception e) {
     return ResponseEntity.badRequest()

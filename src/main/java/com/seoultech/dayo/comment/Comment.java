@@ -11,34 +11,39 @@ import javax.persistence.*;
 @Getter
 public class Comment extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Post post;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Member member;
+  @ManyToOne(fetch = FetchType.EAGER)
+  private Member member;
 
-    private String contents;
+  private String contents;
 
-    public void addPost(Post post) {
-        this.post = post;
-        post.getComments().add(this);
-    }
+  public void addPost(Post post) {
+    this.post = post;
+    post.getComments().add(this);
+  }
 
-    public Comment(Member member, String contents) {
-        this.member = member;
-        this.contents = contents;
-    }
+  public void delete() {
+    post.getComments().removeIf(comment -> comment.getId().equals(this.id));
+  }
 
-    public Comment(Long id, Member member, String contents) {
-        this.id = id;
-        this.member = member;
-        this.contents = contents;
-    }
+  public Comment(Member member, String contents) {
+    this.member = member;
+    this.contents = contents;
+  }
 
-    protected Comment() {}
+  public Comment(Long id, Member member, String contents) {
+    this.id = id;
+    this.member = member;
+    this.contents = contents;
+  }
+
+  protected Comment() {
+  }
 
 }

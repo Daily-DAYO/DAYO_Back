@@ -35,5 +35,9 @@ public class PostHashtagService {
     return postHashtagRepository.findPostHashtagsByHashtag(hashtag);
   }
 
+  public void deletePostHashtag(Post post) {
+    postHashtagRepository.deleteAllByPost(post);
+  }
+
 
 }

@@ -9,6 +9,7 @@ import com.seoultech.dayo.comment.repository.CommentRepository;
 import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequest;
 import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
 import com.seoultech.dayo.config.fcm.Note;
+import com.seoultech.dayo.exception.NotExistCommentException;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.service.PostService;
@@ -58,7 +59,12 @@ public class CommentService {
   }
 
   public void deleteComment(Long commentId) {
-    commentRepository.deleteById(commentId);
+
+    Comment comment = commentRepository.findById(commentId)
+        .orElseThrow(NotExistCommentException::new);
+
+    comment.delete();
+    commentRepository.delete(comment);
   }
 
   public void deleteAllByMember(Member member) {

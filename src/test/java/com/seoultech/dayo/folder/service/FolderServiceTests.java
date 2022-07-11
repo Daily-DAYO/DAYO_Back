@@ -13,12 +13,15 @@ import com.seoultech.dayo.folder.Privacy;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.request.EditOrderFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.request.EditOrderFolderRequest.EditOrderDto;
+import com.seoultech.dayo.folder.controller.dto.response.CreateFolderResponse;
 import com.seoultech.dayo.folder.controller.dto.response.ListAllFolderResponse;
 import com.seoultech.dayo.folder.repository.FolderRepository;
 import com.seoultech.dayo.hashtag.Hashtag;
 import com.seoultech.dayo.image.Image;
+import com.seoultech.dayo.image.repository.ImageRepository;
 import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.member.Member;
+import com.seoultech.dayo.member.repository.MemberRepository;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.postHashtag.PostHashtag;
@@ -26,6 +29,7 @@ import com.seoultech.dayo.search.Search;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,8 +40,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -58,7 +66,7 @@ class FolderServiceTests {
 
   @BeforeEach
   void init() {
-    member = new Member("조재영", "jdyj@naver.com");
+    member = new Member("조재영", "jdyj6543@naver.com");
     post = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
     folder = new Folder(1L, "테스트폴더", "테스트폴더 부제목", Privacy.ALL, null);
   }

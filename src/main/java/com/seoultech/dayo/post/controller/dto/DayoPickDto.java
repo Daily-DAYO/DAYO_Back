@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class DayoPick {
+public class DayoPickDto {
 
   private Long id;
 
@@ -22,32 +22,15 @@ public class DayoPick {
 
   private Integer commentCount;
 
-  private boolean isHeart;
-
-  public static DayoPick from(Post post, boolean isHeart) {
-    return new DayoPick(post.getId(),
+  public static DayoPickDto from(Post post) {
+    return new DayoPickDto(post.getId(),
         post.getThumbnailImage(),
         post.getMember().getId(),
         post.getMember().getNickname(),
         post.getMember().getProfileImg().getStoreFileName(),
         post.getHeartCount(),
-        post.getCommentCount(),
-        isHeart
+        post.getCommentCount()
     );
   }
-
-  public static DayoPick fromDto(DayoPickDto dayoPickDto, boolean isHeart) {
-    return new DayoPick(
-        dayoPickDto.getId(),
-        dayoPickDto.getThumbnailImage(),
-        dayoPickDto.getMemberId(),
-        dayoPickDto.getNickname(),
-        dayoPickDto.getUserProfileImage(),
-        dayoPickDto.getHeartCount(),
-        dayoPickDto.getCommentCount(),
-        isHeart
-    );
-  }
-
 
 }

@@ -28,6 +28,10 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
+  redis:
+    host: localhost
+    port: 6379
+
 #server log setting
 logging:
   file:

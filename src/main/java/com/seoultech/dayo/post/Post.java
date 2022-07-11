@@ -10,6 +10,7 @@ import com.seoultech.dayo.heart.Heart;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.postHashtag.PostHashtag;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +29,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Formula;
+import org.springframework.data.redis.core.RedisHash;
 
 @Entity
 @Getter
@@ -98,6 +100,18 @@ public class Post extends BaseTimeEntity {
 
   public void setFolder(Folder folder) {
     this.folder = folder;
+  }
+
+  public void deleteHeart(Heart heart) {
+    hearts.removeIf(heart1 -> heart1.getKey().equals(heart.getKey()));
+  }
+
+  public void deleteBookmark(Bookmark bookmark) {
+    bookmarks.removeIf(bookmark1 -> bookmark1.getKey().equals(bookmark.getKey()));
+  }
+
+  public void deletePostHashTag() {
+    postHashtags.clear();
   }
 
   public Post(Member member, String contents, String thumbnailImage, Category category,

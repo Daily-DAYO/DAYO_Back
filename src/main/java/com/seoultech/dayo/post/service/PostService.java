@@ -16,13 +16,16 @@ import com.seoultech.dayo.hashtag.service.HashtagService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
+import com.seoultech.dayo.post.cache.DayoPickRedis;
 import com.seoultech.dayo.post.controller.dto.DayoPick;
+import com.seoultech.dayo.post.controller.dto.DayoPickDto;
 import com.seoultech.dayo.post.controller.dto.FeedDto;
 import com.seoultech.dayo.post.controller.dto.FeedDto.CommentDto;
 import com.seoultech.dayo.post.controller.dto.PostDto;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
 import com.seoultech.dayo.post.controller.dto.request.EditPostRequest;
 import com.seoultech.dayo.post.controller.dto.response.*;
+import com.seoultech.dayo.post.repository.DayoPickRepository;
 import com.seoultech.dayo.post.repository.PostRepository;
 import com.seoultech.dayo.postHashtag.service.PostHashtagService;
 import java.util.ArrayList;
@@ -30,6 +33,7 @@ import java.util.Comparator;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +51,7 @@ import static java.util.stream.Collectors.toSet;
 public class PostService {
 
   private final PostRepository postRepository;
+  private final DayoPickRepository dayoPickRepository;
   private final PostHashtagService postHashtagService;
   private final HashtagService hashtagService;
   private final HeartService heartService;
@@ -176,6 +181,8 @@ public class PostService {
     }
     if (request.getHashtags().size() > 0) {
       List<Hashtag> hashtags = hashtagService.createHashtag(request.getHashtags());
+      post.deletePostHashTag();
+      postHashtagService.deletePostHashtag(post);
       postHashtagService.createPostHashtag(post, hashtags);
     }
     if (request.getContents() != null) {
@@ -246,7 +253,22 @@ public class PostService {
   }
 
   @Transactional(readOnly = true)
-  public DayoPickPostListResponse dayoPickAllList(Member member) {
+  public DayoPickPostListResponse dayoPickList(Member member) {
+
+    if (dayoPickRepository.existsById(1L)) {
+      List<DayoPickDto> data = dayoPickRepository.findById(1L).get().getData();
+      Set<Long> likePost = getLikePost(member);
+      List<DayoPick> collect = new ArrayList<>();
+      for (DayoPickDto post : data) {
+        boolean like = likePost.contains(post.getId());
+        if (like) {
+          collect.add(DayoPick.fromDto(post, true));
+        } else {
+          collect.add(DayoPick.fromDto(post, false));
+        }
+      }
+      return DayoPickPostListResponse.from(collect);
+    }
 
     List<Post> postList = postRepository.findAllUsingJoinMember();
 

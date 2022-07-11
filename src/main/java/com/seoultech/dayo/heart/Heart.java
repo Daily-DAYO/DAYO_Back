@@ -31,6 +31,7 @@ public class Heart extends BaseTimeEntity {
     this.member = member;
     this.post = post;
     key = new Key(member.getId(), post.getId());
+    post.getHearts().add(this);
   }
 
   @Embeddable

@@ -32,6 +32,7 @@ public class Bookmark {
     this.member = member;
     this.post = post;
     key = new Bookmark.Key(member.getId(), post.getId());
+    post.getBookmarks().add(this);
   }
 
   @Embeddable

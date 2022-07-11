@@ -10,6 +10,7 @@ import com.seoultech.dayo.bookmark.controller.dto.response.CreateBookmarkRespons
 import com.seoultech.dayo.bookmark.controller.dto.response.ListAllBookmarkPostResponse;
 import com.seoultech.dayo.bookmark.controller.dto.response.ListAllMyBookmarkPostResponse;
 import com.seoultech.dayo.bookmark.repository.BookmarkRepository;
+import com.seoultech.dayo.exception.NotExistBookmarkException;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Post;
@@ -35,8 +36,13 @@ public class BookmarkService {
     return CreateBookmarkResponse.from(savedBookmark);
   }
 
-  public void deleteBookmark(String memberId, Long postId) {
-    bookmarkRepository.deleteById(new Bookmark.Key(memberId, postId));
+  public void deleteBookmark(Member member, Post post) {
+
+    Bookmark bookmark = bookmarkRepository.findBookmarkByMemberAndPost(member, post)
+        .orElseThrow(NotExistBookmarkException::new);
+
+    post.deleteBookmark(bookmark);
+    bookmarkRepository.delete(bookmark);
   }
 
   @Transactional(readOnly = true)

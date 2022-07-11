@@ -35,7 +35,7 @@ public class PostController {
     String memberId = servletRequest.getAttribute("memberId").toString();
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
-        .body(postService.dayoPickAllList(member));
+        .body(postService.dayoPickList(member));
   }
 
   @GetMapping("/dayopick/{category}")

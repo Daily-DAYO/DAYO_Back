@@ -15,4 +15,7 @@ public interface MemberRepository extends JpaRepository<Member, String> {
 
   Optional<Member> findMemberByEmailAndPassword(String email, String password);
 
+  @Query("select m from Member m left join m.folders where m.id = :id")
+  Optional<Member> findMemberByIdUsingJoinFolder(@Param("id") String id);
+
 }

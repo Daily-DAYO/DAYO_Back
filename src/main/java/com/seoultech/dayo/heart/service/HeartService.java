@@ -3,7 +3,9 @@ package com.seoultech.dayo.heart.service;
 import com.seoultech.dayo.alarm.Topic;
 import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.config.fcm.Note;
+import com.seoultech.dayo.exception.NotExistHeartException;
 import com.seoultech.dayo.heart.Heart;
+import com.seoultech.dayo.heart.Heart.Key;
 import com.seoultech.dayo.heart.controller.dto.HeartPostDto;
 import com.seoultech.dayo.heart.controller.dto.MyHeartPostDto;
 import com.seoultech.dayo.heart.controller.dto.request.CreateHeartRequest;
@@ -42,8 +44,13 @@ public class HeartService {
     return CreateHeartResponse.from(savedHeart);
   }
 
-  public void deleteHeart(String memberId, Long postId) {
-    heartRepository.deleteById(new Heart.Key(memberId, postId));
+  public void deleteHeart(Member member, Post post) {
+
+    Heart heart = heartRepository.findHeartByMemberAndPost(member, post)
+        .orElseThrow(NotExistHeartException::new);
+
+    post.deleteHeart(heart);
+    heartRepository.delete(heart);
   }
 
   @Transactional(readOnly = true)
