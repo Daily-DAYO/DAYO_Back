@@ -37,7 +37,7 @@ public class Alarm extends BaseTimeEntity {
 
   private String image;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private Member sender;
 
   public void setCheck(Boolean check) {

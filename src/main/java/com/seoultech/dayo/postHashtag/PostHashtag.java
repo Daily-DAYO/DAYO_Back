@@ -13,17 +13,16 @@ import java.io.Serializable;
 
 @Entity
 @Getter
-@ToString
 public class PostHashtag {
 
   @EmbeddedId
   private Key key;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   @MapsId("hashtagId")
   private Hashtag hashtag;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   @MapsId("postId")
   private Post post;
 

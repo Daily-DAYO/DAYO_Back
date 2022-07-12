@@ -2,6 +2,7 @@ package com.seoultech.dayo.inquiry;
 
 import com.seoultech.dayo.member.Member;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,7 +15,7 @@ public class Inquiry {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   private Member member;
 
   private String content;
