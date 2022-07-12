@@ -34,16 +34,13 @@ public class FeedDto {
 
   private String contents;
 
-  private List<CommentDto> comments;
-
   private String category;
 
   private LocalDateTime createTime;
 
   private List<String> hashtags;
 
-  public static FeedDto from(Post post, boolean isHeart, boolean isBookmark,
-      List<CommentDto> comments) {
+  public static FeedDto from(Post post, boolean isHeart, boolean isBookmark) {
     List<Hashtag> collect = post.getPostHashtags().stream()
         .map(PostHashtag::getHashtag)
         .collect(Collectors.toList());
@@ -59,30 +56,10 @@ public class FeedDto {
         isHeart,
         isBookmark,
         post.getContents(),
-        comments,
         post.getCategory().toString(),
         post.getCreatedDate(),
         hashtags
     );
   }
 
-  @Getter
-  @AllArgsConstructor
-  static public class CommentDto {
-
-    private Long commentId;
-    private String memberId;
-    private String nickname;
-    private String profileImg;
-    private String contents;
-    private LocalDateTime createTime;
-
-    public static CommentDto from(Comment comment) {
-      return new CommentDto(comment.getId(), comment.getMember().getId(),
-          comment.getMember().getNickname(),
-          comment.getMember().getProfileImg().getStoreFileName(), comment.getContents(),
-          comment.getCreatedDate());
-    }
-
-  }
 }

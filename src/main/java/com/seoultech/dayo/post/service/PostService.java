@@ -21,7 +21,6 @@ import com.seoultech.dayo.post.cache.DayoPickRedis;
 import com.seoultech.dayo.post.controller.dto.DayoPick;
 import com.seoultech.dayo.post.controller.dto.DayoPickDto;
 import com.seoultech.dayo.post.controller.dto.FeedDto;
-import com.seoultech.dayo.post.controller.dto.FeedDto.CommentDto;
 import com.seoultech.dayo.post.controller.dto.PostDto;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
 import com.seoultech.dayo.post.controller.dto.request.EditPostRequest;
@@ -225,15 +224,10 @@ public class PostService {
 
     List<FeedDto> feedDtos = new ArrayList<>();
     for (Post post : postCollect) {
-
-      List<CommentDto> temp = post.getComments().stream()
-          .map(CommentDto::from)
-          .collect(toList());
-
       boolean isHeart = heartService.isHeart(member.getId(), post.getId());
       boolean isBookmark = bookmarkService.isBookmark(member.getId(), post.getId());
 
-      feedDtos.add(FeedDto.from(post, isHeart, isBookmark, temp));
+      feedDtos.add(FeedDto.from(post, isHeart, isBookmark));
     }
 
     return ListFeedResponse.from(feedDtos);
