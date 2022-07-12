@@ -220,7 +220,7 @@ public class PostService {
 
     List<Post> postCollect = posts.stream()
         .filter(post -> post.getPrivacy() != Privacy.ONLY_ME)
-        .sorted(Comparator.comparing(BaseTimeEntity::getCreatedDate))
+        .sorted((post1, post2) -> post2.getCreatedDate().compareTo(post1.getCreatedDate()))
         .collect(toList());
 
     List<FeedDto> feedDtos = new ArrayList<>();
