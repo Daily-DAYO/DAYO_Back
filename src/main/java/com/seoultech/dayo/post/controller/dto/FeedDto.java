@@ -38,7 +38,7 @@ public class FeedDto {
 
   private String category;
 
-  private LocalDateTime localDateTime;
+  private LocalDateTime createTime;
 
   private List<String> hashtags;
 

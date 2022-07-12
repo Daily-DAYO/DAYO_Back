@@ -1,6 +1,7 @@
 package com.seoultech.dayo.post.service;
 
 
+import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.bookmark.service.BookmarkService;
 import com.seoultech.dayo.exception.InvalidPostAccess;
 import com.seoultech.dayo.exception.NotExistPostException;
@@ -219,6 +220,7 @@ public class PostService {
 
     List<Post> postCollect = posts.stream()
         .filter(post -> post.getPrivacy() != Privacy.ONLY_ME)
+        .sorted(Comparator.comparing(BaseTimeEntity::getCreatedDate))
         .collect(toList());
 
     List<FeedDto> feedDtos = new ArrayList<>();
