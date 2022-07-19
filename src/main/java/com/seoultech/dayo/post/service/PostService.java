@@ -251,20 +251,20 @@ public class PostService {
   @Transactional(readOnly = true)
   public DayoPickPostListResponse dayoPickList(Member member) {
 
-    if (dayoPickRepository.existsById(1L)) {
-      List<DayoPickDto> data = dayoPickRepository.findById(1L).get().getData();
-      Set<Long> likePost = getLikePost(member);
-      List<DayoPick> collect = new ArrayList<>();
-      for (DayoPickDto post : data) {
-        boolean like = likePost.contains(post.getId());
-        if (like) {
-          collect.add(DayoPick.fromDto(post, true));
-        } else {
-          collect.add(DayoPick.fromDto(post, false));
-        }
-      }
-      return DayoPickPostListResponse.from(collect);
-    }
+//    if (dayoPickRepository.existsById(1L)) {
+//      List<DayoPickDto> data = dayoPickRepository.findById(1L).get().getData();
+//      Set<Long> likePost = getLikePost(member);
+//      List<DayoPick> collect = new ArrayList<>();
+//      for (DayoPickDto post : data) {
+//        boolean like = likePost.contains(post.getId());
+//        if (like) {
+//          collect.add(DayoPick.fromDto(post, true));
+//        } else {
+//          collect.add(DayoPick.fromDto(post, false));
+//        }
+//      }
+//      return DayoPickPostListResponse.from(collect);
+//    }
 
     List<Post> postList = postRepository.findAllUsingJoinMember();
 
