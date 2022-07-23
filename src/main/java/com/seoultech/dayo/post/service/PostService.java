@@ -1,7 +1,6 @@
 package com.seoultech.dayo.post.service;
 
 
-import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.bookmark.service.BookmarkService;
 import com.seoultech.dayo.exception.InvalidPostAccess;
 import com.seoultech.dayo.exception.NotExistPostException;
@@ -17,9 +16,7 @@ import com.seoultech.dayo.hashtag.service.HashtagService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
-import com.seoultech.dayo.post.cache.DayoPickRedis;
 import com.seoultech.dayo.post.controller.dto.DayoPick;
-import com.seoultech.dayo.post.controller.dto.DayoPickDto;
 import com.seoultech.dayo.post.controller.dto.FeedDto;
 import com.seoultech.dayo.post.controller.dto.PostDto;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
@@ -33,7 +30,6 @@ import java.util.Comparator;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -70,8 +66,8 @@ public class PostService {
     List<DayoPick> collect = new ArrayList<>();
 
     for (Post post : postList) {
-      boolean like = likePost.contains(post.getId());
-      if (like) {
+      boolean isLike = likePost.contains(post.getId());
+      if (isLike) {
         collect.add(DayoPick.from(post, true));
       } else {
         collect.add(DayoPick.from(post, false));
@@ -97,14 +93,14 @@ public class PostService {
 
     for (Post post : postList) {
 
-      boolean like = likePost.contains(post.getId());
-      boolean bookmark = bookmarkPost.contains(post.getId());
+      boolean isLike = likePost.contains(post.getId());
+      boolean isBookmark = bookmarkPost.contains(post.getId());
 
-      if (like && bookmark) {
+      if (isLike && isBookmark) {
         collect.add(PostDto.from(post, true, true));
-      } else if (like) {
+      } else if (isLike) {
         collect.add(PostDto.from(post, true, false));
-      } else if (bookmark) {
+      } else if (isBookmark) {
         collect.add(PostDto.from(post, false, true));
       } else {
         collect.add(PostDto.from(post, false, false));
