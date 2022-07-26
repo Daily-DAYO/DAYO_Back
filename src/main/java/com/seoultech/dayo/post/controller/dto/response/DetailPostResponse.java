@@ -57,7 +57,7 @@ public class DetailPostResponse {
         post.getMember().getId(),
         post.getMember().getNickname(),
         post.getMember().getProfileImg().getStoreFileName(),
-        post.getCreatedDate(),
+        post.getCreatedDate().withNano(0),
         post.getCategory(),
         collectImages,
         post.getContents(),

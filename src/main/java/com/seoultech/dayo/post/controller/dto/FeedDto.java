@@ -57,7 +57,7 @@ public class FeedDto {
         isBookmark,
         post.getContents(),
         post.getCategory().toString(),
-        post.getCreatedDate(),
+        post.getCreatedDate().withNano(0),
         hashtags
     );
   }

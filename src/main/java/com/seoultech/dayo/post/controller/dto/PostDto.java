@@ -40,7 +40,7 @@ public class PostDto {
         post.getComments().size(),
         isHeart,
         isBookmark,
-        post.getCreatedDate()
+        post.getCreatedDate().withNano(0)
     );
   }
 
