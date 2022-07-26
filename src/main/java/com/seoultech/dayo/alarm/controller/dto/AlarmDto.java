@@ -1,6 +1,7 @@
 package com.seoultech.dayo.alarm.controller.dto;
 
 import com.seoultech.dayo.alarm.Alarm;
+import com.seoultech.dayo.post.Post;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,8 +29,17 @@ public class AlarmDto {
   private String image;
 
   public static AlarmDto from(Alarm alarm) {
+
+    Post post = alarm.getPost();
+    Long postId;
+    if (post == null) {
+      postId = null;
+    } else {
+      postId = post.getId();
+    }
+
     return new AlarmDto(alarm.getId(), alarm.getContent(), alarm.getCategory().toString(),
-        alarm.getIsCheck(), alarm.getPost().getId(),
+        alarm.getIsCheck(), postId,
         alarm.getSender().getNickname(), alarm.getCreatedDate(), alarm.getSender().getId(),
         alarm.getImage());
   }
