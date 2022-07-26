@@ -8,6 +8,7 @@ import com.seoultech.dayo.alarm.repository.AlarmRepository;
 import com.seoultech.dayo.config.fcm.Note;
 import com.seoultech.dayo.exception.NotExistAlarmException;
 import com.seoultech.dayo.member.Member;
+import com.seoultech.dayo.post.Post;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,9 @@ public class AlarmService {
 
   private final AlarmRepository alarmRepository;
 
-  public void saveAlarmPost(Note note, Member member, Long postId, Member sender,
+  public void saveAlarmPost(Note note, Member member, Post post, Member sender,
       Topic category) {
-    alarmRepository.save(note.toEntityWithPostId(member, postId, sender, category));
+    alarmRepository.save(note.toEntityWithPostId(member, post, sender, category));
   }
 
   public void saveAlarmFollow(Note note, Member member, Member sender, Topic category) {
@@ -50,6 +51,10 @@ public class AlarmService {
     }
 
     alarm.setCheck(true);
+  }
+
+  public void deleteByPost(Post post) {
+    alarmRepository.deleteAlarmByPost(post);
   }
 
   public void deleteAllByMember(Member member) {

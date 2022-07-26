@@ -90,7 +90,7 @@ public class HeartService {
       Map<String, String> data = makeMessage(member, post);
       Note note = Note.makeNote(data);
 
-      alarmService.saveAlarmPost(note, post.getMember(), post.getId(), member,
+      alarmService.saveAlarmPost(note, post.getMember(), post, member,
           Topic.HEART);
 
       if (canSendMessage(post)) {

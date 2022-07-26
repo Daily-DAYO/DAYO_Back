@@ -1,6 +1,7 @@
 package com.seoultech.dayo.post.service;
 
 
+import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.bookmark.service.BookmarkService;
 import com.seoultech.dayo.exception.InvalidPostAccess;
 import com.seoultech.dayo.exception.NotExistPostException;
@@ -54,6 +55,7 @@ public class PostService {
   private final BookmarkService bookmarkService;
   private final FollowService followService;
   private final ImageService imageService;
+  private final AlarmService alarmService;
 
   @Transactional(readOnly = true)
   public DayoPickPostListResponse dayoPickListWithCategory(Member member, String category) {
@@ -236,6 +238,7 @@ public class PostService {
       throw new InvalidPostAccess();
     }
 
+    alarmService.deleteByPost(post);
     postRepository.deleteById(postId);
   }
 

@@ -3,6 +3,7 @@ package com.seoultech.dayo.config.fcm;
 import com.seoultech.dayo.alarm.Alarm;
 import com.seoultech.dayo.alarm.Topic;
 import com.seoultech.dayo.member.Member;
+import com.seoultech.dayo.post.Post;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class Note {
     );
   }
 
-  public Alarm toEntityWithPostId(Member member, Long postId, Member sender, Topic category) {
+  public Alarm toEntityWithPostId(Member member, Post post, Member sender, Topic category) {
     return new Alarm(
         member,
         category,
@@ -36,7 +37,7 @@ public class Note {
         this.subject,
         this.content,
         this.image,
-        postId,
+        post,
         sender
     );
   }

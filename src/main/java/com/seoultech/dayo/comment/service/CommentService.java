@@ -76,7 +76,7 @@ public class CommentService {
       Map<String, String> data = makeMessage(member, post);
       Note note = Note.makeNote(data);
 
-      alarmService.saveAlarmPost(note, post.getMember(), post.getId(), member,
+      alarmService.saveAlarmPost(note, post.getMember(), post, member,
           Topic.COMMENT);
 
       if (canSendMessage(post)) {
