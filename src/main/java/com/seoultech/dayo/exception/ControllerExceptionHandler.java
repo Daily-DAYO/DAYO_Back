@@ -2,6 +2,7 @@ package com.seoultech.dayo.exception;
 
 import com.seoultech.dayo.exception.dto.BadRequestFailResponse;
 import com.seoultech.dayo.exception.dto.ForbiddenFailResponse;
+import com.seoultech.dayo.exception.dto.NotFoundFailResponse;
 import com.seoultech.dayo.exception.dto.UnauthorizedFailResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
@@ -18,26 +19,37 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class ControllerExceptionHandler {
 
   @ExceptionHandler(value = {
+      InvalidFolderAccess.class,
+      InvalidPostAccess.class,
+      ExistEmailException.class,
+      IncorrectPasswordException.class
+  })
+  public ResponseEntity<BadRequestFailResponse> badRequest(Exception e) {
+    return ResponseEntity.badRequest()
+        .body(BadRequestFailResponse.builder()
+            .status(HttpStatus.BAD_REQUEST.value())
+            .message(e.getMessage())
+            .build()
+        );
+  }
+
+  @ExceptionHandler(value = {
       NotExistFolderException.class,
       NotExistMemberException.class,
       NotExistPostException.class,
       NotExistFollowerException.class,
       NotExistFollowException.class,
       NotExistPostCategoryException.class,
-      InvalidFolderAccess.class,
-      InvalidPostAccess.class,
-      ExistEmailException.class,
-      IncorrectPasswordException.class,
       NotExistEmailException.class,
       NotExistFolderException.class,
       NotExistHeartException.class,
       NotExistBookmarkException.class,
       NotExistCommentException.class
   })
-  public ResponseEntity<BadRequestFailResponse> badRequest(Exception e) {
-    return ResponseEntity.badRequest()
-        .body(BadRequestFailResponse.builder()
-            .status(HttpStatus.BAD_REQUEST.value())
+  public ResponseEntity<NotFoundFailResponse> notFound(Exception e) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(NotFoundFailResponse.builder()
+            .status(HttpStatus.NOT_FOUND.value())
             .message(e.getMessage())
             .build()
         );
