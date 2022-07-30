@@ -35,7 +35,7 @@ public class PostDto {
         post.getThumbnailImage(),
         post.getMember().getId(),
         post.getMember().getNickname(),
-        post.getMember().getProfileImg().getStoreFileName(),
+        post.getMember().getProfileImg().getStoreFileName() + "_37x37",
         post.getHearts().size(),
         post.getComments().size(),
         isHeart,

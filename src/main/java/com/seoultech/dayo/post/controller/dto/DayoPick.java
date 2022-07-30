@@ -26,10 +26,10 @@ public class DayoPick {
 
   public static DayoPick from(Post post, boolean isHeart) {
     return new DayoPick(post.getId(),
-        post.getThumbnailImage(),
+        post.getThumbnailImage() + "_220x220",
         post.getMember().getId(),
         post.getMember().getNickname(),
-        post.getMember().getProfileImg().getStoreFileName(),
+        post.getMember().getProfileImg().getStoreFileName() + "_17x17",
         post.getHeartCount(),
         post.getCommentCount(),
         isHeart

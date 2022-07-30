@@ -22,7 +22,7 @@ public class FollowingDto {
     return new FollowingDto(
         follow.getFollower().getId(),
         follow.getFollower().getNickname(),
-        follow.getFollower().getProfileImg().getStoreFileName(),
+        follow.getFollower().getProfileImg().getStoreFileName() + "_45x45",
         isFollow
     );
   }

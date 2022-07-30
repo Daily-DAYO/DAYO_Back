@@ -56,7 +56,7 @@ public class DetailPostResponse {
     return new DetailPostResponse(
         post.getMember().getId(),
         post.getMember().getNickname(),
-        post.getMember().getProfileImg().getStoreFileName(),
+        post.getMember().getProfileImg().getStoreFileName() + "_37x37",
         post.getCreatedDate().withNano(0),
         post.getCategory(),
         collectImages,

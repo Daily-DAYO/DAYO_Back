@@ -23,7 +23,7 @@ public class MailService {
       MailUtils sendMail = new MailUtils(mailSender);
       sendMail.setSubject("회원가입 이메일 인증");
       sendMail.setText("<h1>[이메일 인증]</h1>"
-          + "<p>6자리 여기요~</p>"
+          + "<p>인증번호 6자리</p>"
           + authKey);
       sendMail.setFrom("jdyj@naver.com", "관리자");
       sendMail.setTo(email);

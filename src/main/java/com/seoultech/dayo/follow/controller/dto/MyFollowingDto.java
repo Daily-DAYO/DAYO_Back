@@ -21,7 +21,7 @@ public class MyFollowingDto {
     return new MyFollowingDto(
         follow.getFollower().getId(),
         follow.getFollower().getNickname(),
-        follow.getFollower().getProfileImg().getStoreFileName(),
+        follow.getFollower().getProfileImg().getStoreFileName() + "_45x45",
         true
     );
   }
