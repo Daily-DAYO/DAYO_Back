@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.seoultech.dayo.hashtag.Hashtag;
 import com.seoultech.dayo.hashtag.service.HashtagService;
 import com.seoultech.dayo.image.Image;
+import com.seoultech.dayo.image.repository.ImageRepository;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.repository.MemberRepository;
 import com.seoultech.dayo.post.Category;
@@ -45,14 +46,20 @@ class PostServiceTests {
   @Autowired
   HashtagService hashtagService;
 
+  @Autowired
+  ImageRepository imageRepository;
+
   Post post;
   Member member;
+  Image image;
 
   @BeforeEach
   void init() {
     member = new Member("조재영", "jdyj@naver.com");
     member.setNickname("재영");
-    post = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
+    image = new Image("testImage", "testImage", com.seoultech.dayo.image.Category.POST);
+    imageRepository.save(image);
+    post = new Post(member, "테스트1", image, Category.SCHEDULER, null);
   }
 
   @Test

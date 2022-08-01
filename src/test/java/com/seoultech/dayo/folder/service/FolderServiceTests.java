@@ -63,11 +63,13 @@ class FolderServiceTests {
   Member member;
   Post post;
   Folder folder;
+  Image image;
 
   @BeforeEach
   void init() {
     member = new Member("조재영", "jdyj6543@naver.com");
-    post = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
+    image = new Image("testImage", "testImage", FOLDER);
+    post = new Post(member, "테스트1", image, Category.SCHEDULER, null);
     folder = new Folder(1L, "테스트폴더", "테스트폴더 부제목", Privacy.ALL, null);
   }
 

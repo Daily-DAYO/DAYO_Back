@@ -12,6 +12,7 @@ import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequest;
 import com.seoultech.dayo.comment.repository.CommentRepository;
+import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
@@ -51,12 +52,14 @@ class CommentServiceTests {
   Member member;
   Post post;
   Comment comment;
+  Image image;
 
   @BeforeEach
   void init() {
     member = new Member("조재영", "jdyj@naver.com");
     member.setNickname("재영");
-    post = new Post(1L, member, "테스트1", "testimage", Category.SCHEDULER, null);
+    image = new Image("testImage", "testImage", com.seoultech.dayo.image.Category.POST);
+    post = new Post(1L, member, "테스트1", image, Category.SCHEDULER, null);
     comment = new Comment(1L, member, "테스트 댓글1");
   }
 
@@ -97,7 +100,7 @@ class CommentServiceTests {
   void commentTest3() {
     Member otherMember = new Member("홍길동", "other@naver.com");
     otherMember.setDeviceToken("test");
-    Post otherPost = new Post(2L, otherMember, "테스트1", "testimage", Category.SCHEDULER, null);
+    Post otherPost = new Post(2L, otherMember, "테스트1", image, Category.SCHEDULER, null);
     CreateCommentRequest request = new CreateCommentRequest("테스트 댓글1", otherPost.getId());
 
     given(commentRepository.save(any())).willReturn(comment);

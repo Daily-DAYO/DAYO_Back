@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.comment.repository.CommentRepository;
+import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.repository.MemberRepository;
 import com.seoultech.dayo.post.Category;
@@ -34,11 +35,13 @@ class CommentServiceTest {
   Member member;
   Post post;
   Comment comment;
+  Image image;
 
   @BeforeEach
   void init() {
     member = new Member("조재영", "jdyj444@naver.com");
-    post = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
+    image = new Image("testImage", "testImage", com.seoultech.dayo.image.Category.POST);
+    post = new Post(member, "테스트1", image, Category.SCHEDULER, null);
     comment = new Comment(member, "댓글 테스트");
     comment.addPost(post);
   }

@@ -88,7 +88,7 @@ class CommentControllerTests {
         .id(1L)
         .member(member)
         .contents("테스트 첫개시")
-        .thumbnailImage("test.jpg")
+        .thumbnailImage(image)
         .category(Category.SCHEDULER)
         .build();
 

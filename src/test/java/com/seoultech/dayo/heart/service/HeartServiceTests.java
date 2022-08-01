@@ -8,6 +8,7 @@ import com.seoultech.dayo.heart.Heart.Key;
 import com.seoultech.dayo.heart.controller.dto.request.CreateHeartRequest;
 import com.seoultech.dayo.heart.controller.dto.response.CreateHeartResponse;
 import com.seoultech.dayo.heart.repository.HeartRepository;
+import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.repository.MemberRepository;
 import com.seoultech.dayo.post.Category;
@@ -37,11 +38,12 @@ class HeartServiceTests {
 
   Member member;
   Post post;
+  Image image;
 
   @BeforeEach
   void init() {
     member = new Member("조재영", "jdyj444@naver.com");
-    post = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
+    post = new Post(member, "테스트1", image, Category.SCHEDULER, null);
   }
 
   @Test

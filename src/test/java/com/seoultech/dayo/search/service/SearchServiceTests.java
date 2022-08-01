@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.seoultech.dayo.hashtag.Hashtag;
 import com.seoultech.dayo.hashtag.service.HashtagService;
+import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
@@ -50,6 +51,7 @@ class SearchServiceTests {
   PostHashtag postHashtag;
   Post post;
   Search search;
+  Image image;
 
   List<PostHashtag> postHashtagList = new ArrayList<>();
 
@@ -57,7 +59,8 @@ class SearchServiceTests {
   public void init() {
     member = new Member("조재영", "jdyj@naver.com");
     hashtag = new Hashtag("테스트");
-    post = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
+    image = new Image("testImage", "testImage", com.seoultech.dayo.image.Category.POST);
+    post = new Post(member, "테스트1", image, Category.SCHEDULER, null);
     postHashtag = new PostHashtag(post, hashtag);
     search = new Search(member, hashtag.getTag());
   }

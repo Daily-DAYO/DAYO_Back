@@ -29,15 +29,15 @@ class DayoPickRepositoryTests {
     Image image = new Image("test.jpg", "test.jpg", PROFILE);
     Member member = new Member("조재영", "jdyj@naver.com", image);
     member.setNickname("재영");
-    Post post1 = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
-    Post post2 = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
-    Post post3 = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
-    Post post4 = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
-    Post post5 = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
-    Post post6 = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
-    Post post7 = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
-    Post post8 = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
-    Post post9 = new Post(member, "테스트1", "testimage", Category.SCHEDULER, null);
+    Post post1 = new Post(member, "테스트1", image, Category.SCHEDULER, null);
+    Post post2 = new Post(member, "테스트1", image, Category.SCHEDULER, null);
+    Post post3 = new Post(member, "테스트1", image, Category.SCHEDULER, null);
+    Post post4 = new Post(member, "테스트1", image, Category.SCHEDULER, null);
+    Post post5 = new Post(member, "테스트1", image, Category.SCHEDULER, null);
+    Post post6 = new Post(member, "테스트1", image, Category.SCHEDULER, null);
+    Post post7 = new Post(member, "테스트1", image, Category.SCHEDULER, null);
+    Post post8 = new Post(member, "테스트1", image, Category.SCHEDULER, null);
+    Post post9 = new Post(member, "테스트1", image, Category.SCHEDULER, null);
 
     List<Post> postList = new ArrayList<>();
 
