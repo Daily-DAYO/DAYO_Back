@@ -50,7 +50,7 @@ public class FeedDto {
 
     return new FeedDto(post.getId(), post.getImages().get(0).getStoreFileName(),
         post.getMember().getId(), post.getMember().getNickname(),
-        post.getMember().getProfileImg().getStoreFileName() + "_37x37",
+        post.getMember().getProfileImg().getResizeFileName(37, 37),
         post.getHeartCount(),
         post.getCommentCount(),
         isHeart,

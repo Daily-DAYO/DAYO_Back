@@ -20,7 +20,7 @@ public class FollowerDto {
     return new FollowerDto(
         follow.getMember().getId(),
         follow.getMember().getNickname(),
-        follow.getMember().getProfileImg().getStoreFileName() + "_45x45",
+        follow.getMember().getProfileImg().getResizeFileName(45, 45),
         isFollow
     );
   }
