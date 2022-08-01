@@ -1,5 +1,7 @@
 package com.seoultech.dayo.image.controller;
 
+import com.seoultech.dayo.image.Category;
+import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -27,12 +29,23 @@ public class ImageController {
     return new UrlResource("file:" + imageService.getFullPath(filename));
   }
 
-  @PostMapping
-  public ResponseEntity uploadImage(MultipartHttpServletRequest servletRequest) throws IOException {
-    List<MultipartFile> images = servletRequest.getFiles("files");
-    imageService.storeFiles(images);
+  @PostMapping("/profile")
+  public ResponseEntity uploadProfileImage(MultipartHttpServletRequest servletRequest)
+      throws IOException {
+    MultipartFile image = servletRequest.getFile("file");
+    Image savedImage = imageService.storeFile(image, Category.PROFILE);
+    imageService.resizeFile(savedImage.getStoreFileName(), 17, 17);
+    imageService.resizeFile(savedImage.getStoreFileName(), 37, 37);
+    imageService.resizeFile(savedImage.getStoreFileName(), 45, 45);
     return new ResponseEntity(HttpStatus.OK);
   }
 
+  @PostMapping("/folder")
+  public ResponseEntity uploadFolderImage(MultipartHttpServletRequest servletRequest)
+      throws IOException {
+    MultipartFile image = servletRequest.getFile("file");
+    imageService.storeFile(image, Category.FOLDER);
+    return new ResponseEntity(HttpStatus.OK);
+  }
 
 }

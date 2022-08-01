@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ImageService {
 
   private final ImageRepository imageRepository;
@@ -34,7 +35,6 @@ public class ImageService {
     return fileDir + fileName;
   }
 
-  @Transactional
   public List<Image> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
     List<Name> collect = new ArrayList<>();
     File folder = new File(fileDir);

@@ -181,6 +181,7 @@ public class MemberService {
       image = imageService.storeFile(request.getProfileImg(), Category.PROFILE);
       imageService.resizeFile(image.getStoreFileName(), 17, 17);
       imageService.resizeFile(image.getStoreFileName(), 37, 37);
+      imageService.resizeFile(image.getStoreFileName(), 45, 45);
     } else {
       image = imageService.findDefaultProfileImage();
     }
