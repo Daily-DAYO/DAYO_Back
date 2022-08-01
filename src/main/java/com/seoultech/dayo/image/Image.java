@@ -27,6 +27,17 @@ public class Image extends BaseTimeEntity {
     this.category = category;
   }
 
+  public String getResizeFileName(int width, int height) {
+    int pos = this.storeFileName.lastIndexOf(".");
+    String ext = extractExt(this.storeFileName);
+    return this.storeFileName.substring(0, pos) + "_" + width + "x" + height + "." + ext;
+  }
+
+  private String extractExt(String originalFilename) {
+    int pos = originalFilename.lastIndexOf(".");
+    return originalFilename.substring(pos + 1);
+  }
+
   protected Image() {
   }
 }

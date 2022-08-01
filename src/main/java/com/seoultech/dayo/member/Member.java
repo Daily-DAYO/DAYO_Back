@@ -30,6 +30,7 @@ public class Member extends BaseTimeEntity {
   private String name;
 
   @Pattern(regexp = "\\S+$")
+  @Column(unique = true)
   private String nickname;
 
   @Email

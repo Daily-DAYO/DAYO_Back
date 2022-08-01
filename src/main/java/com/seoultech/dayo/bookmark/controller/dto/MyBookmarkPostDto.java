@@ -15,6 +15,6 @@ public class MyBookmarkPostDto {
 
   public static MyBookmarkPostDto from(Bookmark bookmark) {
     return new MyBookmarkPostDto(bookmark.getPost().getId(),
-        bookmark.getPost().getThumbnailImage());
+        bookmark.getPost().getThumbnailImage().getStoreFileName());
   }
 }

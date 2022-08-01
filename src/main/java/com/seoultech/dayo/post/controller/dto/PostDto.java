@@ -32,10 +32,10 @@ public class PostDto {
 
   public static PostDto from(Post post, boolean isHeart, boolean isBookmark) {
     return new PostDto(post.getId(),
-        post.getThumbnailImage(),
+        post.getThumbnailImage().getStoreFileName(),
         post.getMember().getId(),
         post.getMember().getNickname(),
-        post.getMember().getProfileImg().getStoreFileName() + "_37x37",
+        post.getMember().getProfileImg().getResizeFileName(37, 37),
         post.getHearts().size(),
         post.getComments().size(),
         isHeart,

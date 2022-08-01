@@ -9,12 +9,13 @@ import lombok.Getter;
 @AllArgsConstructor
 public class HeartPostDto {
 
-    private Long postId;
+  private Long postId;
 
-    private String thumbnailImage;
+  private String thumbnailImage;
 
-    public static HeartPostDto from(Heart heart) {
-        return new HeartPostDto(heart.getPost().getId(), heart.getPost().getThumbnailImage());
-    }
+  public static HeartPostDto from(Heart heart) {
+    return new HeartPostDto(heart.getPost().getId(),
+        heart.getPost().getThumbnailImage().getStoreFileName());
+  }
 
 }

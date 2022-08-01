@@ -42,7 +42,7 @@ public class CreatePostRequest {
       return Post.builder()
           .member(member)
           .contents(contents)
-          .thumbnailImage(images.get(0).getStoreFileName())
+          .thumbnailImage(images.get(0))
           .category(Category.valueOf(category))
           .images(images)
           .build();

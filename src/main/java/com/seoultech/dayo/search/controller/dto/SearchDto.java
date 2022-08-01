@@ -13,6 +13,6 @@ public class SearchDto {
   private String thumbnailImage;
 
   public static SearchDto from(Post post) {
-    return new SearchDto(post.getId(), post.getThumbnailImage());
+    return new SearchDto(post.getId(), post.getThumbnailImage().getStoreFileName());
   }
 }

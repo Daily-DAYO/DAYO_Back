@@ -16,7 +16,8 @@ public class FolderDetailDto {
   private LocalDateTime createDate;
 
   public static FolderDetailDto from(Post post) {
-    return new FolderDetailDto(post.getId(), post.getThumbnailImage(), post.getCreatedDate());
+    return new FolderDetailDto(post.getId(), post.getThumbnailImage().getStoreFileName(),
+        post.getCreatedDate());
   }
 
 }

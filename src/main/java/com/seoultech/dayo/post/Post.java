@@ -24,6 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,7 +46,8 @@ public class Post extends BaseTimeEntity {
   @Setter
   private String contents;
 
-  private String thumbnailImage;
+  @OneToOne
+  private Image thumbnailImage;
 
   @Setter
   @Enumerated(EnumType.STRING)
@@ -114,7 +116,7 @@ public class Post extends BaseTimeEntity {
     postHashtags.clear();
   }
 
-  public Post(Member member, String contents, String thumbnailImage, Category category,
+  public Post(Member member, String contents, Image thumbnailImage, Category category,
       List<Image> images) {
     this.member = member;
     member.getPosts().add(this);
@@ -125,7 +127,7 @@ public class Post extends BaseTimeEntity {
   }
 
   @Builder
-  public Post(Long id, Member member, String contents, String thumbnailImage, Category category,
+  public Post(Long id, Member member, String contents, Image thumbnailImage, Category category,
       List<Image> images) {
     this.id = id;
     this.member = member;

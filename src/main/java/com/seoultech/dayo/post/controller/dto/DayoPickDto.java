@@ -24,10 +24,10 @@ public class DayoPickDto {
 
   public static DayoPickDto from(Post post) {
     return new DayoPickDto(post.getId(),
-        post.getThumbnailImage() + "_220x220",
+        post.getThumbnailImage().getResizeFileName(220, 220),
         post.getMember().getId(),
         post.getMember().getNickname(),
-        post.getMember().getProfileImg().getStoreFileName() + "_17x17",
+        post.getMember().getProfileImg().getResizeFileName(17, 17),
         post.getHeartCount(),
         post.getCommentCount()
     );
