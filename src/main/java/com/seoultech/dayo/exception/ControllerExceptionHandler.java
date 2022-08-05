@@ -5,6 +5,8 @@ import com.seoultech.dayo.exception.dto.ForbiddenFailResponse;
 import com.seoultech.dayo.exception.dto.NotFoundFailResponse;
 import com.seoultech.dayo.exception.dto.UnauthorizedFailResponse;
 import io.jsonwebtoken.ExpiredJwtException;
+import java.util.Arrays;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+@Slf4j
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
@@ -50,6 +53,19 @@ public class ControllerExceptionHandler {
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(NotFoundFailResponse.builder()
             .status(HttpStatus.NOT_FOUND.value())
+            .message(e.getMessage())
+            .build()
+        );
+  }
+
+  @ExceptionHandler(value = {
+      RuntimeException.class
+  })
+  public ResponseEntity<BadRequestFailResponse> otherError(Exception e) {
+    log.error(Arrays.toString(e.getStackTrace()));
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(BadRequestFailResponse.builder()
+            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
             .message(e.getMessage())
             .build()
         );
