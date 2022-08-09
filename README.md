@@ -3,5 +3,5 @@
 ![github2](https://user-images.githubusercontent.com/41135099/181040989-5e56d63a-6822-48de-a059-b177863a43ab.png)
 
 ## Stack
-Spring boot, JPA, ElasticSearch, spring cache, rest docs(예정)
+Spring boot, JPA
 
