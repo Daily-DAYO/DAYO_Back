@@ -6,6 +6,7 @@ import com.seoultech.dayo.bookmark.controller.dto.response.ListAllBookmarkPostRe
 import com.seoultech.dayo.bookmark.controller.dto.response.ListAllMyBookmarkPostResponse;
 import com.seoultech.dayo.bookmark.service.BookmarkService;
 import com.seoultech.dayo.config.jwt.TokenProvider;
+import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Post;
@@ -32,10 +33,8 @@ public class BookmarkController {
   private final PostService postService;
 
   @PostMapping
-  public ResponseEntity<CreateBookmarkResponse> createBookmark(HttpServletRequest servletRequest,
+  public ResponseEntity<CreateBookmarkResponse> createBookmark(@LoginUser String memberId,
       @RequestBody @Valid CreateBookmarkRequest request) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
     Member member = memberService.findMemberById(memberId);
     Post post = postService.findPostById(request.getPostId());
 
@@ -44,10 +43,8 @@ public class BookmarkController {
   }
 
   @PostMapping("/delete/{postId}")
-  public ResponseEntity<Void> deleteBookmark(HttpServletRequest servletRequest,
+  public ResponseEntity<Void> deleteBookmark(@LoginUser String memberId,
       @PathVariable Long postId) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
     Member member = memberService.findMemberById(memberId);
     Post post = postService.findPostById(postId);
 
@@ -67,11 +64,8 @@ public class BookmarkController {
 
   @GetMapping("/list")
   public ResponseEntity<ListAllMyBookmarkPostResponse> listAllMyBookmarkPost(
-      HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
+      @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
-
     return ResponseEntity.ok()
         .body(bookmarkService.listAllMyBookmarkPost(member));
   }

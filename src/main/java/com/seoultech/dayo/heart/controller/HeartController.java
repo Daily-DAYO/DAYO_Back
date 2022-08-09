@@ -2,6 +2,7 @@ package com.seoultech.dayo.heart.controller;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.seoultech.dayo.config.jwt.TokenProvider;
+import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.heart.controller.dto.request.CreateHeartRequest;
 import com.seoultech.dayo.heart.controller.dto.response.CreateHeartResponse;
 import com.seoultech.dayo.heart.controller.dto.response.ListAllHeartPostResponse;
@@ -29,10 +30,8 @@ public class HeartController {
   private final PostService postService;
 
   @PostMapping
-  public ResponseEntity<CreateHeartResponse> createHeart(HttpServletRequest servletRequest,
+  public ResponseEntity<CreateHeartResponse> createHeart(@LoginUser String memberId,
       @RequestBody @Valid CreateHeartRequest request) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
     Member member = memberService.findMemberById(memberId);
     Post post = postService.findPostById(request.getPostId());
 
@@ -41,10 +40,8 @@ public class HeartController {
   }
 
   @PostMapping("/delete/{postId}")
-  public ResponseEntity<Void> deleteHeart(HttpServletRequest servletRequest,
+  public ResponseEntity<Void> deleteHeart(@LoginUser String memberId,
       @PathVariable Long postId) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
     Member member = memberService.findMemberById(memberId);
     Post post = postService.findPostById(postId);
 
@@ -55,18 +52,14 @@ public class HeartController {
   @GetMapping("/list/{memberId}")
   public ResponseEntity<ListAllHeartPostResponse> listAllHeartPost(
       @PathVariable @Valid String memberId) {
-
     Member member = memberService.findMemberById(memberId);
-
     return ResponseEntity.ok()
         .body(heartService.listAllHeartPost(member));
   }
 
   @GetMapping("/list")
   public ResponseEntity<ListAllMyHeartPostResponse> listAllMyHeartPost(
-      HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
+      @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()

@@ -2,6 +2,7 @@ package com.seoultech.dayo.alarm.controller;
 
 import com.seoultech.dayo.alarm.controller.dto.response.ListAllAlarmResponse;
 import com.seoultech.dayo.alarm.service.AlarmService;
+import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
 import javax.servlet.http.HttpServletRequest;
@@ -23,10 +24,8 @@ public class AlarmController {
   private final MemberService memberService;
 
   @GetMapping
-  public ResponseEntity<ListAllAlarmResponse> listAllAlarm(HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
+  public ResponseEntity<ListAllAlarmResponse> listAllAlarm(@LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
-
     return ResponseEntity.ok()
         .body(alarmService.listAll(member));
   }

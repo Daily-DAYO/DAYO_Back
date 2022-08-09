@@ -1,6 +1,7 @@
 package com.seoultech.dayo.folder.controller;
 
 import com.seoultech.dayo.config.jwt.TokenProvider;
+import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderInPostRequest;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.request.EditFolderRequest;
@@ -29,23 +30,17 @@ public class FolderController {
   private final MemberService memberService;
 
   @PostMapping
-  public ResponseEntity<CreateFolderResponse> createFolder(HttpServletRequest servletRequest,
+  public ResponseEntity<CreateFolderResponse> createFolder(@LoginUser String memberId,
       @ModelAttribute @Valid CreateFolderRequest request) throws IOException {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
     Member member = memberService.findMemberById(memberId);
-
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(folderService.createFolder(member, request));
   }
 
   @PostMapping("/inPost")
   public ResponseEntity<CreateFolderInPostResponse> createFolderInPost(
-      HttpServletRequest servletRequest, @RequestBody @Valid CreateFolderInPostRequest request) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
+      @LoginUser String memberId, @RequestBody @Valid CreateFolderInPostRequest request) {
     Member member = memberService.findMemberById(memberId);
-
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(folderService.createFolderInPost(member, request));
   }
@@ -57,13 +52,10 @@ public class FolderController {
   }
 
   @PostMapping("/order")
-  public ResponseEntity<Void> orderFolder(HttpServletRequest servletRequest,
+  public ResponseEntity<Void> orderFolder(@LoginUser String memberId,
       @RequestBody EditOrderFolderRequest.EditOrderDto[] request) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
     Member member = memberService.findMemberById(memberId);
     folderService.orderFolder(member, request);
-
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
@@ -76,20 +68,15 @@ public class FolderController {
 
   @GetMapping("/my")
   public ResponseEntity<ListAllMyFolderResponse> listAllMyFolder(
-      HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
+      @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
-
     return ResponseEntity.ok()
         .body(folderService.listAllMyFolder(member));
   }
 
   @GetMapping("/list/{memberId}")
   public ResponseEntity<ListAllFolderResponse> listAllFolder(@PathVariable String memberId) {
-
     Member member = memberService.findMemberById(memberId);
-
     return ResponseEntity.ok()
         .body(folderService.listAllFolder(member));
   }

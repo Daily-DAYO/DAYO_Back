@@ -5,6 +5,7 @@ import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequest;
 import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
 import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponse;
 import com.seoultech.dayo.comment.service.CommentService;
+import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.exception.NotExistMemberException;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
@@ -25,9 +26,8 @@ public class CommentController {
   private final MemberService memberService;
 
   @PostMapping
-  public ResponseEntity<CreateCommentResponse> createComment(HttpServletRequest servletRequest,
+  public ResponseEntity<CreateCommentResponse> createComment(@LoginUser String memberId,
       @RequestBody @Valid CreateCommentRequest request) {
-    String memberId = getMemberId(servletRequest);
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.status(HttpStatus.CREATED)
@@ -46,11 +46,5 @@ public class CommentController {
         .body(commentService.listAllComment(postId));
   }
 
-  private String getMemberId(HttpServletRequest servletRequest) {
-    if (servletRequest.getAttribute("memberId") != null) {
-      return servletRequest.getAttribute("memberId").toString();
-    }
-    throw new NotExistMemberException();
-  }
 
 }

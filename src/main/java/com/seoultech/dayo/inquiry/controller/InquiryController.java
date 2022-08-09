@@ -1,5 +1,6 @@
 package com.seoultech.dayo.inquiry.controller;
 
+import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.inquiry.controller.dto.request.CreateInquiryRequest;
 import com.seoultech.dayo.inquiry.service.InquiryService;
 import com.seoultech.dayo.member.Member;
@@ -21,10 +22,8 @@ public class InquiryController {
   private final MemberService memberService;
 
   @PostMapping
-  public ResponseEntity<Void> create(HttpServletRequest servletRequest,
+  public ResponseEntity<Void> create(@LoginUser String memberId,
       CreateInquiryRequest request) {
-
-    String memberId = servletRequest.getAttribute("memberId").toString();
     Member member = memberService.findMemberById(memberId);
 
     inquiryService.create(request, member);

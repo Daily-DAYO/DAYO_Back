@@ -1,5 +1,6 @@
 package com.seoultech.dayo.report.controller;
 
+import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.report.controller.dto.request.CreateReportRequest;
@@ -22,11 +23,9 @@ public class ReportController {
   private final MemberService memberService;
 
   @PostMapping
-  public ResponseEntity<Void> saveReport(HttpServletRequest servletRequest, @RequestBody
+  public ResponseEntity<Void> saveReport(@LoginUser String memberId, @RequestBody
       CreateReportRequest request) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
     Member member = memberService.findMemberById(memberId);
-
     reportService.save(member, request);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }

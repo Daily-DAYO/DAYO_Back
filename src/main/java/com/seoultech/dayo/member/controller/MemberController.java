@@ -1,5 +1,6 @@
 package com.seoultech.dayo.member.controller;
 
+import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.exception.NotExistEmailException;
 import com.seoultech.dayo.mail.MailService;
 import com.seoultech.dayo.member.controller.dto.request.ChangePasswordRequest;
@@ -46,31 +47,27 @@ public class MemberController {
   }
 
   @GetMapping("/myInfo")
-  public ResponseEntity<MemberInfoResponse> memberInfo(HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
+  public ResponseEntity<MemberInfoResponse> memberInfo(@LoginUser String memberId) {
     return ResponseEntity.ok()
         .body(memberService.memberInfo(memberId));
   }
 
   @GetMapping("/profile/other/{memberId}")
-  public ResponseEntity<MemberOtherProfileResponse> otherProfile(HttpServletRequest servletRequest,
+  public ResponseEntity<MemberOtherProfileResponse> otherProfile(@LoginUser String myMemberId,
       @PathVariable @Valid String memberId) {
-    String myMemberId = servletRequest.getAttribute("memberId").toString();
     return ResponseEntity.ok()
         .body(memberService.otherProfile(myMemberId, memberId));
   }
 
   @GetMapping("/profile/my")
-  public ResponseEntity<MemberMyProfileResponse> myProfile(HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
+  public ResponseEntity<MemberMyProfileResponse> myProfile(@LoginUser String memberId) {
     return ResponseEntity.ok()
         .body(memberService.myProfile(memberId));
   }
 
   @PostMapping("/update/profile")
-  public ResponseEntity<Void> profileUpdate(HttpServletRequest servletRequest,
+  public ResponseEntity<Void> profileUpdate(@LoginUser String memberId,
       @ModelAttribute @Valid MemberProfileUpdateRequest request) throws IOException {
-    String memberId = servletRequest.getAttribute("memberId").toString();
     memberService.profileUpdate(memberId, request);
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -84,9 +81,7 @@ public class MemberController {
   @GetMapping("/signUp/{email}")
   public ResponseEntity<MemberAuthCodeResponse> signUpMember(
       @PathVariable @Email String email) {
-
     String authCode = mailService.sendAuthMail(email);
-
     return ResponseEntity.ok()
         .body(MemberAuthCodeResponse.from(authCode));
   }
@@ -106,8 +101,7 @@ public class MemberController {
   }
 
   @GetMapping("/refresh")
-  public ResponseEntity<RefreshTokenResponse> refreshToken(HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
+  public ResponseEntity<RefreshTokenResponse> refreshToken(@LoginUser String memberId) {
     return ResponseEntity.ok()
         .body(memberService.refreshAccessToken(memberId));
 
@@ -115,8 +109,7 @@ public class MemberController {
 
   @PostMapping
   public ResponseEntity<Void> deviceToken(@RequestBody DeviceTokenRequest request,
-      HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
+      @LoginUser String memberId) {
     memberService.setDeviceToken(memberId, request);
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -144,43 +137,33 @@ public class MemberController {
 
   @PostMapping("/resign")
   public ResponseEntity<Void> resign(MemberResignRequest request,
-      HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
+      @LoginUser String memberId) {
     memberService.resign(memberId, request);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @PostMapping("/checkPassword")
   public ResponseEntity<Void> checkPassword(@RequestBody CheckPasswordRequest request,
-      HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
+      @LoginUser String memberId) {
     memberService.checkPassword(request, memberId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @PostMapping("/changeReceiveAlarm")
   public ResponseEntity<Void> changeReceiveAlarm(@RequestBody ChangeReceiveAlarmRequest request,
-      HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
+      @LoginUser String memberId) {
     memberService.changeReceiveAlarm(request, memberId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @GetMapping("/receiveAlarm")
-  public ResponseEntity<ReceiveAlarmResponse> showReceiveAlarm(HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
+  public ResponseEntity<ReceiveAlarmResponse> showReceiveAlarm(@LoginUser String memberId) {
     return ResponseEntity.ok()
         .body(memberService.showReceiveAlarm(memberId));
   }
 
   @PostMapping("/logout")
-  public ResponseEntity<Void> logout(HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
+  public ResponseEntity<Void> logout(@LoginUser String memberId) {
     memberService.logout(memberId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }

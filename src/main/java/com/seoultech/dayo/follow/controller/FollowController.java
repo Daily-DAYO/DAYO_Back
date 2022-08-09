@@ -2,6 +2,7 @@ package com.seoultech.dayo.follow.controller;
 
 
 import com.google.firebase.messaging.FirebaseMessagingException;
+import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.follow.controller.dto.request.CreateFollowRequest;
 import com.seoultech.dayo.follow.controller.dto.request.CreateFollowUpRequest;
 import com.seoultech.dayo.follow.controller.dto.response.*;
@@ -25,10 +26,8 @@ public class FollowController {
   private final MemberService memberService;
 
   @PostMapping
-  public ResponseEntity<CreateFollowResponse> createFollow(HttpServletRequest servletRequest,
+  public ResponseEntity<CreateFollowResponse> createFollow(@LoginUser String memberId,
       @RequestBody @Valid CreateFollowRequest request) throws FirebaseMessagingException {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
     Member member = memberService.findMemberById(memberId);
     Member follower = memberService.findFollowerById(request.getFollowerId());
 
@@ -37,10 +36,8 @@ public class FollowController {
   }
 
   @PostMapping("/up")
-  public ResponseEntity<CreateFollowUpResponse> createFollowUp(HttpServletRequest servletRequest,
+  public ResponseEntity<CreateFollowUpResponse> createFollowUp(@LoginUser String memberId,
       @RequestBody @Valid CreateFollowUpRequest request) throws FirebaseMessagingException {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
     Member member = memberService.findMemberById(memberId);
     Member follower = memberService.findFollowerById(request.getFollowerId());
 
@@ -49,9 +46,8 @@ public class FollowController {
   }
 
   @PostMapping("/delete/{followerId}")
-  public ResponseEntity<Void> deleteFollow(HttpServletRequest servletRequest,
+  public ResponseEntity<Void> deleteFollow(@LoginUser String memberId,
       @PathVariable String followerId) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
     Member member = memberService.findMemberById(memberId);
     Member follower = memberService.findFollowerById(followerId);
 
@@ -61,9 +57,7 @@ public class FollowController {
 
   @GetMapping("/follower/my")
   public ResponseEntity<ListAllMyFollowerResponse> listAllMyFollower(
-      HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
+      @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()
@@ -72,20 +66,15 @@ public class FollowController {
 
   @GetMapping("/following/my")
   public ResponseEntity<ListAllMyFollowingResponse> listAllMyFollowing(
-      HttpServletRequest servletRequest) {
-    String memberId = servletRequest.getAttribute("memberId").toString();
-
+      @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
-
     return ResponseEntity.ok()
         .body(followService.listAllMyFollowings(member));
   }
 
   @GetMapping("/follower/list/{memberId}")
-  public ResponseEntity<ListAllFollowerResponse> listAllFollower(HttpServletRequest servletRequest,
+  public ResponseEntity<ListAllFollowerResponse> listAllFollower(@LoginUser String myMemberId,
       @PathVariable @Valid String memberId) {
-    String myMemberId = servletRequest.getAttribute("memberId").toString();
-
     Member me = memberService.findMemberById(myMemberId);
     Member member = memberService.findMemberById(memberId);
 
@@ -95,10 +84,8 @@ public class FollowController {
 
   @GetMapping("/following/list/{memberId}")
   public ResponseEntity<ListAllFollowingResponse> listAllFollowing(
-      HttpServletRequest servletRequest,
+      @LoginUser String myMemberId,
       @PathVariable @Valid String memberId) {
-    String myMemberId = servletRequest.getAttribute("memberId").toString();
-
     Member me = memberService.findMemberById(myMemberId);
     Member member = memberService.findMemberById(memberId);
 
