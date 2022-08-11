@@ -15,6 +15,7 @@ import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.controller.dto.request.EditPostRequest;
 import com.seoultech.dayo.post.repository.DayoPickRepository;
 import com.seoultech.dayo.post.repository.PostRepository;
+import com.seoultech.dayo.postHashtag.PostHashtag;
 import com.seoultech.dayo.postHashtag.repository.PostHashtagRepository;
 import com.seoultech.dayo.postHashtag.service.PostHashtagService;
 import java.util.ArrayList;

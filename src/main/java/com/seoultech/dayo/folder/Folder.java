@@ -38,7 +38,6 @@ public class Folder extends BaseTimeEntity {
 
   @OneToMany(
       mappedBy = "folder",
-      cascade = CascadeType.PERSIST,
       orphanRemoval = true
   )
   private List<Post> posts = new ArrayList<>();

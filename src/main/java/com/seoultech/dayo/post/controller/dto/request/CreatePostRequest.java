@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 public class CreatePostRequest {
 
-  @NotBlank
+  @NotNull
   private String contents;
 
   @NotNull

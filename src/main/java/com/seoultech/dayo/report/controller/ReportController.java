@@ -3,9 +3,9 @@ package com.seoultech.dayo.report.controller;
 import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
-import com.seoultech.dayo.report.controller.dto.request.CreateReportRequest;
+import com.seoultech.dayo.report.controller.dto.request.CreateReportMemberRequest;
+import com.seoultech.dayo.report.controller.dto.request.CreateReportPostRequest;
 import com.seoultech.dayo.report.service.ReportService;
-import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +22,22 @@ public class ReportController {
   private final ReportService reportService;
   private final MemberService memberService;
 
-  @PostMapping
-  public ResponseEntity<Void> saveReport(@LoginUser String memberId, @RequestBody
-      CreateReportRequest request) {
+  @PostMapping("/post")
+  public ResponseEntity<Void> savePostReport(@LoginUser String memberId, @RequestBody
+      CreateReportPostRequest request) {
     Member member = memberService.findMemberById(memberId);
-    reportService.save(member, request);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    reportService.savePostReport(member, request);
+    return new ResponseEntity<>(HttpStatus.CREATED);
+  }
+
+  @PostMapping("/member")
+  public ResponseEntity<Void> saveMemberReport(@LoginUser String memberId, @RequestBody
+      CreateReportMemberRequest request) {
+    Member member = memberService.findMemberById(memberId);
+    Member reportedMember = memberService.findMemberById(request.getMemberId());
+
+    reportService.saveMemberReport(member, reportedMember, request);
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
 }
