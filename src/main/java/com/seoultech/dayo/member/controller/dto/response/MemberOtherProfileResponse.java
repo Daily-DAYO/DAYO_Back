@@ -10,30 +10,33 @@ import lombok.Getter;
 @Builder
 public class MemberOtherProfileResponse {
 
-    private String memberId;
+  private String memberId;
 
-    private String nickname;
+  private String email;
 
-    private String profileImg;
+  private String nickname;
 
-    private int followingCount;
+  private String profileImg;
 
-    private int followerCount;
+  private int followingCount;
 
-    private int postCount;
+  private int followerCount;
 
-    private boolean isFollow;
+  private int postCount;
 
-    public static MemberOtherProfileResponse from(Member member, boolean isFollow) {
-        return MemberOtherProfileResponse.builder()
-                .memberId(member.getId())
-                .nickname(member.getNickname())
-                .profileImg(member.getProfileImg().getStoreFileName())
-                .followingCount(member.getFollowingCount())
-                .followerCount(member.getFollowerCount())
-                .postCount(member.getPostCount())
-                .isFollow(isFollow)
-                .build();
-    }
+  private boolean isFollow;
+
+  public static MemberOtherProfileResponse from(Member member, boolean isFollow) {
+    return MemberOtherProfileResponse.builder()
+        .memberId(member.getId())
+        .email(member.getEmail())
+        .nickname(member.getNickname())
+        .profileImg(member.getProfileImg().getStoreFileName())
+        .followingCount(member.getFollowingCount())
+        .followerCount(member.getFollowerCount())
+        .postCount(member.getPostCount())
+        .isFollow(isFollow)
+        .build();
+  }
 
 }

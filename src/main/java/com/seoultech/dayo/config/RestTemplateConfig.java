@@ -10,21 +10,21 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class RestTemplateConfig {
 
-    @Bean
-    public RestTemplate restTemplate() {
+  @Bean
+  public RestTemplate restTemplate() {
 
-        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        factory.setConnectTimeout(3000);
-        factory.setReadTimeout(5000);
+    HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+    factory.setConnectTimeout(3000);
+    factory.setReadTimeout(5000);
 
-        HttpClient httpClient = HttpClientBuilder.create()
-                .setMaxConnTotal(50)    // 최대 커넥션 수
-                .setMaxConnPerRoute(20) // 각 호스트당 커넥션 풀에 생성가능한 커넥션 수
-                .build();
+    HttpClient httpClient = HttpClientBuilder.create()
+        .setMaxConnTotal(50)    // 최대 커넥션 수
+        .setMaxConnPerRoute(20) // 각 호스트당 커넥션 풀에 생성가능한 커넥션 수
+        .build();
 
-        factory.setHttpClient(httpClient);
+    factory.setHttpClient(httpClient);
 
-        return new RestTemplate(factory);
-    }
+    return new RestTemplate(factory);
+  }
 
 }
