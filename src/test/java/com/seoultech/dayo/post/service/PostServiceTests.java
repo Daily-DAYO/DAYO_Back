@@ -56,12 +56,24 @@ class PostServiceTests {
 
   @BeforeEach
   void init() {
-    member = new Member("조재영", "jdyj@naver.com");
+    member = new Member("조재영", "jdyj123456863@naver.com");
     member.setNickname("재영");
+    memberRepository.save(member);
     image = new Image("testImage", "testImage", com.seoultech.dayo.image.Category.POST);
     imageRepository.save(image);
     post = new Post(member, "테스트1", image, Category.SCHEDULER, null);
   }
+
+  @Test
+  void test1() {
+
+    Post save = postRepository.save(post);
+
+    postRepository.findById(save.getId());
+
+
+  }
+
 
   @Test
   @Transactional

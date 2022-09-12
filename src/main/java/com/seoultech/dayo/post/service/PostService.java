@@ -82,7 +82,6 @@ public class PostService {
 
   }
 
-  //    @Cacheable(value = "all")
   @Transactional(readOnly = true)
   public ListAllPostResponse listPostAll(Member member) {
 

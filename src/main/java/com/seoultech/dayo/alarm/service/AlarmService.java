@@ -59,6 +59,7 @@ public class AlarmService {
 
   public void deleteAllByMember(Member member) {
     alarmRepository.deleteAllByMember(member);
+    alarmRepository.deleteAllBySender(member);
   }
 
 }

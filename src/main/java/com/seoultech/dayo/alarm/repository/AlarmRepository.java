@@ -12,6 +12,8 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
   void deleteAllByMember(Member member);
 
+  void deleteAllBySender(Member sender);
+
   void deleteAlarmByPost(Post post);
 
 }
