@@ -189,6 +189,7 @@ public class MemberService {
     Member savedMember = memberRepository.save(
         new Member(request.getNickname(), request.getEmail(), password,
             image));
+    savedMember.addFolder(folderService.createDefaultFolder());
 
     return MemberSignUpResponse.from(savedMember);
   }
