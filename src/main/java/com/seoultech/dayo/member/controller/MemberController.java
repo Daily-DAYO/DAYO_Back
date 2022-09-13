@@ -115,10 +115,19 @@ public class MemberController {
   }
 
   @GetMapping("/search/{email}")
-  public ResponseEntity<Void> searchPassword(@PathVariable @Email String email) {
+  public ResponseEntity<Void> searchEmail(@PathVariable @Email String email) {
     if (memberService.existMemberByEmail(email)) {
-      mailService.sendAuthMail(email);
       return new ResponseEntity<>(HttpStatus.OK);
+    }
+    throw new NotExistEmailException();
+  }
+
+  @GetMapping("/search/code/{email}")
+  public ResponseEntity<MemberAuthCodeResponse> searchPassword(@PathVariable @Email String email) {
+    if (memberService.existMemberByEmail(email)) {
+      String authCode = mailService.sendAuthMail(email);
+      return ResponseEntity.ok()
+          .body(MemberAuthCodeResponse.from(authCode));
     }
     throw new NotExistEmailException();
   }
