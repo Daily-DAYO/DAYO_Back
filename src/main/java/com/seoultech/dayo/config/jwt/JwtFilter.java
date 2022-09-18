@@ -44,10 +44,10 @@ public class JwtFilter implements Filter {
       // 2. validateToken 으로 토큰 유효성 검사
       if (isCheckPath(requestURI) && (!StringUtils.hasText(jwt) || !validateToken(jwt,
           httpRequest))) {
-        throw new Exception("유효하지 않는 토큰입니다");
+        throw new IllegalAccessException("유효하지 않는 토큰입니다");
       }
       chain.doFilter(request, response);
-    } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e) {
+    } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException | IllegalAccessException e) {
       HttpServletResponse res = (HttpServletResponse) response;
       res.sendError(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
     } catch (Exception e) {
