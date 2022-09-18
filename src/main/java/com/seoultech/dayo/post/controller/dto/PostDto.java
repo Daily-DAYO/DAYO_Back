@@ -36,8 +36,8 @@ public class PostDto {
         post.getMember().getId(),
         post.getMember().getNickname(),
         post.getMember().getProfileImg().getResizeFileName(37, 37),
-        post.getHearts().size(),
-        post.getComments().size(),
+        post.getHeartCount(),
+        post.getCommentCount(),
         isHeart,
         isBookmark,
         post.getCreatedDate().withNano(0)

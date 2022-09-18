@@ -1,6 +1,7 @@
 package com.seoultech.dayo.member.controller;
 
 import com.seoultech.dayo.config.login.LoginUser;
+import com.seoultech.dayo.exception.ExistNicknameException;
 import com.seoultech.dayo.exception.NotExistEmailException;
 import com.seoultech.dayo.mail.MailService;
 import com.seoultech.dayo.member.controller.dto.request.ChangePasswordRequest;
@@ -175,6 +176,14 @@ public class MemberController {
   public ResponseEntity<Void> logout(@LoginUser String memberId) {
     memberService.logout(memberId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  @GetMapping("/check")
+  public ResponseEntity<Void> checkNickname(@RequestParam("nickname") String nickname) {
+    if (memberService.existNickname(nickname)) {
+      throw new ExistNicknameException();
+    }
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
 }

@@ -265,6 +265,10 @@ public class MemberService {
     member.setDeviceToken(null);
   }
 
+  public boolean existNickname(String nickname) {
+    return memberRepository.existsMemberByNickname(nickname);
+  }
+
   private String get(String apiUrl, String accessToken) {
 
     try {
