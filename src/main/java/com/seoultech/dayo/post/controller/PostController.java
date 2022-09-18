@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
@@ -33,14 +34,15 @@ public class PostController {
 
   @GetMapping("/dayopick/all")
   public ResponseEntity<DayoPickPostListResponse> dayoPickListAll(
-      @LoginUser String memberId) {
+      @ApiIgnore @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
         .body(postService.dayoPickList(member));
   }
 
   @GetMapping("/dayopick/{category}")
-  public ResponseEntity<DayoPickPostListResponse> dayoPickList(@LoginUser String memberId,
+  public ResponseEntity<DayoPickPostListResponse> dayoPickList(
+      @ApiIgnore @LoginUser String memberId,
       @PathVariable @Valid String category) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
@@ -48,7 +50,7 @@ public class PostController {
   }
 
   @PostMapping("/{postId}/edit")
-  public ResponseEntity<EditPostResponse> editPost(@LoginUser String memberId,
+  public ResponseEntity<EditPostResponse> editPost(@ApiIgnore @LoginUser String memberId,
       @RequestBody EditPostRequest request, @PathVariable Long postId) {
     Member member = memberService.findMemberById(memberId);
     if (request.getFolderId() != null) {
@@ -62,7 +64,7 @@ public class PostController {
   }
 
   @GetMapping
-  public ResponseEntity<ListAllPostResponse> listAllPost(@LoginUser String memberId) {
+  public ResponseEntity<ListAllPostResponse> listAllPost(@ApiIgnore @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
         .body(postService.listPostAll(member));
@@ -70,7 +72,7 @@ public class PostController {
 
   @GetMapping("/category/{category}")
   public ResponseEntity<ListCategoryPostResponse> listPostByCategory(
-      @LoginUser String memberId,
+      @ApiIgnore @LoginUser String memberId,
       @PathVariable @Valid String category) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
@@ -78,9 +80,8 @@ public class PostController {
   }
 
   @PostMapping
-  public ResponseEntity<CreatePostResponse> createPost(HttpServletRequest servletRequest,
+  public ResponseEntity<CreatePostResponse> createPost(@ApiIgnore @LoginUser String memberId,
       @ModelAttribute @Valid CreatePostRequest request) throws IOException {
-    String memberId = servletRequest.getAttribute("memberId").toString();
     Member member = memberService.findMemberById(memberId);
 
     Folder folder = folderService.findFolderById(request.getFolderId());
@@ -95,21 +96,21 @@ public class PostController {
   }
 
   @PostMapping("/delete/{postId}")
-  public ResponseEntity<Void> deletePost(@LoginUser String memberId,
+  public ResponseEntity<Void> deletePost(@ApiIgnore @LoginUser String memberId,
       @PathVariable Long postId) {
     postService.deletePost(memberId, postId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @GetMapping("/{postId}")
-  public ResponseEntity<DetailPostResponse> detailPost(@LoginUser String memberId,
+  public ResponseEntity<DetailPostResponse> detailPost(@ApiIgnore @LoginUser String memberId,
       @PathVariable @Valid Long postId) {
     return ResponseEntity.ok()
         .body(postService.detailPost(memberId, postId));
   }
 
   @GetMapping("/feed/list")
-  public ResponseEntity<ListFeedResponse> listFeed(@LoginUser String memberId) {
+  public ResponseEntity<ListFeedResponse> listFeed(@ApiIgnore @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
         .body(postService.listFeed(member));

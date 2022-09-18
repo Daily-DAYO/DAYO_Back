@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +34,8 @@ public class BookmarkController {
   private final PostService postService;
 
   @PostMapping
-  public ResponseEntity<CreateBookmarkResponse> createBookmark(@LoginUser String memberId,
+  public ResponseEntity<CreateBookmarkResponse> createBookmark(
+      @ApiIgnore @LoginUser String memberId,
       @RequestBody @Valid CreateBookmarkRequest request) {
     Member member = memberService.findMemberById(memberId);
     Post post = postService.findPostById(request.getPostId());
@@ -43,7 +45,7 @@ public class BookmarkController {
   }
 
   @PostMapping("/delete/{postId}")
-  public ResponseEntity<Void> deleteBookmark(@LoginUser String memberId,
+  public ResponseEntity<Void> deleteBookmark(@ApiIgnore @LoginUser String memberId,
       @PathVariable Long postId) {
     Member member = memberService.findMemberById(memberId);
     Post post = postService.findPostById(postId);
@@ -64,7 +66,7 @@ public class BookmarkController {
 
   @GetMapping("/list")
   public ResponseEntity<ListAllMyBookmarkPostResponse> listAllMyBookmarkPost(
-      @LoginUser String memberId) {
+      @ApiIgnore @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
         .body(bookmarkService.listAllMyBookmarkPost(member));

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +27,7 @@ public class CommentController {
   private final MemberService memberService;
 
   @PostMapping
-  public ResponseEntity<CreateCommentResponse> createComment(@LoginUser String memberId,
+  public ResponseEntity<CreateCommentResponse> createComment(@ApiIgnore @LoginUser String memberId,
       @RequestBody @Valid CreateCommentRequest request) {
     Member member = memberService.findMemberById(memberId);
 

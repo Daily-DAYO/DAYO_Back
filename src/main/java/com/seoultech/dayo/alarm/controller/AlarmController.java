@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping("/api/v1/alarms")
@@ -24,7 +25,7 @@ public class AlarmController {
   private final MemberService memberService;
 
   @GetMapping
-  public ResponseEntity<ListAllAlarmResponse> listAllAlarm(@LoginUser String memberId) {
+  public ResponseEntity<ListAllAlarmResponse> listAllAlarm(@ApiIgnore @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
         .body(alarmService.listAll(member));

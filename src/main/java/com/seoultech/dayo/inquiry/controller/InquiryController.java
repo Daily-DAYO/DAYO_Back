@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping("/api/v1/inquiry")
@@ -22,7 +23,7 @@ public class InquiryController {
   private final MemberService memberService;
 
   @PostMapping
-  public ResponseEntity<Void> create(@LoginUser String memberId,
+  public ResponseEntity<Void> create(@ApiIgnore @LoginUser String memberId,
       CreateInquiryRequest request) {
     Member member = memberService.findMemberById(memberId);
 

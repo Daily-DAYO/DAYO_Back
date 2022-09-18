@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class FolderController {
   private final MemberService memberService;
 
   @PostMapping
-  public ResponseEntity<CreateFolderResponse> createFolder(@LoginUser String memberId,
+  public ResponseEntity<CreateFolderResponse> createFolder(@ApiIgnore @LoginUser String memberId,
       @ModelAttribute @Valid CreateFolderRequest request) throws IOException {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.status(HttpStatus.CREATED)
@@ -39,7 +40,8 @@ public class FolderController {
 
   @PostMapping("/inPost")
   public ResponseEntity<CreateFolderInPostResponse> createFolderInPost(
-      @LoginUser String memberId, @RequestBody @Valid CreateFolderInPostRequest request) {
+      @ApiIgnore @LoginUser String memberId,
+      @RequestBody @Valid CreateFolderInPostRequest request) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(folderService.createFolderInPost(member, request));
@@ -52,7 +54,7 @@ public class FolderController {
   }
 
   @PostMapping("/order")
-  public ResponseEntity<Void> orderFolder(@LoginUser String memberId,
+  public ResponseEntity<Void> orderFolder(@ApiIgnore @LoginUser String memberId,
       @RequestBody EditOrderFolderRequest.EditOrderDto[] request) {
     Member member = memberService.findMemberById(memberId);
     folderService.orderFolder(member, request);
@@ -68,7 +70,7 @@ public class FolderController {
 
   @GetMapping("/my")
   public ResponseEntity<ListAllMyFolderResponse> listAllMyFolder(
-      @LoginUser String memberId) {
+      @ApiIgnore @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
         .body(folderService.listAllMyFolder(member));

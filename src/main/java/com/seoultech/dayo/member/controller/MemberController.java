@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,26 +49,27 @@ public class MemberController {
   }
 
   @GetMapping("/myInfo")
-  public ResponseEntity<MemberInfoResponse> memberInfo(@LoginUser String memberId) {
+  public ResponseEntity<MemberInfoResponse> memberInfo(@ApiIgnore @LoginUser String memberId) {
     return ResponseEntity.ok()
         .body(memberService.memberInfo(memberId));
   }
 
   @GetMapping("/profile/other/{memberId}")
-  public ResponseEntity<MemberOtherProfileResponse> otherProfile(@LoginUser String myMemberId,
+  public ResponseEntity<MemberOtherProfileResponse> otherProfile(
+      @ApiIgnore @LoginUser String myMemberId,
       @PathVariable @Valid String memberId) {
     return ResponseEntity.ok()
         .body(memberService.otherProfile(myMemberId, memberId));
   }
 
   @GetMapping("/profile/my")
-  public ResponseEntity<MemberMyProfileResponse> myProfile(@LoginUser String memberId) {
+  public ResponseEntity<MemberMyProfileResponse> myProfile(@ApiIgnore @LoginUser String memberId) {
     return ResponseEntity.ok()
         .body(memberService.myProfile(memberId));
   }
 
   @PostMapping("/update/profile")
-  public ResponseEntity<Void> profileUpdate(@LoginUser String memberId,
+  public ResponseEntity<Void> profileUpdate(@ApiIgnore @LoginUser String memberId,
       @ModelAttribute @Valid MemberProfileUpdateRequest request) throws IOException {
     memberService.profileUpdate(memberId, request);
     return new ResponseEntity<>(HttpStatus.OK);
@@ -102,7 +104,7 @@ public class MemberController {
   }
 
   @GetMapping("/refresh")
-  public ResponseEntity<RefreshTokenResponse> refreshToken(@LoginUser String memberId) {
+  public ResponseEntity<RefreshTokenResponse> refreshToken(@ApiIgnore @LoginUser String memberId) {
     return ResponseEntity.ok()
         .body(memberService.refreshAccessToken(memberId));
 
@@ -110,7 +112,7 @@ public class MemberController {
 
   @PostMapping
   public ResponseEntity<Void> deviceToken(@RequestBody DeviceTokenRequest request,
-      @LoginUser String memberId) {
+      @ApiIgnore @LoginUser String memberId) {
     memberService.setDeviceToken(memberId, request);
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -147,33 +149,34 @@ public class MemberController {
 
   @PostMapping("/resign")
   public ResponseEntity<Void> resign(MemberResignRequest request,
-      @LoginUser String memberId) {
+      @ApiIgnore @LoginUser String memberId) {
     memberService.resign(memberId, request);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @PostMapping("/checkPassword")
   public ResponseEntity<Void> checkPassword(@RequestBody CheckPasswordRequest request,
-      @LoginUser String memberId) {
+      @ApiIgnore @LoginUser String memberId) {
     memberService.checkPassword(request, memberId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @PostMapping("/changeReceiveAlarm")
   public ResponseEntity<Void> changeReceiveAlarm(@RequestBody ChangeReceiveAlarmRequest request,
-      @LoginUser String memberId) {
+      @ApiIgnore @LoginUser String memberId) {
     memberService.changeReceiveAlarm(request, memberId);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @GetMapping("/receiveAlarm")
-  public ResponseEntity<ReceiveAlarmResponse> showReceiveAlarm(@LoginUser String memberId) {
+  public ResponseEntity<ReceiveAlarmResponse> showReceiveAlarm(
+      @ApiIgnore @LoginUser String memberId) {
     return ResponseEntity.ok()
         .body(memberService.showReceiveAlarm(memberId));
   }
 
   @PostMapping("/logout")
-  public ResponseEntity<Void> logout(@LoginUser String memberId) {
+  public ResponseEntity<Void> logout(@ApiIgnore @LoginUser String memberId) {
     memberService.logout(memberId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }

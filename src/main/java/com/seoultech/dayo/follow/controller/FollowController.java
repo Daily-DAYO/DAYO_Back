@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,8 +27,8 @@ public class FollowController {
   private final MemberService memberService;
 
   @PostMapping
-  public ResponseEntity<CreateFollowResponse> createFollow(@LoginUser String memberId,
-      @RequestBody @Valid CreateFollowRequest request) throws FirebaseMessagingException {
+  public ResponseEntity<CreateFollowResponse> createFollow(@ApiIgnore @LoginUser String memberId,
+      @RequestBody @Valid CreateFollowRequest request) {
     Member member = memberService.findMemberById(memberId);
     Member follower = memberService.findFollowerById(request.getFollowerId());
 
@@ -36,8 +37,9 @@ public class FollowController {
   }
 
   @PostMapping("/up")
-  public ResponseEntity<CreateFollowUpResponse> createFollowUp(@LoginUser String memberId,
-      @RequestBody @Valid CreateFollowUpRequest request) throws FirebaseMessagingException {
+  public ResponseEntity<CreateFollowUpResponse> createFollowUp(
+      @ApiIgnore @LoginUser String memberId,
+      @RequestBody @Valid CreateFollowUpRequest request) {
     Member member = memberService.findMemberById(memberId);
     Member follower = memberService.findFollowerById(request.getFollowerId());
 
@@ -46,7 +48,7 @@ public class FollowController {
   }
 
   @PostMapping("/delete/{followerId}")
-  public ResponseEntity<Void> deleteFollow(@LoginUser String memberId,
+  public ResponseEntity<Void> deleteFollow(@ApiIgnore @LoginUser String memberId,
       @PathVariable String followerId) {
     Member member = memberService.findMemberById(memberId);
     Member follower = memberService.findFollowerById(followerId);
@@ -57,7 +59,7 @@ public class FollowController {
 
   @GetMapping("/follower/my")
   public ResponseEntity<ListAllMyFollowerResponse> listAllMyFollower(
-      @LoginUser String memberId) {
+      @ApiIgnore @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()
@@ -66,14 +68,15 @@ public class FollowController {
 
   @GetMapping("/following/my")
   public ResponseEntity<ListAllMyFollowingResponse> listAllMyFollowing(
-      @LoginUser String memberId) {
+      @ApiIgnore @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
         .body(followService.listAllMyFollowings(member));
   }
 
   @GetMapping("/follower/list/{memberId}")
-  public ResponseEntity<ListAllFollowerResponse> listAllFollower(@LoginUser String myMemberId,
+  public ResponseEntity<ListAllFollowerResponse> listAllFollower(
+      @ApiIgnore @LoginUser String myMemberId,
       @PathVariable @Valid String memberId) {
     Member me = memberService.findMemberById(myMemberId);
     Member member = memberService.findMemberById(memberId);
@@ -84,7 +87,7 @@ public class FollowController {
 
   @GetMapping("/following/list/{memberId}")
   public ResponseEntity<ListAllFollowingResponse> listAllFollowing(
-      @LoginUser String myMemberId,
+      @ApiIgnore @LoginUser String myMemberId,
       @PathVariable @Valid String memberId) {
     Member me = memberService.findMemberById(myMemberId);
     Member member = memberService.findMemberById(memberId);

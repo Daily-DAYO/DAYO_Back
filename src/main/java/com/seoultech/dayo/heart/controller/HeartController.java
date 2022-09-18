@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class HeartController {
   private final PostService postService;
 
   @PostMapping
-  public ResponseEntity<CreateHeartResponse> createHeart(@LoginUser String memberId,
+  public ResponseEntity<CreateHeartResponse> createHeart(@ApiIgnore @LoginUser String memberId,
       @RequestBody @Valid CreateHeartRequest request) {
     Member member = memberService.findMemberById(memberId);
     Post post = postService.findPostById(request.getPostId());
@@ -40,7 +41,7 @@ public class HeartController {
   }
 
   @PostMapping("/delete/{postId}")
-  public ResponseEntity<Void> deleteHeart(@LoginUser String memberId,
+  public ResponseEntity<Void> deleteHeart(@ApiIgnore @LoginUser String memberId,
       @PathVariable Long postId) {
     Member member = memberService.findMemberById(memberId);
     Post post = postService.findPostById(postId);
@@ -59,7 +60,7 @@ public class HeartController {
 
   @GetMapping("/list")
   public ResponseEntity<ListAllMyHeartPostResponse> listAllMyHeartPost(
-      @LoginUser String memberId) {
+      @ApiIgnore @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class ReportController {
   private final MemberService memberService;
 
   @PostMapping("/post")
-  public ResponseEntity<Void> savePostReport(@LoginUser String memberId, @RequestBody
+  public ResponseEntity<Void> savePostReport(@ApiIgnore @LoginUser String memberId, @RequestBody
       CreateReportPostRequest request) {
     Member member = memberService.findMemberById(memberId);
     reportService.savePostReport(member, request);
@@ -31,7 +32,7 @@ public class ReportController {
   }
 
   @PostMapping("/member")
-  public ResponseEntity<Void> saveMemberReport(@LoginUser String memberId, @RequestBody
+  public ResponseEntity<Void> saveMemberReport(@ApiIgnore @LoginUser String memberId, @RequestBody
       CreateReportMemberRequest request) {
     Member member = memberService.findMemberById(memberId);
     Member reportedMember = memberService.findMemberById(request.getMemberId());
