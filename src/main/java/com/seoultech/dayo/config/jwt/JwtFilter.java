@@ -29,7 +29,7 @@ public class JwtFilter implements Filter {
       "/api/v1/members/changePassword", "/api/v1/members/search/**",
       "/docs/api-doc.html", "/favicon.ico",
       "/swagger-resources/**", "/v3/api-docs", "/swagger*/**", "/webjars/**", "/swagger-resources",
-      "/images/**", "/terms.html"};
+      "/images/**", "/terms.html", "/privacy.html"};
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
