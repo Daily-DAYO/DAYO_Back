@@ -13,7 +13,7 @@ public class CreateReportMemberRequest {
   private String memberId;
 
   public Report toEntity(Member member, Member reportedMember) {
-    return new Report(this.comment, member, reportedMember, Category.POST);
+    return new Report(this.comment, member, reportedMember, Category.MEMBER);
   }
 
 
