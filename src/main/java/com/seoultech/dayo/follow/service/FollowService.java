@@ -139,7 +139,7 @@ public class FollowService {
 
   public void deleteFollow(Member member, Member follower) {
     followRepository.deleteFollowByMemberAndFollower(member, follower);
-    alarmService.deleteFollow(member, follower);
+    alarmService.deleteFollow(follower, member);
 
   }
 
