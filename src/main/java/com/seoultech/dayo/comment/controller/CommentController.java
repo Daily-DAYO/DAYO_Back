@@ -36,8 +36,10 @@ public class CommentController {
   }
 
   @PostMapping("/delete/{commentId}")
-  public ResponseEntity<Void> deleteComment(@PathVariable @Valid Long commentId) {
-    commentService.deleteComment(commentId);
+  public ResponseEntity<Void> deleteComment(@ApiIgnore @LoginUser String memberId,
+      @PathVariable @Valid Long commentId) {
+    Member member = memberService.findMemberById(memberId);
+    commentService.deleteComment(member, commentId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 

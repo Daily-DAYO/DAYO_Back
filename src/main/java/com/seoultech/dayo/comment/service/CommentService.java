@@ -58,13 +58,16 @@ public class CommentService {
     return ListAllCommentResponse.from(collect);
   }
 
-  public void deleteComment(Long commentId) {
+  public void deleteComment(Member member, Long commentId) {
 
     Comment comment = commentRepository.findById(commentId)
         .orElseThrow(NotExistCommentException::new);
 
+    Post post = comment.getPost();
+
     comment.delete();
     commentRepository.delete(comment);
+    alarmService.deleteComment(member, post);
   }
 
   public void deleteAllByMember(Member member) {

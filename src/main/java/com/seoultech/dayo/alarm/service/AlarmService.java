@@ -62,4 +62,16 @@ public class AlarmService {
     alarmRepository.deleteAllBySender(member);
   }
 
+  public void deleteHeart(Member sender, Post post) {
+    alarmRepository.deleteAlarmBySenderAndPostAndCategory(sender, post, Topic.HEART);
+  }
+
+  public void deleteComment(Member sender, Post post) {
+    alarmRepository.deleteAlarmBySenderAndPostAndCategory(sender, post, Topic.COMMENT);
+  }
+
+  public void deleteFollow(Member member, Member sender) {
+    alarmRepository.deleteAlarmByMemberAndSenderAndCategory(member, sender, Topic.FOLLOW);
+  }
+
 }

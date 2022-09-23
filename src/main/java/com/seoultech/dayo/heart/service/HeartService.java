@@ -5,7 +5,6 @@ import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.config.fcm.Note;
 import com.seoultech.dayo.exception.NotExistHeartException;
 import com.seoultech.dayo.heart.Heart;
-import com.seoultech.dayo.heart.Heart.Key;
 import com.seoultech.dayo.heart.controller.dto.HeartPostDto;
 import com.seoultech.dayo.heart.controller.dto.MyHeartPostDto;
 import com.seoultech.dayo.heart.controller.dto.request.CreateHeartRequest;
@@ -51,6 +50,7 @@ public class HeartService {
 
     post.deleteHeart(heart);
     heartRepository.delete(heart);
+    alarmService.deleteHeart(member, post);
   }
 
   @Transactional(readOnly = true)
