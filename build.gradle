@@ -81,6 +81,7 @@ dependencies {
 
     implementation group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.6'
 
+    implementation 'commons-io:commons-io:2.11.0'
     implementation group: 'com.google.firebase', name: 'firebase-admin', version: '8.1.0'
     implementation group: 'com.google.auth', name: 'google-auth-library-credentials', version: '1.5.3'
     implementation group: 'com.google.auth', name: 'google-auth-library-oauth2-http', version: '1.5.3'
