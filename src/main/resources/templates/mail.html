@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" as="style" crossorigin
+        href="https://unpkg.com/pretendard@1.3.5/dist/web/static/pretendard.css"/>
+</head>
+<body>
+
+<div
+    style="width: 600px; text-align: center; align-items: center;margin: 0 auto; font-family: 'Pretendard'">
+  <img src="cid:dayoLogo" style="margin-bottom: 32px; margin-top: 40px">
+  <hr style="border: 0.5px solid #EDEDED; margin-bottom: 40px">
+
+  <p style="font-size: 14px; margin-bottom: 32px; letter-spacing: -0.21px; line-height: 25px">다음은
+    본인인증을 위한 이메일 인증코드입니다.
+    진행 중인 본인인증 입력란에 아래의
+    인증코드를 입력하여 회원 가입을 진행해주세요.
+    이 인증코드는 3분 동안만 사용할 수 있고,
+    그 이후에는 인증코드를 재발송 받아야 해요.</p>
+
+  <div
+      style="display:flex; margin: 0 auto; vertical-align:middle; align-items: center; border-radius: 16px; width: 164px; height: 57px; background-color: #F2FBF7;">
+    <div
+        style="font-size: 32px; font-weight: bold; color: #23C882; margin: 0 auto"
+        th:text="${code}">
+    </div>
+  </div>
+  <div style="font-size: 12px; color: #9E9E9E; margin-top: 48px; margin-bottom: 40px">
+    인증코드를 요청하지 않으셨다면 이 메일을 무시해주세요.
+  </div>
+  <hr style="border: 0.5px solid #EDEDED;">
+
+
+</div>
+
+</body>
+</html>

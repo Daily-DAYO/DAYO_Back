@@ -1,9 +1,13 @@
 package com.seoultech.dayo.mail;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -35,6 +39,14 @@ public class MailUtils {
 
   public void setTo(String email) throws MessagingException {
     messageHelper.setTo(email);
+  }
+
+  public void addInline(String contentId, String pathToInline)
+      throws IOException, MessagingException {
+    File file = new ClassPathResource(pathToInline).getFile();
+    FileSystemResource fsr = new FileSystemResource(file);
+
+    messageHelper.addInline(contentId, fsr);
   }
 
   public void addInline(String contentId, DataSource dataSource) throws MessagingException {
