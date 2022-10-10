@@ -3,6 +3,7 @@ package com.seoultech.dayo.heart.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.heart.Heart;
 import com.seoultech.dayo.heart.Heart.Key;
 import com.seoultech.dayo.heart.controller.dto.request.CreateHeartRequest;
@@ -29,6 +30,9 @@ class HeartServiceTests {
 
   @Autowired
   HeartService heartService;
+
+  @Autowired
+  AlarmService alarmService;
 
   @Autowired
   MemberRepository memberRepository;

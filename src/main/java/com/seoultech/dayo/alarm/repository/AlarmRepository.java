@@ -11,7 +11,7 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
   List<Alarm> findAllByMember(Member member);
 
-  boolean existsBySenderAndPost(Member sender, Post post);
+  boolean existsBySenderAndPostAndCategory(Member sender, Post post, Topic category);
 
   void deleteAllByMember(Member member);
 

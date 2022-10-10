@@ -54,7 +54,7 @@ class CommentServiceTest {
     Post savedPost = postRepository.save(post);
     Comment savedComment = commentRepository.save(comment);
 
-    commentService.deleteComment(savedComment.getId());
+    commentService.deleteComment(savedMember, savedComment.getId());
 
     Post findPost = postRepository.findById(savedPost.getId()).orElseThrow();
 

@@ -1,12 +1,13 @@
 package com.seoultech.dayo.post.controller.dto;
 
 import com.seoultech.dayo.post.Post;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class DayoPick {
+public class DayoPick implements Serializable {
 
   private Long id;
 

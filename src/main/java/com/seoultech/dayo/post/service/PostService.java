@@ -31,6 +31,7 @@ import java.util.Comparator;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,7 +49,6 @@ import static java.util.stream.Collectors.toSet;
 public class PostService {
 
   private final PostRepository postRepository;
-  private final DayoPickRepository dayoPickRepository;
   private final PostHashtagService postHashtagService;
   private final HashtagService hashtagService;
   private final HeartService heartService;
@@ -60,8 +60,7 @@ public class PostService {
   @Transactional(readOnly = true)
   public DayoPickPostListResponse dayoPickListWithCategory(Member member, String category) {
 
-    List<Post> postList = postRepository.findAllByCategoryUsingJoinMember(
-        Category.valueOf(category));
+    List<Post> postList = getDayoPickWithCategory(category);
 
     Set<Long> likePost = getLikePost(member);
 
@@ -80,6 +79,12 @@ public class PostService {
 
     return DayoPickPostListResponse.from(collect);
 
+  }
+
+  @Cacheable(value = "dayoPick", key = "#category")
+  public List<Post> getDayoPickWithCategory(String category) {
+    return postRepository.findAllByCategoryUsingJoinMember(
+        Category.valueOf(category));
   }
 
   @Transactional(readOnly = true)
@@ -249,22 +254,7 @@ public class PostService {
   @Transactional(readOnly = true)
   public DayoPickPostListResponse dayoPickList(Member member) {
 
-//    if (dayoPickRepository.existsById(1L)) {
-//      List<DayoPickDto> data = dayoPickRepository.findById(1L).get().getData();
-//      Set<Long> likePost = getLikePost(member);
-//      List<DayoPick> collect = new ArrayList<>();
-//      for (DayoPickDto post : data) {
-//        boolean like = likePost.contains(post.getId());
-//        if (like) {
-//          collect.add(DayoPick.fromDto(post, true));
-//        } else {
-//          collect.add(DayoPick.fromDto(post, false));
-//        }
-//      }
-//      return DayoPickPostListResponse.from(collect);
-//    }
-
-    List<Post> postList = postRepository.findAllUsingJoinMember();
+    List<Post> postList = getDayoPickAll();
 
     postList.sort(Comparator.comparingInt(Post::getHeartCount));
 
@@ -284,6 +274,11 @@ public class PostService {
     collect.sort((a1, a2) -> a2.getHeartCount() - a1.getHeartCount());
 
     return DayoPickPostListResponse.from(collect);
+  }
+
+  @Cacheable(value = "dayoPick", key = "1")
+  public List<Post> getDayoPickAll() {
+    return postRepository.findAllUsingJoinMember();
   }
 
   public void deleteAllByMember(Member member) {
