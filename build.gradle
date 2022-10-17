@@ -75,10 +75,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 
+    implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.11'
     implementation group: 'net.sf.ehcache', name: 'ehcache', version: '2.10.6'
 
     implementation 'commons-io:commons-io:2.11.0'

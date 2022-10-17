@@ -9,6 +9,7 @@ import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -63,7 +64,10 @@ public class ControllerExceptionHandler {
       RuntimeException.class
   })
   public ResponseEntity<BadRequestFailResponse> otherError(Exception e) {
-    log.error(Arrays.toString(e.getStackTrace()));
+    String message = getMessage(e.getMessage());
+    StackTraceElement[] stackTrace = e.getStackTrace();
+
+    log.error(message, stackTrace[0]);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(BadRequestFailResponse.builder()
             .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -92,5 +96,12 @@ public class ControllerExceptionHandler {
     return ResponseEntity.badRequest().body(builder.toString());
   }
 
+  private String getMessage(String message) {
+    if (StringUtils.hasText(message)) {
+      return message + "\n \t {}";
+    }
+    return "\n \t {}";
+
+  }
 
 }
