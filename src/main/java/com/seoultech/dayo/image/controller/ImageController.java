@@ -29,6 +29,16 @@ public class ImageController {
     return new UrlResource("file:" + imageService.getFullPath(filename));
   }
 
+//  @PostMapping
+//  public ResponseEntity upload(MultipartHttpServletRequest servletRequest) throws IOException {
+//    MultipartFile image = servletRequest.getFile("file");
+//    Image savedImage = imageService.storeFile(image, Category.PROFILE);
+//    imageService.resizeFile(savedImage.getStoreFileName(), 17, 17);
+//    imageService.resizeFile(savedImage.getStoreFileName(), 37, 37);
+//    imageService.resizeFile(savedImage.getStoreFileName(), 45, 45);
+//    return new ResponseEntity(HttpStatus.OK);
+//  }
+
   @PostMapping("/profile")
   public ResponseEntity uploadProfileImage(MultipartHttpServletRequest servletRequest)
       throws IOException {

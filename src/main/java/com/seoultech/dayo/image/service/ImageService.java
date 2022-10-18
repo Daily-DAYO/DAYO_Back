@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,16 +77,10 @@ public class ImageService {
     File image = new File(getFullPath(fileName));
 
     BufferedImage src = ImageIO.read(image);
-
-    BufferedImage resizeImage =
-        new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-    resizeImage.getGraphics()
-        .drawImage(src.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH), 0, 0, null);
+    BufferedImage read = Scalr.resize(src, width);
 
     FileOutputStream out = new FileOutputStream(getFullPath(renameFile(fileName, width, height)));
-
-    ImageIO.write(resizeImage, extractExt(fileName), out);
+    ImageIO.write(read, extractExt(fileName), out);
     out.close();
   }
 

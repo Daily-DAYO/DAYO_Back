@@ -12,13 +12,14 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class CreateFolderInPostRequest {
 
-    @NotNull
-    private String name;
+  @NotNull
+  private String name;
 
-    private String privacy;
+  private String privacy;
 
-    public Folder toEntity(Image image) {
-        return new Folder(this.name, Privacy.valueOf(this.privacy), image);
-    }
+  public Folder toEntity(Image image) {
+    //TODO: 소개글 문구 추가
+    return new Folder(this.name, Privacy.valueOf(this.privacy), image);
+  }
 
 }
