@@ -39,22 +39,18 @@
   </appender>
 
   <!-- info 레벨부터 콘솔에 출력 -->
-  <root level="info">
-    <appender-ref ref="RollingFile"/>
+  <root level="info">\
     <appender-ref ref="Console"/>
   </root>
-
-
-  <!--    <root level="error">-->
-  <!--        <appender-ref ref="RollingFile" />-->
-  <!--        <appender-ref ref="Console" />-->
-  <!--    </root>-->
-
 
   <logger name="com.seoultech.dayo" level="error" additivity="false">
     <appender-ref ref="RollingFile"/>
     <appender-ref ref="Console"/>
   </logger>
 
+  <logger name="com.seoultech.dayo" level="info" additivity="false">
+    <appender-ref ref="RollingFile"/>
+    <appender-ref ref="Console"/>
+  </logger>
 
 </configuration>
