@@ -164,6 +164,10 @@ public class MemberService {
       imageService.resizeFile(image.getStoreFileName(), 45, 45);
       member.setProfileImg(image);
     }
+    if (request.isOnBasicProfileImg()) {
+      Image image = imageService.findDefaultProfileImage();
+      member.setProfileImg(image);
+    }
 
   }
 

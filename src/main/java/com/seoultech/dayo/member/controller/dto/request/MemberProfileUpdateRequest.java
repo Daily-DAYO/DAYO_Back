@@ -8,9 +8,11 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class MemberProfileUpdateRequest {
 
-    private String nickname;
+  private String nickname;
 
-    private MultipartFile profileImg;
+  private MultipartFile profileImg;
+
+  private boolean onBasicProfileImg;
 
 
 }
