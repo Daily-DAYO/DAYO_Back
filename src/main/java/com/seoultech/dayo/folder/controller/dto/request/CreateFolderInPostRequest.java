@@ -19,7 +19,7 @@ public class CreateFolderInPostRequest {
 
   public Folder toEntity(Image image) {
     //TODO: 소개글 문구 추가
-    return new Folder(this.name, Privacy.valueOf(this.privacy), image);
+    return new Folder(this.name, "폴더 소개를 적어주세요", Privacy.valueOf(this.privacy), image);
   }
 
 }

@@ -85,12 +85,6 @@ public class Folder extends BaseTimeEntity {
     this.thumbnailImage = thumbnailImage;
   }
 
-  public Folder(String name, Privacy privacy, Image thumbnailImage) {
-    this.name = name;
-    this.privacy = privacy;
-    this.thumbnailImage = thumbnailImage;
-  }
-
   public Folder(String name, Privacy privacy) {
     this.name = name;
     this.privacy = privacy;

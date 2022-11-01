@@ -30,6 +30,9 @@ public class CreateFolderRequest {
 
   public Folder toEntity(Image image) {
     if (Privacy.find(privacy)) {
+      if (this.subheading.equals("")) {
+        return new Folder(this.name, "폴더 소개를 적어주세요", Privacy.valueOf(this.privacy), image);
+      }
       return new Folder(this.name, this.subheading, Privacy.valueOf(this.privacy), image);
     } else {
       throw new NotExistFolderPrivacyException();
