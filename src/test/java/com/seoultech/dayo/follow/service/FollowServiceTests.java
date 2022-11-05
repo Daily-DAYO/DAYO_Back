@@ -14,7 +14,6 @@ import com.seoultech.dayo.follow.Follow.Key;
 import com.seoultech.dayo.follow.controller.dto.request.CreateFollowRequest;
 import com.seoultech.dayo.follow.repository.FollowRepository;
 import com.seoultech.dayo.member.Member;
-import com.seoultech.dayo.utils.KafkaProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,9 +33,6 @@ class FollowServiceTests {
 
   @Mock
   AlarmService alarmService;
-
-  @Mock
-  KafkaProducer kafkaProducer;
 
   @InjectMocks
   FollowService followService;
@@ -61,13 +57,12 @@ class FollowServiceTests {
     CreateFollowRequest request = new CreateFollowRequest(follower.getId());
 
     given(followRepository.save(any())).willReturn(follow);
-    doNothing().when(kafkaProducer).sendMessage(Topic.FOLLOW, "테스트 메세지");
-    follower.setDeviceToken("test");
+       follower.setDeviceToken("test");
     followService.createFollow(member, follower, request);
 
-    verify(kafkaProducer, times(1)).sendMessage(Topic.FOLLOW,
-        "{\"subject\":\"DAYO\",\"topic\":\"FOLLOW\",\"body\":\"조재영님이 회원님을 팔로우해요.\",\"content\":\"님이 회원님을 팔로우해요.\",\"deviceToken\":\"test\",\"memberId\":\""
-            + member.getId() + "\"}");
+//    verify(kafkaProducer, times(1)).sendMessage(Topic.FOLLOW,
+//        "{\"subject\":\"DAYO\",\"topic\":\"FOLLOW\",\"body\":\"조재영님이 회원님을 팔로우해요.\",\"content\":\"님이 회원님을 팔로우해요.\",\"deviceToken\":\"test\",\"memberId\":\""
+//            + member.getId() + "\"}");
   }
 
   @Test
@@ -78,12 +73,12 @@ class FollowServiceTests {
     CreateFollowRequest request = new CreateFollowRequest(follower.getId());
 
     given(followRepository.save(any())).willReturn(follow);
-    doNothing().when(kafkaProducer).sendMessage(Topic.FOLLOW, "테스트 메세지");
+//    doNothing().when(kafkaProducer).sendMessage(Topic.FOLLOW, "테스트 메세지");
     followService.createFollow(member, follower, request);
 
-    verify(kafkaProducer, times(0)).sendMessage(Topic.FOLLOW,
-        "{\"subject\":\"DAYO\",\"topic\":\"FOLLOW\",\"body\":\"조재영님이 회원님을 팔로우해요.\",\"content\":\"님이 회원님을 팔로우해요.\",\"deviceToken\":\"test\",\"memberId\":\""
-            + member.getId() + "\"}");
+//    verify(kafkaProducer, times(0)).sendMessage(Topic.FOLLOW,
+//        "{\"subject\":\"DAYO\",\"topic\":\"FOLLOW\",\"body\":\"조재영님이 회원님을 팔로우해요.\",\"content\":\"님이 회원님을 팔로우해요.\",\"deviceToken\":\"test\",\"memberId\":\""
+//            + member.getId() + "\"}");
   }
 
 }

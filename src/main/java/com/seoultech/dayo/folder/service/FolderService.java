@@ -162,7 +162,7 @@ public class FolderService {
 
   public Folder createDefaultFolder() {
     Image image = imageService.findDefaultFolderImage();
-    Folder folder = new Folder("기본 폴더", "폴더 소개를 적어주세요",Privacy.ALL, image);
+    Folder folder = new Folder("기본 폴더", "폴더 소개를 적어주세요", Privacy.ALL, image);
     return folderRepository.save(folder);
   }
 

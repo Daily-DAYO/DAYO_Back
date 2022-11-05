@@ -3,6 +3,10 @@ package com.seoultech.dayo.image.controller;
 import com.seoultech.dayo.image.Category;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -25,7 +29,8 @@ public class ImageController {
   private final ImageService imageService;
 
   @GetMapping(value = "/{filename}", produces = MediaType.IMAGE_PNG_VALUE)
-  public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
+  public Resource downloadImage(@PathVariable String filename)
+      throws MalformedURLException {
     return new UrlResource("file:" + imageService.getFullPath(filename));
   }
 

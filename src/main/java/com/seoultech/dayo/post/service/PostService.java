@@ -187,6 +187,10 @@ public class PostService {
       postHashtagService.deletePostHashtag(post);
       postHashtagService.createPostHashtag(post, hashtags);
     }
+    if (request.getHashtags().size() == 0) {
+      post.deletePostHashTag();
+      postHashtagService.deletePostHashtag(post);
+    }
     if (request.getContents() != null) {
       post.setContents(request.getContents());
     }

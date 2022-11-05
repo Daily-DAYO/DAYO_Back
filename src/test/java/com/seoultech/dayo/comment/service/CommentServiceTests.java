@@ -17,7 +17,6 @@ import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.service.PostService;
-import com.seoultech.dayo.utils.KafkaProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,8 +42,6 @@ class CommentServiceTests {
   @Mock
   AlarmService alarmService;
 
-  @Mock
-  KafkaProducer kafkaProducer;
 
   @InjectMocks
   CommentService commentService;
@@ -87,12 +84,12 @@ class CommentServiceTests {
     member.setDeviceToken("test");
     given(commentRepository.save(any())).willReturn(comment);
     given(postService.findPostById(any())).willReturn(post);
-    doNothing().when(kafkaProducer).sendMessage(Topic.COMMENT, "테스트 메세지");
+//    doNothing().when(kafkaProducer).sendMessage(Topic.COMMENT, "테스트 메세지");
 
     commentService.createComment(member, request);
 
-    verify(kafkaProducer, times(0)).sendMessage(Topic.COMMENT,
-        "{\"image\":\"testimage\",\"subject\":\"DAYO\",\"topic\":\"COMMENT\",\"postId\":\"2\",\"body\":\"재영님이 회원님의 게시글에 댓글을 남겼어요.\",\"content\":\"님이 회원님의 게시글에 댓글을 남겼어요.\",\"deviceToken\":\"test\"}");
+//    verify(kafkaProducer, times(0)).sendMessage(Topic.COMMENT,
+//        "{\"image\":\"testimage\",\"subject\":\"DAYO\",\"topic\":\"COMMENT\",\"postId\":\"2\",\"body\":\"재영님이 회원님의 게시글에 댓글을 남겼어요.\",\"content\":\"님이 회원님의 게시글에 댓글을 남겼어요.\",\"deviceToken\":\"test\"}");
   }
 
   @Test
@@ -105,12 +102,12 @@ class CommentServiceTests {
 
     given(commentRepository.save(any())).willReturn(comment);
     given(postService.findPostById(any())).willReturn(otherPost);
-    doNothing().when(kafkaProducer).sendMessage(Topic.COMMENT, "테스트 메세지");
+//    doNothing().when(kafkaProducer).sendMessage(Topic.COMMENT, "테스트 메세지");
 
     commentService.createComment(member, request);
 
-    verify(kafkaProducer, times(1)).sendMessage(Topic.COMMENT,
-        "{\"image\":\"testimage\",\"subject\":\"DAYO\",\"topic\":\"COMMENT\",\"postId\":\"2\",\"body\":\"재영님이 회원님의 게시글에 댓글을 남겼어요.\",\"content\":\"님이 회원님의 게시글에 댓글을 남겼어요.\",\"deviceToken\":\"test\"}"
+//    verify(kafkaProducer, times(1)).sendMessage(Topic.COMMENT,
+//        "{\"image\":\"testimage\",\"subject\":\"DAYO\",\"topic\":\"COMMENT\",\"postId\":\"2\",\"body\":\"재영님이 회원님의 게시글에 댓글을 남겼어요.\",\"content\":\"님이 회원님의 게시글에 댓글을 남겼어요.\",\"deviceToken\":\"test\"}"
     );
   }
 

@@ -1,4 +1,4 @@
-package com.seoultech.dayo.utils;
+package com.seoultech.dayo.utils.notification;
 
 import com.seoultech.dayo.alarm.Topic;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class KafkaProducer {
+final class KafkaProducer {
 
   private final KafkaTemplate<String, String> kafkaTemplate;
 
