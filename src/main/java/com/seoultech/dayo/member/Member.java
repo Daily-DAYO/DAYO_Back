@@ -3,6 +3,7 @@ package com.seoultech.dayo.member;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.seoultech.dayo.BaseTimeEntity;
+import com.seoultech.dayo.block.Block;
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.follow.Follow;
@@ -70,11 +71,11 @@ public class Member extends BaseTimeEntity {
   @Formula("(select count(1) from post p where p.member_id = id)")
   private int postCount;
 
-//    @OneToMany(mappedBy = "member")
-//    private List<Follow> followings = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "follower")
-//    private List<Follow> followers = new ArrayList<>();
+  @OneToMany(
+      mappedBy = "member",
+      orphanRemoval = true
+  )
+  private List<Block> blockList = new ArrayList<>();
 
   public void addFolder(Folder folder) {
     folders.add(folder);

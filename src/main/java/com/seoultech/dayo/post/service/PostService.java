@@ -65,8 +65,12 @@ public class PostService {
     Set<Long> likePost = getLikePost(member);
 
     List<DayoPick> collect = new ArrayList<>();
+    Set<String> blockList = getBlockList(member);
 
     for (Post post : postList) {
+      if (blockList.contains(post.getMember().getId())) {
+        continue;
+      }
       boolean isLike = likePost.contains(post.getId());
       if (isLike) {
         collect.add(DayoPick.from(post, true));
@@ -94,10 +98,14 @@ public class PostService {
 
     Set<Long> likePost = getLikePost(member);
     Set<Long> bookmarkPost = getBookmarkPost(member);
+    Set<String> blockList = getBlockList(member);
 
     List<PostDto> collect = new ArrayList<>();
 
     for (Post post : postList) {
+      if (blockList.contains(post.getMember().getId())) {
+        continue;
+      }
 
       boolean isLike = likePost.contains(post.getId());
       boolean isBookmark = bookmarkPost.contains(post.getId());
@@ -127,10 +135,15 @@ public class PostService {
     Set<Long> likePost = getLikePost(member);
 
     Set<Long> bookmarkPost = getBookmarkPost(member);
+    Set<String> blockList = getBlockList(member);
 
     List<PostDto> collect = new ArrayList<>();
 
     for (Post post : postList) {
+
+      if (blockList.contains(post.getMember().getId())) {
+        continue;
+      }
 
       boolean like = likePost.contains(post.getId());
       boolean bookmark = bookmarkPost.contains(post.getId());
@@ -228,8 +241,13 @@ public class PostService {
         .sorted((post1, post2) -> post2.getCreatedDate().compareTo(post1.getCreatedDate()))
         .collect(toList());
 
+    Set<String> blockList = getBlockList(member);
+
     List<FeedDto> feedDtos = new ArrayList<>();
     for (Post post : postCollect) {
+      if (blockList.contains(post.getMember().getId())) {
+        continue;
+      }
       boolean isHeart = heartService.isHeart(member.getId(), post.getId());
       boolean isBookmark = bookmarkService.isBookmark(member.getId(), post.getId());
 
@@ -263,10 +281,14 @@ public class PostService {
     postList.sort(Comparator.comparingInt(Post::getHeartCount));
 
     Set<Long> likePost = getLikePost(member);
+    Set<String> blockList = getBlockList(member);
 
     List<DayoPick> collect = new ArrayList<>();
 
     for (Post post : postList) {
+      if (blockList.contains(post.getMember().getId())) {
+        continue;
+      }
       boolean like = likePost.contains(post.getId());
       if (like) {
         collect.add(DayoPick.from(post, true));
@@ -301,4 +323,10 @@ public class PostService {
         .collect(toSet());
   }
 
+
+  public Set<String> getBlockList(Member member) {
+    Set<String> blockList = member.getBlockList().stream().map(block -> block.getTarget().getId())
+        .collect(toSet());
+    return blockList;
+  }
 }

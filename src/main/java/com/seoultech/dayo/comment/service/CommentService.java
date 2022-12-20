@@ -12,6 +12,7 @@ import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.service.PostService;
 import com.seoultech.dayo.utils.notification.Notification;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,10 +44,12 @@ public class CommentService {
   }
 
   @Transactional(readOnly = true)
-  public ListAllCommentResponse listAllComment(Long postId) {
+  public ListAllCommentResponse listAllComment(Member member, Long postId) {
 
     Post post = postService.findPostById(postId);
+    Set<String> blockList = postService.getBlockList(member);
     List<ListAllCommentResponse.CommentDto> collect = post.getComments().stream()
+        .filter(comment -> !blockList.contains(comment.getMember().getId()))
         .map(ListAllCommentResponse.CommentDto::from)
         .collect(toList());
 

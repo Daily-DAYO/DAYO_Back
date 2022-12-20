@@ -44,9 +44,11 @@ public class CommentController {
   }
 
   @GetMapping("/{postId}")
-  public ResponseEntity<ListAllCommentResponse> listAllComment(@PathVariable @Valid Long postId) {
+  public ResponseEntity<ListAllCommentResponse> listAllComment(
+      @ApiIgnore @LoginUser String memberId, @PathVariable @Valid Long postId) {
+    Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
-        .body(commentService.listAllComment(postId));
+        .body(commentService.listAllComment(member, postId));
   }
 
 

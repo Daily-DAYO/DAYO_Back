@@ -108,7 +108,28 @@ class CommentServiceTests {
 
 //    verify(kafkaProducer, times(1)).sendMessage(Topic.COMMENT,
 //        "{\"image\":\"testimage\",\"subject\":\"DAYO\",\"topic\":\"COMMENT\",\"postId\":\"2\",\"body\":\"재영님이 회원님의 게시글에 댓글을 남겼어요.\",\"content\":\"님이 회원님의 게시글에 댓글을 남겼어요.\",\"deviceToken\":\"test\"}"
-    );
+//    );
+  }
+
+  @Test
+  @DisplayName("댓글 조회")
+  void commentTest4() {
+
+    CreateCommentRequest request = new CreateCommentRequest("테스트 댓글1", 1L);
+
+    given(commentRepository.save(any())).willReturn(comment);
+    given(postService.findPostById(any())).willReturn(post);
+
+    commentService.createComment(member, request);
+
+    Member member2 = new Member("조재영", "jdyj@naver.com");
+    member2.setNickname("재영");
+    commentService.listAllComment(member2, post.getId());
+
+    assertThat(post.getComments().size()).isEqualTo(1);
+    assertThat(post.getComments().get(0).getId()).isEqualTo(1L);
+    assertThat(comment.getPost().getId()).isEqualTo(1);
+
   }
 
 

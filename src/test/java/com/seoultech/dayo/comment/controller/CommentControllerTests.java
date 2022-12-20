@@ -152,7 +152,7 @@ class CommentControllerTests {
 
     //when
     ListAllCommentResponse response = ListAllCommentResponse.from(collect);
-    given(commentService.listAllComment(any())).willReturn(response);
+    given(commentService.listAllComment(any(), any())).willReturn(response);
 
     MockHttpServletRequestBuilder mockBuilder = get("/api/v1/comments/{postId}",
         post.getId()).contentType(
