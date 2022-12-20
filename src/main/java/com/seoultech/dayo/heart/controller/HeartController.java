@@ -12,6 +12,7 @@ import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.service.PostService;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,17 +55,20 @@ public class HeartController {
   public ResponseEntity<ListAllHeartPostResponse> listAllHeartPost(
       @PathVariable @Valid String memberId) {
     Member member = memberService.findMemberById(memberId);
+    Set<String> blockList = postService.getBlockList(member);
+
     return ResponseEntity.ok()
-        .body(heartService.listAllHeartPost(member));
+        .body(heartService.listAllHeartPost(member, blockList));
   }
 
   @GetMapping("/list")
   public ResponseEntity<ListAllMyHeartPostResponse> listAllMyHeartPost(
       @ApiIgnore @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
+    Set<String> blockList = postService.getBlockList(member);
 
     return ResponseEntity.ok()
-        .body(heartService.listAllMyHeartPost(member));
+        .body(heartService.listAllMyHeartPost(member, blockList));
   }
 
 }

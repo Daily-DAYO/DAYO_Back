@@ -16,6 +16,7 @@ import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.repository.PostRepository;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,10 +47,11 @@ public class BookmarkService {
   }
 
   @Transactional(readOnly = true)
-  public ListAllBookmarkPostResponse listAllBookmarkPost(Member member) {
+  public ListAllBookmarkPostResponse listAllBookmarkPost(Member member, Set<String> blockList) {
 
     List<Bookmark> Bookmarks = bookmarkRepository.findAllByMember(member);
     List<BookmarkPostDto> collect = Bookmarks.stream()
+        .filter(bookmark -> !blockList.contains(bookmark.getPost().getMember().getId()))
         .map(BookmarkPostDto::from)
         .collect(toList());
 
@@ -57,10 +59,11 @@ public class BookmarkService {
   }
 
   @Transactional(readOnly = true)
-  public ListAllMyBookmarkPostResponse listAllMyBookmarkPost(Member member) {
+  public ListAllMyBookmarkPostResponse listAllMyBookmarkPost(Member member, Set<String> blockList) {
 
     List<Bookmark> Bookmarks = bookmarkRepository.findAllByMember(member);
     List<MyBookmarkPostDto> collect = Bookmarks.stream()
+        .filter(bookmark -> !blockList.contains(bookmark.getPost().getMember().getId()))
         .map(MyBookmarkPostDto::from)
         .collect(toList());
 

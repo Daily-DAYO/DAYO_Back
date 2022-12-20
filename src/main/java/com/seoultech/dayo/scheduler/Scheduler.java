@@ -1,7 +1,10 @@
 package com.seoultech.dayo.scheduler;
 
+import com.seoultech.dayo.post.Category;
+import com.seoultech.dayo.post.controller.dto.DayoPickDto;
 import com.seoultech.dayo.post.service.PostService;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.RedisConnection;

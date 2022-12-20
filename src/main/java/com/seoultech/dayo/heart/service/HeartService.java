@@ -12,7 +12,9 @@ import com.seoultech.dayo.heart.controller.dto.response.ListAllMyHeartPostRespon
 import com.seoultech.dayo.heart.repository.HeartRepository;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
+import com.seoultech.dayo.post.service.PostService;
 import com.seoultech.dayo.utils.notification.Notification;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,9 +51,10 @@ public class HeartService {
   }
 
   @Transactional(readOnly = true)
-  public ListAllHeartPostResponse listAllHeartPost(Member member) {
+  public ListAllHeartPostResponse listAllHeartPost(Member member, Set<String> blockList) {
     List<Heart> hearts = listHeartsByMember(member);
     List<HeartPostDto> collect = hearts.stream()
+        .filter(heart -> !blockList.contains(heart.getPost().getMember().getId()))
         .map(HeartPostDto::from)
         .collect(toList());
 
@@ -59,9 +62,10 @@ public class HeartService {
   }
 
   @Transactional(readOnly = true)
-  public ListAllMyHeartPostResponse listAllMyHeartPost(Member member) {
+  public ListAllMyHeartPostResponse listAllMyHeartPost(Member member, Set<String> blockList) {
     List<Heart> hearts = listHeartsByMember(member);
     List<MyHeartPostDto> collect = hearts.stream()
+        .filter(heart -> !blockList.contains(heart.getPost().getMember().getId()))
         .map(MyHeartPostDto::from)
         .collect(toList());
 

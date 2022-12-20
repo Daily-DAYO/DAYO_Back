@@ -11,6 +11,7 @@ import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.service.PostService;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -59,17 +60,20 @@ public class BookmarkController {
       @PathVariable @Valid String memberId) {
 
     Member member = memberService.findMemberById(memberId);
+    Set<String> blockList = postService.getBlockList(member);
 
     return ResponseEntity.ok()
-        .body(bookmarkService.listAllBookmarkPost(member));
+        .body(bookmarkService.listAllBookmarkPost(member, blockList));
   }
 
   @GetMapping("/list")
   public ResponseEntity<ListAllMyBookmarkPostResponse> listAllMyBookmarkPost(
       @ApiIgnore @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
+    Set<String> blockList = postService.getBlockList(member);
+
     return ResponseEntity.ok()
-        .body(bookmarkService.listAllMyBookmarkPost(member));
+        .body(bookmarkService.listAllMyBookmarkPost(member, blockList));
   }
 
 }
