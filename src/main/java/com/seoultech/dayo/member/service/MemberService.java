@@ -279,8 +279,7 @@ public class MemberService {
 
   public MemberListResponse blockMember(String memberId) {
 
-    Member member = memberRepository.findMemberByIdUsingJoinBlock(memberId)
-        .orElseThrow(NotExistMemberException::new);
+    Member member = findMemberById(memberId);
     List<Block> blockList = member.getBlockList();
 
     List<BlockMember> collect = blockList.stream()
