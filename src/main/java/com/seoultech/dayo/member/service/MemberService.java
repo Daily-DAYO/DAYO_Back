@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.seoultech.dayo.alarm.service.AlarmService;
+import com.seoultech.dayo.block.Block;
 import com.seoultech.dayo.bookmark.service.BookmarkService;
 import com.seoultech.dayo.comment.service.CommentService;
 import com.seoultech.dayo.config.jwt.TokenDto;
@@ -31,6 +32,7 @@ import com.seoultech.dayo.member.controller.dto.request.MemberSignInRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignUpRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberResignRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
+import com.seoultech.dayo.member.controller.dto.response.MemberListResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOAuthResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOtherProfileResponse;
@@ -44,6 +46,8 @@ import com.seoultech.dayo.report.service.ReportService;
 import com.seoultech.dayo.resign.Resign;
 import com.seoultech.dayo.resign.repository.ResignRepository;
 import com.seoultech.dayo.search.service.SearchService;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -271,6 +275,19 @@ public class MemberService {
 
   public boolean existNickname(String nickname) {
     return memberRepository.existsMemberByNickname(nickname);
+  }
+
+  public MemberListResponse blockMember(String memberId) {
+
+    Member member = memberRepository.findMemberByIdUsingJoinBlock(memberId)
+        .orElseThrow(NotExistMemberException::new);
+    List<Block> blockList = member.getBlockList();
+
+    List<BlockMember> collect = blockList.stream()
+        .map(block -> BlockMember.from(block.getTarget()))
+        .collect(Collectors.toList());
+
+    return MemberListResponse.from(collect);
   }
 
   private String get(String apiUrl, String accessToken) {

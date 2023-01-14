@@ -14,6 +14,7 @@ import com.seoultech.dayo.member.controller.dto.request.MemberSignUpRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberResignRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberAuthCodeResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
+import com.seoultech.dayo.member.controller.dto.response.MemberListResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberOtherProfileResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberSignInResponse;
@@ -187,6 +188,11 @@ public class MemberController {
       throw new ExistNicknameException();
     }
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @GetMapping("/block")
+  public ResponseEntity<MemberListResponse> blockMemberList(@ApiIgnore @LoginUser String memberId) {
+    return ResponseEntity.ok().body(memberService.blockMember(memberId));
   }
 
 }
