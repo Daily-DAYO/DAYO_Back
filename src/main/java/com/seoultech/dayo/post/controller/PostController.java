@@ -110,10 +110,11 @@ public class PostController {
   }
 
   @GetMapping("/feed/list")
-  public ResponseEntity<ListFeedResponse> listFeed(@ApiIgnore @LoginUser String memberId) {
+  public ResponseEntity<ListFeedResponse> listFeed(@ApiIgnore @LoginUser String memberId,
+      @RequestParam(value = "end") String end) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
-        .body(postService.listFeed(member));
+        .body(postService.listFeed(member, Long.valueOf(end)));
   }
 
 }

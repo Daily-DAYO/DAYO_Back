@@ -224,7 +224,7 @@ public class PostService {
   }
 
   @Transactional(readOnly = true)
-  public ListFeedResponse listFeed(Member member) {
+  public ListFeedResponse listFeed(Member member, Long end) {
 
     List<Follow> follows = followService.findFollowings(member);
     List<Member> members = follows.stream()
@@ -239,6 +239,8 @@ public class PostService {
     List<Post> postCollect = posts.stream()
         .filter(post -> post.getPrivacy() != Privacy.ONLY_ME)
         .sorted((post1, post2) -> post2.getCreatedDate().compareTo(post1.getCreatedDate()))
+        .skip(end)
+        .limit(10)
         .collect(toList());
 
     Set<String> blockList = getBlockList(member);
