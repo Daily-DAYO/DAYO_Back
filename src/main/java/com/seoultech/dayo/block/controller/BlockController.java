@@ -33,4 +33,16 @@ public class BlockController {
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
+  @PostMapping("/cancel")
+  public ResponseEntity<Void> blockCancel(@ApiIgnore @LoginUser String memberId,
+      @RequestBody BlockRequest.CancelDto request) {
+
+    Member member = memberService.findMemberById(memberId);
+    Member target = memberService.findMemberById(request.getMemberId());
+
+    blockService.cancel(member, target);
+
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
 }

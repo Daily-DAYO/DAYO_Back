@@ -10,4 +10,10 @@ public class BlockRequest {
     private String memberId;
   }
 
+  @Getter
+  static class CancelDto {
+
+    private String memberId;
+  }
+
 }
