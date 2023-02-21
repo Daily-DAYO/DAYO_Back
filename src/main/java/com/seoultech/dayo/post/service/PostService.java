@@ -60,7 +60,10 @@ public class PostService {
   @Transactional(readOnly = true)
   public DayoPickPostListResponse dayoPickListWithCategory(Member member, String category) {
 
-    List<Post> postList = getDayoPickWithCategory(category);
+    List<Post> postList = getDayoPickWithCategory(category)
+        .stream()
+        .limit(30)
+        .collect(toList());
 
     Set<Long> likePost = getLikePost(member);
 
@@ -278,9 +281,9 @@ public class PostService {
   @Transactional(readOnly = true)
   public DayoPickPostListResponse dayoPickList(Member member) {
 
-    List<Post> postList = getDayoPickAll();
-
-    postList.sort(Comparator.comparingInt(Post::getHeartCount));
+    List<Post> postList = getDayoPickAll().stream()
+        .limit(30)
+        .collect(toList());
 
     Set<Long> likePost = getLikePost(member);
     Set<String> blockList = getBlockList(member);
