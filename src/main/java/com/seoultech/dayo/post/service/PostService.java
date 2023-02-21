@@ -60,10 +60,7 @@ public class PostService {
   @Transactional(readOnly = true)
   public DayoPickPostListResponse dayoPickListWithCategory(Member member, String category) {
 
-    List<Post> postList = getDayoPickWithCategory(category)
-        .stream()
-        .limit(30)
-        .collect(toList());
+    List<Post> postList = getDayoPickWithCategory(category);
 
     Set<Long> likePost = getLikePost(member);
 
@@ -84,7 +81,9 @@ public class PostService {
 
     collect.sort((a1, a2) -> a2.getHeartCount() - a1.getHeartCount());
 
-    return DayoPickPostListResponse.from(collect);
+    List<DayoPick> collect1 = collect.stream().limit(30).collect(toList());
+
+    return DayoPickPostListResponse.from(collect1);
 
   }
 
@@ -281,9 +280,7 @@ public class PostService {
   @Transactional(readOnly = true)
   public DayoPickPostListResponse dayoPickList(Member member) {
 
-    List<Post> postList = getDayoPickAll().stream()
-        .limit(30)
-        .collect(toList());
+    List<Post> postList = getDayoPickAll();
 
     Set<Long> likePost = getLikePost(member);
     Set<String> blockList = getBlockList(member);
@@ -304,7 +301,9 @@ public class PostService {
 
     collect.sort((a1, a2) -> a2.getHeartCount() - a1.getHeartCount());
 
-    return DayoPickPostListResponse.from(collect);
+    List<DayoPick> collect1 = collect.stream().limit(30).collect(toList());
+
+    return DayoPickPostListResponse.from(collect1);
   }
 
   @Cacheable(value = "dayoPick", key = "1")
