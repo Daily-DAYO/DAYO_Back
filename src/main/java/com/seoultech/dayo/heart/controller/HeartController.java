@@ -53,22 +53,24 @@ public class HeartController {
 
   @GetMapping("/list/{memberId}")
   public ResponseEntity<ListAllHeartPostResponse> listAllHeartPost(
-      @PathVariable @Valid String memberId) {
+      @PathVariable @Valid String memberId,
+      @RequestParam(value = "end") String end) {
     Member member = memberService.findMemberById(memberId);
     Set<String> blockList = postService.getBlockList(member);
 
     return ResponseEntity.ok()
-        .body(heartService.listAllHeartPost(member, blockList));
+        .body(heartService.listAllHeartPost(member, blockList, Long.valueOf(end)));
   }
 
   @GetMapping("/list")
   public ResponseEntity<ListAllMyHeartPostResponse> listAllMyHeartPost(
-      @ApiIgnore @LoginUser String memberId) {
+      @ApiIgnore @LoginUser String memberId,
+      @RequestParam(value = "end") String end) {
     Member member = memberService.findMemberById(memberId);
     Set<String> blockList = postService.getBlockList(member);
 
     return ResponseEntity.ok()
-        .body(heartService.listAllMyHeartPost(member, blockList));
+        .body(heartService.listAllMyHeartPost(member, blockList, Long.valueOf(end)));
   }
 
 }

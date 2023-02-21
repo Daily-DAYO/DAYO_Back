@@ -79,9 +79,11 @@ public class FolderService {
   }
 
   @Transactional(readOnly = true)
-  public ListAllMyFolderResponse listAllMyFolder(Member member) {
+  public ListAllMyFolderResponse listAllMyFolder(Member member, Long end) {
     List<Folder> folders = folderRepository.findFoldersByMemberOrderByOrderIndex(member);
     List<MyFolderDto> collect = folders.stream()
+        .skip(end)
+        .limit(20)
         .map(MyFolderDto::from)
         .collect(toList());
 
@@ -89,10 +91,12 @@ public class FolderService {
   }
 
   @Transactional(readOnly = true)
-  public ListAllFolderResponse listAllFolder(Member member) {
+  public ListAllFolderResponse listAllFolder(Member member, Long end) {
     List<Folder> folders = folderRepository.findFoldersByMemberOrderByOrderIndex(member);
     List<FolderDto> collect = folders.stream()
         .filter(folder -> folder.getPrivacy() != ONLY_ME)
+        .skip(end)
+        .limit(20)
         .map(FolderDto::from)
         .collect(toList());
 

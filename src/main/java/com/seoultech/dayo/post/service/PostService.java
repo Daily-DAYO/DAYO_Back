@@ -240,7 +240,7 @@ public class PostService {
         .filter(post -> post.getPrivacy() != Privacy.ONLY_ME)
         .sorted((post1, post2) -> post2.getCreatedDate().compareTo(post1.getCreatedDate()))
         .skip(end)
-        .limit(10)
+        .limit(20)
         .collect(toList());
 
     Set<String> blockList = getBlockList(member);

@@ -47,11 +47,14 @@ public class BookmarkService {
   }
 
   @Transactional(readOnly = true)
-  public ListAllBookmarkPostResponse listAllBookmarkPost(Member member, Set<String> blockList) {
+  public ListAllBookmarkPostResponse listAllBookmarkPost(Member member, Set<String> blockList,
+      Long end) {
 
     List<Bookmark> Bookmarks = bookmarkRepository.findAllByMember(member);
     List<BookmarkPostDto> collect = Bookmarks.stream()
         .filter(bookmark -> !blockList.contains(bookmark.getPost().getMember().getId()))
+        .skip(end)
+        .limit(20)
         .map(BookmarkPostDto::from)
         .collect(toList());
 
@@ -59,11 +62,14 @@ public class BookmarkService {
   }
 
   @Transactional(readOnly = true)
-  public ListAllMyBookmarkPostResponse listAllMyBookmarkPost(Member member, Set<String> blockList) {
+  public ListAllMyBookmarkPostResponse listAllMyBookmarkPost(Member member, Set<String> blockList,
+      Long end) {
 
     List<Bookmark> Bookmarks = bookmarkRepository.findAllByMember(member);
     List<MyBookmarkPostDto> collect = Bookmarks.stream()
         .filter(bookmark -> !blockList.contains(bookmark.getPost().getMember().getId()))
+        .skip(end)
+        .limit(20)
         .map(MyBookmarkPostDto::from)
         .collect(toList());
 

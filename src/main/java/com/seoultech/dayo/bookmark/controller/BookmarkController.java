@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -57,23 +58,25 @@ public class BookmarkController {
 
   @GetMapping("/list/{memberId}")
   public ResponseEntity<ListAllBookmarkPostResponse> listAllBookmarkPost(
-      @PathVariable @Valid String memberId) {
+      @PathVariable @Valid String memberId,
+      @RequestParam(value = "end") String end) {
 
     Member member = memberService.findMemberById(memberId);
     Set<String> blockList = postService.getBlockList(member);
 
     return ResponseEntity.ok()
-        .body(bookmarkService.listAllBookmarkPost(member, blockList));
+        .body(bookmarkService.listAllBookmarkPost(member, blockList, Long.valueOf(end)));
   }
 
   @GetMapping("/list")
   public ResponseEntity<ListAllMyBookmarkPostResponse> listAllMyBookmarkPost(
-      @ApiIgnore @LoginUser String memberId) {
+      @ApiIgnore @LoginUser String memberId,
+      @RequestParam(value = "end") String end) {
     Member member = memberService.findMemberById(memberId);
     Set<String> blockList = postService.getBlockList(member);
 
     return ResponseEntity.ok()
-        .body(bookmarkService.listAllMyBookmarkPost(member, blockList));
+        .body(bookmarkService.listAllMyBookmarkPost(member, blockList, Long.valueOf(end)));
   }
 
 }

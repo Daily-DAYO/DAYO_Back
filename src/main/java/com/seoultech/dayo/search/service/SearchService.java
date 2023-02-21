@@ -31,7 +31,7 @@ public class SearchService {
   private final HashtagService hashtagService;
   private final PostHashtagService postHashtagService;
 
-  public SearchResultResponse search(Member member, String tag) {
+  public SearchResultResponse search(Member member, String tag, Long end) {
     Search search = new Search(member, tag);
     searchRepository.save(search);
 
@@ -41,6 +41,8 @@ public class SearchService {
     if (hashtag.isPresent()) {
       List<PostHashtag> postHashtags = postHashtagService.findPostHashtags(hashtag.get());
       collect = postHashtags.stream()
+          .skip(end)
+          .limit(20)
           .map(postHashtag -> SearchDto.from(postHashtag.getPost()))
           .collect(toList());
     }

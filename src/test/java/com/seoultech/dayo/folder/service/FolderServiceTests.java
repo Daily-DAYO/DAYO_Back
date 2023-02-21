@@ -131,7 +131,7 @@ class FolderServiceTests {
     List<Folder> folderList = makeFolderList();
     given(folderRepository.findFoldersByMemberOrderByOrderIndex(any())).willReturn(folderList);
 
-    ListAllFolderResponse response = folderService.listAllFolder(member);
+    ListAllFolderResponse response = folderService.listAllFolder(member, 10L);
 
     assertThat(response.getCount()).isEqualTo(3);
   }

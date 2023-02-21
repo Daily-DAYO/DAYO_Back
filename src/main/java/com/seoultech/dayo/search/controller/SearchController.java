@@ -28,11 +28,12 @@ public class SearchController {
 
   @GetMapping
   public ResponseEntity<SearchResultResponse> search(@RequestParam String tag,
-      @ApiIgnore @LoginUser String memberId) {
+      @ApiIgnore @LoginUser String memberId,
+      @RequestParam(value = "end") String end) {
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()
-        .body(searchService.search(member, tag));
+        .body(searchService.search(member, tag, Long.valueOf(end)));
   }
 
   @GetMapping("/history")
