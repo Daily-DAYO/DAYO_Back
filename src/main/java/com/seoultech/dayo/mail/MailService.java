@@ -30,7 +30,7 @@ public class MailService {
       sendMail.setSubject("[DAYO] 회원가입 이메일 인증");
       sendMail.setText(springTemplateEngine.process("mail", context));
       sendMail.addInline("dayoLogo", "static/dayo.png");
-      sendMail.setFrom("noreply@dayo.com", "관리자");
+      sendMail.setFrom("jdyj@naver.com", "관리자");
       sendMail.setTo(email);
       sendMail.send();
     } catch (MessagingException | IOException e) {
