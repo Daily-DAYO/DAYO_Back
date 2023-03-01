@@ -11,12 +11,14 @@ import java.util.List;
 public class ListAllMyHeartPostResponse {
 
 
-    private int count;
+  private int count;
 
-    private List<MyHeartPostDto> data;
+  private boolean last;
 
-    public static ListAllMyHeartPostResponse from(List<MyHeartPostDto> collect) {
-        return new ListAllMyHeartPostResponse(collect.size(), collect);
-    }
+  private List<MyHeartPostDto> data;
+
+  public static ListAllMyHeartPostResponse from(List<MyHeartPostDto> collect, boolean last) {
+    return new ListAllMyHeartPostResponse(collect.size(), last, collect);
+  }
 
 }

@@ -38,8 +38,14 @@ public class SearchService {
     Optional<Hashtag> hashtag = hashtagService.findHashtag(tag);
     List<SearchDto> collect = new ArrayList<>();
 
+    boolean last = false;
+
     if (hashtag.isPresent()) {
+
       List<PostHashtag> postHashtags = postHashtagService.findPostHashtags(hashtag.get());
+      if (postHashtags.size() <= end + 20) {
+        last = true;
+      }
       collect = postHashtags.stream()
           .skip(end)
           .limit(20)
@@ -47,7 +53,7 @@ public class SearchService {
           .collect(toList());
     }
 
-    return SearchResultResponse.from(collect);
+    return SearchResultResponse.from(collect, last);
   }
 
   public SearchHistoryResponse searchHistory(Member member) {

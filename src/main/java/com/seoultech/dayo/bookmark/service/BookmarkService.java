@@ -50,30 +50,42 @@ public class BookmarkService {
   public ListAllBookmarkPostResponse listAllBookmarkPost(Member member, Set<String> blockList,
       Long end) {
 
-    List<Bookmark> Bookmarks = bookmarkRepository.findAllByMember(member);
-    List<BookmarkPostDto> collect = Bookmarks.stream()
+    List<Bookmark> bookmarks = bookmarkRepository.findAllByMember(member);
+
+    boolean last = false;
+    if (bookmarks.size() <= end + 20) {
+      last = true;
+    }
+
+    List<BookmarkPostDto> collect = bookmarks.stream()
         .filter(bookmark -> !blockList.contains(bookmark.getPost().getMember().getId()))
         .skip(end)
         .limit(20)
         .map(BookmarkPostDto::from)
         .collect(toList());
 
-    return ListAllBookmarkPostResponse.from(collect);
+    return ListAllBookmarkPostResponse.from(collect, last);
   }
 
   @Transactional(readOnly = true)
   public ListAllMyBookmarkPostResponse listAllMyBookmarkPost(Member member, Set<String> blockList,
       Long end) {
 
-    List<Bookmark> Bookmarks = bookmarkRepository.findAllByMember(member);
-    List<MyBookmarkPostDto> collect = Bookmarks.stream()
+    List<Bookmark> bookmarks = bookmarkRepository.findAllByMember(member);
+
+    boolean last = false;
+    if (bookmarks.size() <= end + 20) {
+      last = true;
+    }
+
+    List<MyBookmarkPostDto> collect = bookmarks.stream()
         .filter(bookmark -> !blockList.contains(bookmark.getPost().getMember().getId()))
         .skip(end)
         .limit(20)
         .map(MyBookmarkPostDto::from)
         .collect(toList());
 
-    return ListAllMyBookmarkPostResponse.from(collect);
+    return ListAllMyBookmarkPostResponse.from(collect, last);
   }
 
   public void deleteAllByMember(Member member) {

@@ -13,9 +13,11 @@ public class ListAllHeartPostResponse {
 
     private int count;
 
+    private boolean last;
+
     private List<HeartPostDto> data;
 
-    public static ListAllHeartPostResponse from(List<HeartPostDto> collect) {
-        return new ListAllHeartPostResponse(collect.size(), collect);
+    public static ListAllHeartPostResponse from(List<HeartPostDto> collect, boolean last) {
+        return new ListAllHeartPostResponse(collect.size(), last, collect);
     }
 }

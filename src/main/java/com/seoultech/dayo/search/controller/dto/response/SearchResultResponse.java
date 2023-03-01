@@ -11,10 +11,12 @@ public class SearchResultResponse {
 
   private List<SearchDto> data;
 
+  private boolean last;
+
   private int count;
 
-  public static SearchResultResponse from(List<SearchDto> collect) {
-    return new SearchResultResponse(collect, collect.size());
+  public static SearchResultResponse from(List<SearchDto> collect, boolean last) {
+    return new SearchResultResponse(collect, last, collect.size());
   }
 
 }

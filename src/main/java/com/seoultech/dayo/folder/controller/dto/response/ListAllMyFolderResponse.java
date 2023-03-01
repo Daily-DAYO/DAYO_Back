@@ -11,12 +11,14 @@ import java.util.List;
 @AllArgsConstructor
 public class ListAllMyFolderResponse {
 
-    private int count;
+  private int count;
 
-    private List<MyFolderDto> data;
+  private boolean last;
 
-    public static ListAllMyFolderResponse from(List<MyFolderDto> folderDtos) {
-        return new ListAllMyFolderResponse(folderDtos.size(), folderDtos);
-    }
+  private List<MyFolderDto> data;
+
+  public static ListAllMyFolderResponse from(List<MyFolderDto> folderDtos, boolean last) {
+    return new ListAllMyFolderResponse(folderDtos.size(), last, folderDtos);
+  }
 
 }

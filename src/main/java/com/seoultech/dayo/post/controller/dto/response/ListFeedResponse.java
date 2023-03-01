@@ -13,10 +13,12 @@ public class ListFeedResponse {
 
   private int count;
 
+  private boolean last;
+
   private List<FeedDto> data;
 
-  public static ListFeedResponse from(List<FeedDto> data) {
-    return new ListFeedResponse(data.size(), data);
+  public static ListFeedResponse from(List<FeedDto> data, boolean last) {
+    return new ListFeedResponse(data.size(), last, data);
   }
 
 

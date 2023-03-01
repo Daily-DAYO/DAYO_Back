@@ -11,10 +11,12 @@ public class ListAllMyBookmarkPostResponse {
 
   private int count;
 
+  private boolean last;
+
   private List<MyBookmarkPostDto> data;
 
-  public static ListAllMyBookmarkPostResponse from(List<MyBookmarkPostDto> collect) {
-    return new ListAllMyBookmarkPostResponse(collect.size(), collect);
+  public static ListAllMyBookmarkPostResponse from(List<MyBookmarkPostDto> collect, boolean last) {
+    return new ListAllMyBookmarkPostResponse(collect.size(), last, collect);
   }
 
 }

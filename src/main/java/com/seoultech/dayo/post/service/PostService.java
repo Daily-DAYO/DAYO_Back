@@ -238,6 +238,12 @@ public class PostService {
       posts.addAll(m.getPosts());
     }
 
+    boolean last = false;
+    int size = posts.size();
+    if (size <= end + 20) {
+      last = true;
+    }
+
     List<Post> postCollect = posts.stream()
         .filter(post -> post.getPrivacy() != Privacy.ONLY_ME)
         .sorted((post1, post2) -> post2.getCreatedDate().compareTo(post1.getCreatedDate()))
@@ -258,7 +264,7 @@ public class PostService {
       feedDtos.add(FeedDto.from(post, isHeart, isBookmark));
     }
 
-    return ListFeedResponse.from(feedDtos);
+    return ListFeedResponse.from(feedDtos, last);
   }
 
   public void deletePost(String memberId, Long postId) {

@@ -53,6 +53,12 @@ public class HeartService {
   @Transactional(readOnly = true)
   public ListAllHeartPostResponse listAllHeartPost(Member member, Set<String> blockList, Long end) {
     List<Heart> hearts = listHeartsByMember(member);
+
+    boolean last = false;
+    if (hearts.size() <= end + 20) {
+      last = true;
+    }
+
     List<HeartPostDto> collect = hearts.stream()
         .filter(heart -> !blockList.contains(heart.getPost().getMember().getId()))
         .skip(end)
@@ -60,13 +66,19 @@ public class HeartService {
         .map(HeartPostDto::from)
         .collect(toList());
 
-    return ListAllHeartPostResponse.from(collect);
+    return ListAllHeartPostResponse.from(collect, last);
   }
 
   @Transactional(readOnly = true)
   public ListAllMyHeartPostResponse listAllMyHeartPost(Member member, Set<String> blockList,
       Long end) {
     List<Heart> hearts = listHeartsByMember(member);
+
+    boolean last = false;
+    if (hearts.size() <= end + 20) {
+      last = true;
+    }
+
     List<MyHeartPostDto> collect = hearts.stream()
         .filter(heart -> !blockList.contains(heart.getPost().getMember().getId()))
         .skip(end)
@@ -74,7 +86,7 @@ public class HeartService {
         .map(MyHeartPostDto::from)
         .collect(toList());
 
-    return ListAllMyHeartPostResponse.from(collect);
+    return ListAllMyHeartPostResponse.from(collect, last);
   }
 
   public List<Heart> listHeartsByMember(Member member) {
