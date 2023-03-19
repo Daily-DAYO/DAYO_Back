@@ -17,7 +17,7 @@ public class BlockMember {
 
   public static BlockMember from(Member member) {
     return new BlockMember(member.getId(), member.getProfileImg().getStoreFileName(),
-        member.getName());
+        member.getNickname());
   }
 
 }
