@@ -79,40 +79,26 @@ public class FolderService {
   }
 
   @Transactional(readOnly = true)
-  public ListAllMyFolderResponse listAllMyFolder(Member member, Long end) {
+  public ListAllMyFolderResponse listAllMyFolder(Member member) {
     List<Folder> folders = folderRepository.findFoldersByMemberOrderByOrderIndex(member);
 
-    boolean last = false;
-    if (folders.size() <= end + 20) {
-      last = true;
-    }
-
     List<MyFolderDto> collect = folders.stream()
-        .skip(end)
-        .limit(20)
         .map(MyFolderDto::from)
         .collect(toList());
 
-    return ListAllMyFolderResponse.from(collect, last);
+    return ListAllMyFolderResponse.from(collect);
   }
 
   @Transactional(readOnly = true)
-  public ListAllFolderResponse listAllFolder(Member member, Long end) {
+  public ListAllFolderResponse listAllFolder(Member member) {
     List<Folder> folders = folderRepository.findFoldersByMemberOrderByOrderIndex(member);
-
-    boolean last = false;
-    if (folders.size() <= end + 20) {
-      last = true;
-    }
 
     List<FolderDto> collect = folders.stream()
         .filter(folder -> folder.getPrivacy() != ONLY_ME)
-        .skip(end)
-        .limit(20)
         .map(FolderDto::from)
         .collect(toList());
 
-    return ListAllFolderResponse.from(collect, last);
+    return ListAllFolderResponse.from(collect);
   }
 
   //TODO 리팩토링
