@@ -240,7 +240,7 @@ public class PostService {
 
     boolean last = false;
     int size = posts.size();
-    if (size <= end + 20) {
+    if (size <= end + 10) {
       last = true;
     }
 
@@ -248,7 +248,7 @@ public class PostService {
         .filter(post -> post.getPrivacy() != Privacy.ONLY_ME)
         .sorted((post1, post2) -> post2.getCreatedDate().compareTo(post1.getCreatedDate()))
         .skip(end)
-        .limit(20)
+        .limit(10)
         .collect(toList());
 
     Set<String> blockList = getBlockList(member);

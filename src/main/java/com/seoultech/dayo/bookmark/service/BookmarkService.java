@@ -53,14 +53,14 @@ public class BookmarkService {
     List<Bookmark> bookmarks = bookmarkRepository.findAllByMember(member);
 
     boolean last = false;
-    if (bookmarks.size() <= end + 20) {
+    if (bookmarks.size() <= end + 10) {
       last = true;
     }
 
     List<BookmarkPostDto> collect = bookmarks.stream()
         .filter(bookmark -> !blockList.contains(bookmark.getPost().getMember().getId()))
         .skip(end)
-        .limit(20)
+        .limit(10)
         .map(BookmarkPostDto::from)
         .collect(toList());
 
@@ -74,14 +74,14 @@ public class BookmarkService {
     List<Bookmark> bookmarks = bookmarkRepository.findAllByMember(member);
 
     boolean last = false;
-    if (bookmarks.size() <= end + 20) {
+    if (bookmarks.size() <= end + 10) {
       last = true;
     }
 
     List<MyBookmarkPostDto> collect = bookmarks.stream()
         .filter(bookmark -> !blockList.contains(bookmark.getPost().getMember().getId()))
         .skip(end)
-        .limit(20)
+        .limit(10)
         .map(MyBookmarkPostDto::from)
         .collect(toList());
 

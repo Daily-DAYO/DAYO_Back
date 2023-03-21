@@ -55,14 +55,14 @@ public class HeartService {
     List<Heart> hearts = listHeartsByMember(member);
 
     boolean last = false;
-    if (hearts.size() <= end + 20) {
+    if (hearts.size() <= end + 10) {
       last = true;
     }
 
     List<HeartPostDto> collect = hearts.stream()
         .filter(heart -> !blockList.contains(heart.getPost().getMember().getId()))
         .skip(end)
-        .limit(20)
+        .limit(10)
         .map(HeartPostDto::from)
         .collect(toList());
 
@@ -75,14 +75,14 @@ public class HeartService {
     List<Heart> hearts = listHeartsByMember(member);
 
     boolean last = false;
-    if (hearts.size() <= end + 20) {
+    if (hearts.size() <= end + 10) {
       last = true;
     }
 
     List<MyHeartPostDto> collect = hearts.stream()
         .filter(heart -> !blockList.contains(heart.getPost().getMember().getId()))
         .skip(end)
-        .limit(20)
+        .limit(10)
         .map(MyHeartPostDto::from)
         .collect(toList());
 

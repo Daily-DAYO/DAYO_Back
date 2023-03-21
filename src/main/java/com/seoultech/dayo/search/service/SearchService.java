@@ -43,12 +43,12 @@ public class SearchService {
     if (hashtag.isPresent()) {
 
       List<PostHashtag> postHashtags = postHashtagService.findPostHashtags(hashtag.get());
-      if (postHashtags.size() <= end + 20) {
+      if (postHashtags.size() <= end + 10) {
         last = true;
       }
       collect = postHashtags.stream()
           .skip(end)
-          .limit(20)
+          .limit(10)
           .map(postHashtag -> SearchDto.from(postHashtag.getPost()))
           .collect(toList());
     }
