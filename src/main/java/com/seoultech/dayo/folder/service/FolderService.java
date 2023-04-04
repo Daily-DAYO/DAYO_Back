@@ -20,6 +20,7 @@ import com.seoultech.dayo.folder.repository.FolderRepository;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.repository.MemberRepository;
 import com.seoultech.dayo.member.service.MemberService;
+import com.seoultech.dayo.post.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -150,16 +151,26 @@ public class FolderService {
   }
 
   @Transactional(readOnly = true)
-  public DetailFolderResponse detailFolder(Long folderId) {
+  public DetailFolderResponse detailFolder(Long folderId, Long end) {
 
     Folder folder = findFolderById(folderId);
 
-    List<FolderDetailDto> collect = folder.getPosts().stream()
+    List<Post> posts = folder.getPosts();
+
+    boolean last = false;
+    int size = posts.size();
+    if (size <= end + 10) {
+      last = true;
+    }
+
+    List<FolderDetailDto> collect = posts.stream()
         .map(FolderDetailDto::from)
         .sorted((a1, a2) -> a2.getCreateDate().compareTo(a1.getCreateDate()))
+        .skip(end)
+        .limit(10)
         .collect(toList());
 
-    return DetailFolderResponse.from(folder, collect);
+    return DetailFolderResponse.from(folder, collect, last);
   }
 
   public Folder createDefaultFolder() {

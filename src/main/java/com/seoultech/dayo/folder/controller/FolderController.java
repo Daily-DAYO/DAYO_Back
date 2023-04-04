@@ -84,9 +84,10 @@ public class FolderController {
   }
 
   @GetMapping("/{folderId}")
-  public ResponseEntity<DetailFolderResponse> detailListFolder(@PathVariable Long folderId) {
+  public ResponseEntity<DetailFolderResponse> detailListFolder(@PathVariable Long folderId,
+      @RequestParam(value = "end") String end) {
     return ResponseEntity.ok()
-        .body(folderService.detailFolder(folderId));
+        .body(folderService.detailFolder(folderId, Long.valueOf(end)));
   }
 
 }

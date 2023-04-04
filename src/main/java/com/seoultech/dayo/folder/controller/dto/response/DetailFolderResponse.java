@@ -23,12 +23,15 @@ public class DetailFolderResponse {
 
   private String memberId;
 
+  private Boolean last;
+
   private List<FolderDetailDto> data;
 
-  public static DetailFolderResponse from(Folder folder, List<FolderDetailDto> collect) {
+  public static DetailFolderResponse from(Folder folder, List<FolderDetailDto> collect,
+      Boolean last) {
     return new DetailFolderResponse(collect.size(), folder.getName(), folder.getSubheading(),
         folder.getThumbnailImage().getStoreFileName(), folder.getPrivacy().name(),
-        folder.getMember().getId(), collect);
+        folder.getMember().getId(), last, collect);
   }
 
 }
