@@ -52,8 +52,9 @@ public class SearchService {
           .map(postHashtag -> SearchDto.from(postHashtag.getPost()))
           .collect(toList());
     }
+    int allCount = collect.size();
 
-    return SearchResultResponse.from(collect, last);
+    return SearchResultResponse.from(collect, last, allCount);
   }
 
   public SearchHistoryResponse searchHistory(Member member) {
