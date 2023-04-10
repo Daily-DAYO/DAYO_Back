@@ -3,6 +3,7 @@ package com.seoultech.dayo.block.service;
 import com.seoultech.dayo.block.Block;
 import com.seoultech.dayo.block.Block.Key;
 import com.seoultech.dayo.block.repository.BlockRepository;
+import com.seoultech.dayo.follow.service.FollowService;
 import com.seoultech.dayo.member.Member;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,8 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class BlockService {
 
   private final BlockRepository blockRepository;
+  private final FollowService followService;
 
   public void blockMember(Member member, Member target) {
+    followService.deleteFollow(member, target);
+    followService.deleteFollow(target, member);
     blockRepository.save(new Block(member, target));
   }
 
