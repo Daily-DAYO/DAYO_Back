@@ -1,5 +1,6 @@
 package com.seoultech.dayo.bookmark;
 
+import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
 import java.io.Serializable;
@@ -15,7 +16,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class Bookmark {
+public class Bookmark extends BaseTimeEntity {
 
   @EmbeddedId
   private Key key;
