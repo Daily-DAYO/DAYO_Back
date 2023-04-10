@@ -1,6 +1,7 @@
 package com.seoultech.dayo.heart.service;
 
 import com.seoultech.dayo.alarm.service.AlarmService;
+import com.seoultech.dayo.block.service.BlockService;
 import com.seoultech.dayo.exception.NotExistHeartException;
 import com.seoultech.dayo.heart.Heart;
 import com.seoultech.dayo.heart.controller.dto.HeartPostDto;
@@ -31,6 +32,7 @@ public class HeartService {
   private final HeartRepository heartRepository;
   private final AlarmService alarmService;
   private final Notification notification;
+  private final BlockService blockService;
 
   public CreateHeartResponse createHeart(Member member, Post post, CreateHeartRequest request) {
     Heart heart = request.toEntity(member, post);
@@ -54,6 +56,8 @@ public class HeartService {
   public ListAllHeartPostResponse listAllHeartPost(Member member, Set<String> blockList, Long end) {
     List<Heart> hearts = listHeartsByMember(member);
 
+    Set<String> blockedMemberList = blockService.getBlockedMemberList(member);
+
     boolean last = false;
     if (hearts.size() <= end + 10) {
       last = true;
@@ -61,6 +65,7 @@ public class HeartService {
 
     List<HeartPostDto> collect = hearts.stream()
         .filter(heart -> !blockList.contains(heart.getPost().getMember().getId()))
+        .filter(heart -> !blockedMemberList.contains(heart.getPost().getMember().getId()))
         .skip(end)
         .limit(10)
         .map(HeartPostDto::from)
@@ -73,6 +78,7 @@ public class HeartService {
   public ListAllMyHeartPostResponse listAllMyHeartPost(Member member, Set<String> blockList,
       Long end) {
     List<Heart> hearts = listHeartsByMember(member);
+    Set<String> blockedMemberList = blockService.getBlockedMemberList(member);
 
     boolean last = false;
     if (hearts.size() <= end + 10) {
@@ -81,6 +87,7 @@ public class HeartService {
 
     List<MyHeartPostDto> collect = hearts.stream()
         .filter(heart -> !blockList.contains(heart.getPost().getMember().getId()))
+        .filter(heart -> !blockedMemberList.contains(heart.getPost().getMember().getId()))
         .skip(end)
         .limit(10)
         .map(MyHeartPostDto::from)

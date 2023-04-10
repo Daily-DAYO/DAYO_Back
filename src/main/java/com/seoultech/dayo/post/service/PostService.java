@@ -2,6 +2,7 @@ package com.seoultech.dayo.post.service;
 
 
 import com.seoultech.dayo.alarm.service.AlarmService;
+import com.seoultech.dayo.block.service.BlockService;
 import com.seoultech.dayo.bookmark.service.BookmarkService;
 import com.seoultech.dayo.exception.InvalidPostAccess;
 import com.seoultech.dayo.exception.NotExistPostException;
@@ -23,11 +24,9 @@ import com.seoultech.dayo.post.controller.dto.PostDto;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
 import com.seoultech.dayo.post.controller.dto.request.EditPostRequest;
 import com.seoultech.dayo.post.controller.dto.response.*;
-import com.seoultech.dayo.post.repository.DayoPickRepository;
 import com.seoultech.dayo.post.repository.PostRepository;
 import com.seoultech.dayo.postHashtag.service.PostHashtagService;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +55,7 @@ public class PostService {
   private final FollowService followService;
   private final ImageService imageService;
   private final AlarmService alarmService;
+  private final BlockService blockService;
 
   @Transactional(readOnly = true)
   public DayoPickPostListResponse dayoPickListWithCategory(Member member, String category) {
@@ -66,9 +66,13 @@ public class PostService {
 
     List<DayoPick> collect = new ArrayList<>();
     Set<String> blockList = getBlockList(member);
+    Set<String> blockedMemberList = blockService.getBlockedMemberList(member);
 
     for (Post post : postList) {
       if (blockList.contains(post.getMember().getId())) {
+        continue;
+      }
+      if (blockedMemberList.contains(post.getMember().getId())) {
         continue;
       }
       boolean isLike = likePost.contains(post.getId());
@@ -101,11 +105,15 @@ public class PostService {
     Set<Long> likePost = getLikePost(member);
     Set<Long> bookmarkPost = getBookmarkPost(member);
     Set<String> blockList = getBlockList(member);
+    Set<String> blockedMemberList = blockService.getBlockedMemberList(member);
 
     List<PostDto> collect = new ArrayList<>();
 
     for (Post post : postList) {
       if (blockList.contains(post.getMember().getId())) {
+        continue;
+      }
+      if (blockedMemberList.contains(post.getMember().getId())) {
         continue;
       }
 
@@ -138,12 +146,16 @@ public class PostService {
 
     Set<Long> bookmarkPost = getBookmarkPost(member);
     Set<String> blockList = getBlockList(member);
+    Set<String> blockedMemberList = blockService.getBlockedMemberList(member);
 
     List<PostDto> collect = new ArrayList<>();
 
     for (Post post : postList) {
 
       if (blockList.contains(post.getMember().getId())) {
+        continue;
+      }
+      if (blockedMemberList.contains(post.getMember().getId())) {
         continue;
       }
 
@@ -290,11 +302,15 @@ public class PostService {
 
     Set<Long> likePost = getLikePost(member);
     Set<String> blockList = getBlockList(member);
+    Set<String> blockedMemberList = blockService.getBlockedMemberList(member);
 
     List<DayoPick> collect = new ArrayList<>();
 
     for (Post post : postList) {
       if (blockList.contains(post.getMember().getId())) {
+        continue;
+      }
+      if (blockedMemberList.contains(post.getMember().getId())) {
         continue;
       }
       boolean like = likePost.contains(post.getId());

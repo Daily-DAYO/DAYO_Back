@@ -1,5 +1,6 @@
 package com.seoultech.dayo.bookmark.controller;
 
+import com.seoultech.dayo.block.service.BlockService;
 import com.seoultech.dayo.bookmark.controller.dto.request.CreateBookmarkRequest;
 import com.seoultech.dayo.bookmark.controller.dto.response.CreateBookmarkResponse;
 import com.seoultech.dayo.bookmark.controller.dto.response.ListAllBookmarkPostResponse;

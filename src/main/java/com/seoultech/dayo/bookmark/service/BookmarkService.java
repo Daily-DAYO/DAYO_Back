@@ -2,6 +2,7 @@ package com.seoultech.dayo.bookmark.service;
 
 import static java.util.stream.Collectors.toList;
 
+import com.seoultech.dayo.block.service.BlockService;
 import com.seoultech.dayo.bookmark.Bookmark;
 import com.seoultech.dayo.bookmark.controller.dto.BookmarkPostDto;
 import com.seoultech.dayo.bookmark.controller.dto.MyBookmarkPostDto;
@@ -15,6 +16,7 @@ import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.repository.PostRepository;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookmarkService {
 
   private final BookmarkRepository bookmarkRepository;
+  private final BlockService blockService;
 
   public CreateBookmarkResponse createBookmark(Member member, Post post,
       CreateBookmarkRequest request) {
@@ -51,6 +54,7 @@ public class BookmarkService {
       Long end) {
 
     List<Bookmark> bookmarks = bookmarkRepository.findAllByMember(member);
+    Set<String> blockedMemberList = blockService.getBlockedMemberList(member);
 
     boolean last = false;
     if (bookmarks.size() <= end + 10) {
@@ -59,6 +63,7 @@ public class BookmarkService {
 
     List<BookmarkPostDto> collect = bookmarks.stream()
         .filter(bookmark -> !blockList.contains(bookmark.getPost().getMember().getId()))
+        .filter(bookmark -> !blockedMemberList.contains(bookmark.getPost().getMember().getId()))
         .skip(end)
         .limit(10)
         .map(BookmarkPostDto::from)
@@ -72,6 +77,7 @@ public class BookmarkService {
       Long end) {
 
     List<Bookmark> bookmarks = bookmarkRepository.findAllByMember(member);
+    Set<String> blockedMemberList = blockService.getBlockedMemberList(member);
 
     boolean last = false;
     if (bookmarks.size() <= end + 10) {
@@ -80,6 +86,7 @@ public class BookmarkService {
 
     List<MyBookmarkPostDto> collect = bookmarks.stream()
         .filter(bookmark -> !blockList.contains(bookmark.getPost().getMember().getId()))
+        .filter(bookmark -> !blockedMemberList.contains(bookmark.getPost().getMember().getId()))
         .skip(end)
         .limit(10)
         .map(MyBookmarkPostDto::from)
