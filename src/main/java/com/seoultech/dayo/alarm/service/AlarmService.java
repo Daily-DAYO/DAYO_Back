@@ -31,14 +31,23 @@ public class AlarmService {
     alarmRepository.save(note.toEntityWithoutPostId(member, sender, category));
   }
 
-  public ListAllAlarmResponse listAll(Member member) {
+  public ListAllAlarmResponse listAll(Member member, Long end) {
     List<Alarm> alarmList = alarmRepository.findAllByMember(member);
+
+    boolean last = false;
+    int size = alarmList.size();
+    if (size <= end + 10) {
+      last = true;
+    }
+
     List<AlarmDto> collect = alarmList.stream()
         .map(AlarmDto::from)
         .sorted((a1, a2) -> a2.getCreatedTime().compareTo(a1.getCreatedTime()))
+        .skip(end)
+        .limit(10)
         .collect(Collectors.toList());
 
-    return ListAllAlarmResponse.from(collect);
+    return ListAllAlarmResponse.from(collect, last);
   }
 
   public void isCheckAlarm(Long alarmId) {

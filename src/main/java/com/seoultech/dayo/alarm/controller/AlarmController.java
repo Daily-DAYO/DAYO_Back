@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -25,10 +26,11 @@ public class AlarmController {
   private final MemberService memberService;
 
   @GetMapping
-  public ResponseEntity<ListAllAlarmResponse> listAllAlarm(@ApiIgnore @LoginUser String memberId) {
+  public ResponseEntity<ListAllAlarmResponse> listAllAlarm(@ApiIgnore @LoginUser String memberId,
+      @RequestParam(value = "end") String end) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
-        .body(alarmService.listAll(member));
+        .body(alarmService.listAll(member, Long.valueOf(end)));
   }
 
   @PostMapping("/{alarmId}")

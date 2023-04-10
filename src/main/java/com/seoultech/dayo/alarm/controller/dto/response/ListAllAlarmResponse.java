@@ -13,8 +13,10 @@ public class ListAllAlarmResponse {
 
   private List<AlarmDto> data;
 
-  public static ListAllAlarmResponse from(List<AlarmDto> data) {
-    return new ListAllAlarmResponse(data.size(), data);
+  private Boolean last;
+
+  public static ListAllAlarmResponse from(List<AlarmDto> data, Boolean last) {
+    return new ListAllAlarmResponse(data.size(), data, last);
   }
 
 }
