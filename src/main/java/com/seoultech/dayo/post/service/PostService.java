@@ -298,7 +298,9 @@ public class PostService {
   @Transactional(readOnly = true)
   public DayoPickPostListResponse dayoPickList(Member member) {
 
-    List<Post> postList = getDayoPickAll();
+    List<Post> postList = getDayoPickAll().stream()
+        .filter(post -> post.getPrivacy().equals(Privacy.ALL))
+        .collect(toList());
 
     Set<Long> likePost = getLikePost(member);
     Set<String> blockList = getBlockList(member);
