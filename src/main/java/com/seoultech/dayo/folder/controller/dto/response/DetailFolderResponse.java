@@ -2,10 +2,9 @@ package com.seoultech.dayo.folder.controller.dto.response;
 
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.controller.dto.FolderDetailDto;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -23,15 +22,12 @@ public class DetailFolderResponse {
 
   private String memberId;
 
-  private Boolean last;
-
   private List<FolderDetailDto> data;
 
-  public static DetailFolderResponse from(Folder folder, List<FolderDetailDto> collect,
-      Boolean last) {
+  public static DetailFolderResponse from(Folder folder, List<FolderDetailDto> collect) {
     return new DetailFolderResponse(collect.size(), folder.getName(), folder.getSubheading(),
         folder.getThumbnailImage().getStoreFileName(), folder.getPrivacy().name(),
-        folder.getMember().getId(), last, collect);
+        folder.getMember().getId(), collect);
   }
 
 }
