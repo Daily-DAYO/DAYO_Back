@@ -9,6 +9,7 @@ import com.seoultech.dayo.folder.controller.dto.response.CreateFolderInPostRespo
 import com.seoultech.dayo.folder.controller.dto.response.CreateFolderResponse;
 import com.seoultech.dayo.folder.controller.dto.response.DetailFolderResponse;
 import com.seoultech.dayo.folder.controller.dto.response.EditFolderResponse;
+import com.seoultech.dayo.folder.controller.dto.response.FolderInfoResponse;
 import com.seoultech.dayo.folder.controller.dto.response.ListAllFolderResponse;
 import com.seoultech.dayo.folder.controller.dto.response.ListAllMyFolderResponse;
 import com.seoultech.dayo.folder.service.FolderService;
@@ -95,9 +96,16 @@ public class FolderController {
   }
 
   @GetMapping("/{folderId}")
-  public ResponseEntity<DetailFolderResponse> detailListFolder(@PathVariable Long folderId) {
+  public ResponseEntity<DetailFolderResponse> detailListFolder(@PathVariable Long folderId,
+      @RequestParam(value = "end") String end) {
     return ResponseEntity.ok()
-        .body(folderService.detailFolder(folderId));
+        .body(folderService.detailFolder(folderId, Long.valueOf(end)));
+  }
+
+  @GetMapping("/{folderId}/info")
+  public ResponseEntity<FolderInfoResponse> folderInfo(@PathVariable Long folderId) {
+    return ResponseEntity.ok()
+        .body(folderService.folderInfo(folderId));
   }
 
 }

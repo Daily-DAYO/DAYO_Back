@@ -18,6 +18,7 @@ import com.seoultech.dayo.folder.controller.dto.response.CreateFolderInPostRespo
 import com.seoultech.dayo.folder.controller.dto.response.CreateFolderResponse;
 import com.seoultech.dayo.folder.controller.dto.response.DetailFolderResponse;
 import com.seoultech.dayo.folder.controller.dto.response.EditFolderResponse;
+import com.seoultech.dayo.folder.controller.dto.response.FolderInfoResponse;
 import com.seoultech.dayo.folder.controller.dto.response.ListAllFolderResponse;
 import com.seoultech.dayo.folder.controller.dto.response.ListAllMyFolderResponse;
 import com.seoultech.dayo.folder.repository.FolderRepository;
@@ -168,18 +169,24 @@ public class FolderService {
   }
 
   @Transactional(readOnly = true)
-  public DetailFolderResponse detailFolder(Long folderId) {
+  public DetailFolderResponse detailFolder(Long folderId, Long end) {
 
     Folder folder = findFolderById(folderId);
 
     List<Post> posts = folder.getPosts();
+
+    boolean last = false;
+    int size = posts.size();
+    if (size <= end + 10) {
+      last = true;
+    }
 
     List<FolderDetailDto> collect = posts.stream()
         .map(FolderDetailDto::from)
         .sorted((a1, a2) -> a2.getCreateDate().compareTo(a1.getCreateDate()))
         .collect(toList());
 
-    return DetailFolderResponse.from(folder, collect);
+    return DetailFolderResponse.from(collect, last);
   }
 
   public Folder createDefaultFolder() {
@@ -198,6 +205,11 @@ public class FolderService {
     List<Folder> folders = folderRepository.findFoldersByMember(member);
     return folders.contains(folder);
 
+  }
+
+  public FolderInfoResponse folderInfo(Long folderId) {
+    Folder folder = findFolderById(folderId);
+    return FolderInfoResponse.from(folder);
   }
 
   public void deleteAllByMember(Member member) {
