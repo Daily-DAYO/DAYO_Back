@@ -11,12 +11,10 @@ public class ListAllFolderResponse {
 
   private int count;
 
-  private boolean last;
-
   private List<FolderDto> data;
 
-  public static ListAllFolderResponse from(List<FolderDto> folderDtos, boolean last) {
-    return new ListAllFolderResponse(folderDtos.size(), last, folderDtos);
+  public static ListAllFolderResponse from(List<FolderDto> folderDtos) {
+    return new ListAllFolderResponse(folderDtos.size(), folderDtos);
   }
 
 }

@@ -80,19 +80,17 @@ public class FolderController {
 
   @GetMapping("/my")
   public ResponseEntity<ListAllMyFolderResponse> listAllMyFolder(
-      @ApiIgnore @LoginUser String memberId,
-      @RequestParam(value = "end") String end) {
+      @ApiIgnore @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
-        .body(folderService.listAllMyFolder(member, Long.valueOf(end)));
+        .body(folderService.listAllMyFolder(member));
   }
 
   @GetMapping("/list/{memberId}")
-  public ResponseEntity<ListAllFolderResponse> listAllFolder(@PathVariable String memberId,
-      @RequestParam(value = "end") String end) {
+  public ResponseEntity<ListAllFolderResponse> listAllFolder(@PathVariable String memberId) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
-        .body(folderService.listAllFolder(member, Long.valueOf(end)));
+        .body(folderService.listAllFolder(member));
   }
 
   @GetMapping("/{folderId}")
