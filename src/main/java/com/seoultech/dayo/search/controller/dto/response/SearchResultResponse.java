@@ -15,9 +15,9 @@ public class SearchResultResponse {
 
   private int count;
 
-  private int allCount;
+  private long allCount;
 
-  public static SearchResultResponse from(List<SearchDto> collect, boolean last, int allCount) {
+  public static SearchResultResponse from(List<SearchDto> collect, boolean last, long allCount) {
     return new SearchResultResponse(collect, last, collect.size(), allCount);
   }
 

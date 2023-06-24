@@ -1,6 +1,6 @@
 package com.seoultech.dayo.search.service;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 import com.seoultech.dayo.hashtag.Hashtag;
 import com.seoultech.dayo.hashtag.service.HashtagService;
@@ -52,7 +52,7 @@ public class SearchService {
           .map(postHashtag -> SearchDto.from(postHashtag.getPost()))
           .collect(toList());
     }
-    int allCount = collect.size();
+    long allCount = collect.size() + end;
 
     return SearchResultResponse.from(collect, last, allCount);
   }
