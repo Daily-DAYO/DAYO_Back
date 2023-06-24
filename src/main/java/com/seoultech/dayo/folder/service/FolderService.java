@@ -166,6 +166,8 @@ public class FolderService {
     }
 
     List<FolderDetailDto> collect = posts.stream()
+        .skip(end)
+        .limit(10)
         .map(FolderDetailDto::from)
         .sorted((a1, a2) -> a2.getCreateDate().compareTo(a1.getCreateDate()))
         .collect(toList());
