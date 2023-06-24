@@ -1,11 +1,10 @@
 package com.seoultech.dayo.comment.controller.dto.response;
 
 import com.seoultech.dayo.comment.Comment;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -27,12 +26,13 @@ public class ListAllCommentResponse {
     private String nickname;
     private String profileImg;
     private String contents;
-    private LocalDateTime createTime;
+    private String createTime;
 
     public static CommentDto from(Comment comment) {
       return new CommentDto(comment.getId(), comment.getMember().getId(),
           comment.getMember().getNickname(), comment.getMember().getProfileImg().getStoreFileName(),
-          comment.getContents(), comment.getCreatedDate());
+          comment.getContents(), comment.getCreatedDate().format(
+          DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")));
     }
 
   }
