@@ -1,5 +1,6 @@
 package com.seoultech.dayo.notice.controller;
 
+import com.seoultech.dayo.notice.controller.dto.response.DetailNoticeResponse;
 import com.seoultech.dayo.notice.controller.dto.response.NoticeListResponse;
 import com.seoultech.dayo.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,12 @@ public class NoticeController {
       @RequestParam("title") String title,
       @RequestParam("content") String content) {
     noticeService.save(title, content);
+  }
+
+  @GetMapping("/{noticeId}")
+  public ResponseEntity<DetailNoticeResponse> detailNotice(Long noticeId) {
+    return ResponseEntity.ok()
+        .body(noticeService.detailNotice(noticeId));
   }
 
 }

@@ -13,11 +13,8 @@ public class NoticeDto {
   @JsonProperty
   private String title;
 
-  @JsonProperty
-  private String contents;
-
   public static NoticeDto from(Notice notice) {
-    return new NoticeDto(notice.getId(), notice.getTitle(), notice.getContents());
+    return new NoticeDto(notice.getId(), notice.getTitle());
   }
 
 }

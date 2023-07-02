@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import com.seoultech.dayo.notice.Notice;
 import com.seoultech.dayo.notice.NoticeRepository.NoticeRepository;
+import com.seoultech.dayo.notice.controller.dto.response.DetailNoticeResponse;
 import com.seoultech.dayo.notice.controller.dto.response.NoticeListResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,9 @@ public class NoticeService {
         new Notice(HtmlUtils.htmlUnescape(title), HtmlUtils.htmlUnescape(content), true));
   }
 
-  public void changeShowNotice() {
-
+  public DetailNoticeResponse detailNotice(Long noticeId) {
+    Notice notice = noticeRepository.findById(noticeId).orElseThrow();
+    return DetailNoticeResponse.from(notice);
   }
 
   public NoticeListResponse listAll(Long end) {
