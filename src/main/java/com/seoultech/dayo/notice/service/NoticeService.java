@@ -38,9 +38,10 @@ public class NoticeService {
     }
 
     List<NoticeDto> collect = noticeList.stream()
+        .map(NoticeDto::from)
+        .sorted((a1, a2) -> a2.getCreatedDate().compareTo(a1.getCreatedDate()))
         .skip(end)
         .limit(10)
-        .map(NoticeDto::from)
         .collect(toList());
 
     return NoticeListResponse.from(collect, last);
