@@ -2,7 +2,7 @@ package com.seoultech.dayo.alarm.controller.dto;
 
 import com.seoultech.dayo.alarm.Alarm;
 import com.seoultech.dayo.post.Post;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -22,7 +22,7 @@ public class AlarmDto {
 
   private String nickname;
 
-  private LocalDateTime createdTime;
+  private String createdTime;
 
   private String memberId;
 
@@ -40,7 +40,9 @@ public class AlarmDto {
 
     return new AlarmDto(alarm.getId(), alarm.getContent(), alarm.getCategory().toString(),
         alarm.getIsCheck(), postId,
-        alarm.getSender().getNickname(), alarm.getCreatedDate(), alarm.getSender().getId(),
+        alarm.getSender().getNickname(),
+        alarm.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")),
+        alarm.getSender().getId(),
         alarm.getImage());
   }
 
