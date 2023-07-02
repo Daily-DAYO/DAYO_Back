@@ -1,5 +1,7 @@
 package com.seoultech.dayo.heart.service;
 
+import static java.util.stream.Collectors.toList;
+
 import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.block.service.BlockService;
 import com.seoultech.dayo.exception.NotExistHeartException;
@@ -8,21 +10,18 @@ import com.seoultech.dayo.heart.controller.dto.HeartPostDto;
 import com.seoultech.dayo.heart.controller.dto.MyHeartPostDto;
 import com.seoultech.dayo.heart.controller.dto.request.CreateHeartRequest;
 import com.seoultech.dayo.heart.controller.dto.response.CreateHeartResponse;
+import com.seoultech.dayo.heart.controller.dto.response.DeleteHeartResponse;
 import com.seoultech.dayo.heart.controller.dto.response.ListAllHeartPostResponse;
 import com.seoultech.dayo.heart.controller.dto.response.ListAllMyHeartPostResponse;
 import com.seoultech.dayo.heart.repository.HeartRepository;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
-import com.seoultech.dayo.post.service.PostService;
 import com.seoultech.dayo.utils.notification.Notification;
+import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +41,7 @@ public class HeartService {
     return CreateHeartResponse.from(savedHeart);
   }
 
-  public void deleteHeart(Member member, Post post) {
+  public DeleteHeartResponse deleteHeart(Member member, Post post) {
 
     Heart heart = heartRepository.findHeartByMemberAndPost(member, post)
         .orElseThrow(NotExistHeartException::new);
@@ -50,6 +49,7 @@ public class HeartService {
     post.deleteHeart(heart);
     heartRepository.delete(heart);
     alarmService.deleteHeart(member, post);
+    return DeleteHeartResponse.from(post);
   }
 
   @Transactional(readOnly = true)

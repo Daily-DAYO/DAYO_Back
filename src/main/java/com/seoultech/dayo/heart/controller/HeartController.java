@@ -1,10 +1,9 @@
 package com.seoultech.dayo.heart.controller;
 
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.seoultech.dayo.config.jwt.TokenProvider;
 import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.heart.controller.dto.request.CreateHeartRequest;
 import com.seoultech.dayo.heart.controller.dto.response.CreateHeartResponse;
+import com.seoultech.dayo.heart.controller.dto.response.DeleteHeartResponse;
 import com.seoultech.dayo.heart.controller.dto.response.ListAllHeartPostResponse;
 import com.seoultech.dayo.heart.controller.dto.response.ListAllMyHeartPostResponse;
 import com.seoultech.dayo.heart.service.HeartService;
@@ -13,13 +12,17 @@ import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.service.PostService;
 import java.util.Set;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
@@ -42,13 +45,13 @@ public class HeartController {
   }
 
   @PostMapping("/delete/{postId}")
-  public ResponseEntity<Void> deleteHeart(@ApiIgnore @LoginUser String memberId,
+  public ResponseEntity<DeleteHeartResponse> deleteHeart(@ApiIgnore @LoginUser String memberId,
       @PathVariable Long postId) {
     Member member = memberService.findMemberById(memberId);
     Post post = postService.findPostById(postId);
 
-    heartService.deleteHeart(member, post);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    return ResponseEntity.ok()
+        .body(heartService.deleteHeart(member, post));
   }
 
   @GetMapping("/list/{memberId}")

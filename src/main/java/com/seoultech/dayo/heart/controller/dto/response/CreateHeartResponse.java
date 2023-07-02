@@ -8,12 +8,15 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CreateHeartResponse {
 
-    private String memberId;
+  private String memberId;
 
-    private Long postId;
+  private Long postId;
 
-    public static CreateHeartResponse from(Heart heart) {
-        return new CreateHeartResponse(heart.getKey().getMemberId(), heart.getKey().getPostId());
-    }
+  private int allCount;
+
+  public static CreateHeartResponse from(Heart heart) {
+    return new CreateHeartResponse(heart.getKey().getMemberId(), heart.getKey().getPostId(),
+        heart.getPost().getHeartCount());
+  }
 
 }
