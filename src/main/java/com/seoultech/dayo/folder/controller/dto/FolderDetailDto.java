@@ -1,7 +1,7 @@
 package com.seoultech.dayo.folder.controller.dto;
 
 import com.seoultech.dayo.post.Post;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,11 +13,11 @@ public class FolderDetailDto {
 
   private String thumbnailImage;
 
-  private LocalDateTime createDate;
+  private String createDate;
 
   public static FolderDetailDto from(Post post) {
     return new FolderDetailDto(post.getId(), post.getThumbnailImage().getStoreFileName(),
-        post.getCreatedDate());
+        post.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")));
   }
 
 }
