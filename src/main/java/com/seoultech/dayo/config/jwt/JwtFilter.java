@@ -7,16 +7,19 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.io.IOException;
+import java.security.Key;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.util.StringUtils;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.security.Key;
 
 @Slf4j
 public class JwtFilter implements Filter {
@@ -29,7 +32,7 @@ public class JwtFilter implements Filter {
       "/api/v1/members/changePassword", "/api/v1/members/search/**",
       "/docs/api-doc.html", "/favicon.ico",
       "/swagger-resources/**", "/v3/api-docs", "/swagger*/**", "/webjars/**", "/swagger-resources",
-      "/images/**", "/terms.html", "/privacy.html", "/mail**"};
+      "/images/**", "/terms.html", "/privacy.html", "/mail**", "/admin.html", "/api/v1/notice"};
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
