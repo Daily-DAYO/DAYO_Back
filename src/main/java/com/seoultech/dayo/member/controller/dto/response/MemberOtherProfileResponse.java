@@ -26,7 +26,7 @@ public class MemberOtherProfileResponse {
 
   private boolean isFollow;
 
-  public static MemberOtherProfileResponse from(Member member, boolean isFollow) {
+  public static MemberOtherProfileResponse from(Member member, boolean isFollow, int size) {
     return MemberOtherProfileResponse.builder()
         .memberId(member.getId())
         .email(member.getEmail())
@@ -34,7 +34,7 @@ public class MemberOtherProfileResponse {
         .profileImg(member.getProfileImg().getStoreFileName())
         .followingCount(member.getFollowingCount())
         .followerCount(member.getFollowerCount())
-        .postCount(member.getPostCount())
+        .postCount(size)
         .isFollow(isFollow)
         .build();
   }

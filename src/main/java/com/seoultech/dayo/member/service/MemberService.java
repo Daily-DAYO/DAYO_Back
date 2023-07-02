@@ -14,6 +14,7 @@ import com.seoultech.dayo.exception.IncorrectPasswordException;
 import com.seoultech.dayo.exception.NotExistEmailException;
 import com.seoultech.dayo.exception.NotExistFollowerException;
 import com.seoultech.dayo.exception.NotExistMemberException;
+import com.seoultech.dayo.folder.Privacy;
 import com.seoultech.dayo.folder.service.FolderService;
 import com.seoultech.dayo.follow.service.FollowService;
 import com.seoultech.dayo.heart.service.HeartService;
@@ -28,9 +29,9 @@ import com.seoultech.dayo.member.controller.dto.request.CheckPasswordRequest;
 import com.seoultech.dayo.member.controller.dto.request.DeviceTokenRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberOAuthRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberProfileUpdateRequest;
+import com.seoultech.dayo.member.controller.dto.request.MemberResignRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignInRequest;
 import com.seoultech.dayo.member.controller.dto.request.MemberSignUpRequest;
-import com.seoultech.dayo.member.controller.dto.request.MemberResignRequest;
 import com.seoultech.dayo.member.controller.dto.response.MemberInfoResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberListResponse;
 import com.seoultech.dayo.member.controller.dto.response.MemberMyProfileResponse;
@@ -46,11 +47,16 @@ import com.seoultech.dayo.report.service.ReportService;
 import com.seoultech.dayo.resign.Resign;
 import com.seoultech.dayo.resign.repository.ResignRepository;
 import com.seoultech.dayo.search.service.SearchService;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -58,9 +64,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -150,7 +153,11 @@ public class MemberService {
   public MemberOtherProfileResponse otherProfile(String memberId, String otherId) {
     boolean isFollow = followService.isFollow(memberId, otherId);
     Member member = findMemberById(otherId);
-    return MemberOtherProfileResponse.from(member, isFollow);
+    int size = (int) member.getPosts()
+        .stream()
+        .filter(post -> post.getPrivacy() != Privacy.ONLY_ME)
+        .count();
+    return MemberOtherProfileResponse.from(member, isFollow, size);
   }
 
   public void profileUpdate(String memberId, MemberProfileUpdateRequest request)
