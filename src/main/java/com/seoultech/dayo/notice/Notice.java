@@ -20,7 +20,7 @@ public class Notice extends BaseTimeEntity {
 
   private String title;
 
-  @Column(length = 50000)
+  @Column(length = 5000)
   private String contents;
 
   private Boolean showYn;
