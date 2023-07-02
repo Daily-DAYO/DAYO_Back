@@ -23,11 +23,11 @@ public class Notice extends BaseTimeEntity {
   @Column(length = 50000)
   private String contents;
 
-  private Boolean isShow;
+  private Boolean showYn;
 
-  public Notice(String title, String contents, Boolean isShow) {
+  public Notice(String title, String contents, Boolean showYn) {
     this.title = title;
     this.contents = contents;
-    this.isShow = isShow;
+    this.showYn = showYn;
   }
 }

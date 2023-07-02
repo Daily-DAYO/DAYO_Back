@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
-  @Query("select n from Notice n where n.isShow = true")
+  @Query("select n from Notice n where n.showYn = true")
   List<Notice> findAllWhereShowIsTrue();
 
 }
