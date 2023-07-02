@@ -39,10 +39,11 @@ public class SearchService {
     List<SearchDto> collect = new ArrayList<>();
 
     boolean last = false;
-
+    long allCount = 0L;
     if (hashtag.isPresent()) {
 
       List<PostHashtag> postHashtags = postHashtagService.findPostHashtags(hashtag.get());
+      allCount = postHashtags.size();
       if (postHashtags.size() <= end + 10) {
         last = true;
       }
@@ -52,7 +53,6 @@ public class SearchService {
           .map(postHashtag -> SearchDto.from(postHashtag.getPost()))
           .collect(toList());
     }
-    long allCount = collect.size() + end;
 
     return SearchResultResponse.from(collect, last, allCount);
   }
