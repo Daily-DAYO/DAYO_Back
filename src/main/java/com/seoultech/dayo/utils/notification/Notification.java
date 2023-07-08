@@ -2,6 +2,7 @@ package com.seoultech.dayo.utils.notification;
 
 import com.seoultech.dayo.alarm.Topic;
 import com.seoultech.dayo.alarm.service.AlarmService;
+import com.seoultech.dayo.config.fcm.FcmMessageService;
 import com.seoultech.dayo.config.fcm.Note;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
@@ -15,8 +16,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class Notification {
 
-  private final KafkaProducer kafkaProducer;
   private final AlarmService alarmService;
+  private final FcmMessageService messageService;
 
   public void sendCommentToPostOwner(Member sender, Post post) {
     if (isNotMyPost(sender, post)) {
@@ -29,7 +30,8 @@ public class Notification {
       if (canSendMessage(post)) {
         JsonData jsonData = new JsonData();
         String message = jsonData.make(data);
-        kafkaProducer.sendMessage(Topic.COMMENT, message);
+        messageService.sendMessage(note, Topic.COMMENT.toString());
+//        kafkaProducer.sendMessage(Topic.COMMENT, message);
       }
     }
   }
@@ -43,7 +45,8 @@ public class Notification {
     if (canSendMessage(follower)) {
       JsonData jsonData = new JsonData();
       String message = jsonData.make(data);
-      kafkaProducer.sendMessage(Topic.FOLLOW, message);
+      messageService.sendMessage(note, Topic.FOLLOW.toString());
+//      kafkaProducer.sendMessage(Topic.FOLLOW, message);
     }
   }
 
@@ -58,7 +61,8 @@ public class Notification {
       if (canSendMessage(post)) {
         JsonData jsonData = new JsonData();
         String message = jsonData.make(data);
-        kafkaProducer.sendMessage(Topic.HEART, message);
+        messageService.sendMessage(note, Topic.HEART.toString());
+//        kafkaProducer.sendMessage(Topic.HEART, message);
       }
     }
   }

@@ -17,6 +17,7 @@ public class Note {
   private String content;
   private Map<String, String> data;
   private String image;
+  private String deviceToken;
 
   public static Note makeNote(Map<String, String> collect) {
 
@@ -25,7 +26,8 @@ public class Note {
         "DAYO",
         tempData.get("content"),
         tempData,
-        tempData.get("image")
+        tempData.get("image"),
+        tempData.get("deviceToken")
     );
   }
 

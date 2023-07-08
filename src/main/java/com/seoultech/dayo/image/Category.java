@@ -4,6 +4,7 @@ public enum Category {
 
   PROFILE,
   FOLDER,
-  POST
+  POST,
+  NOTICE
 
 }
