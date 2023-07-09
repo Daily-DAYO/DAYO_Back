@@ -1,14 +1,24 @@
 package com.seoultech.dayo.post.controller.dto;
 
+import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
 import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@Entity
 @Getter
 @AllArgsConstructor
 public class DayoPick implements Serializable {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String thumbnailImage;
@@ -23,9 +33,12 @@ public class DayoPick implements Serializable {
 
   private Integer commentCount;
 
-  private boolean isHeart;
+  private Long postId;
 
-  public static DayoPick from(Post post, boolean isHeart) {
+  @Enumerated(EnumType.STRING)
+  private Category category;
+
+  public static DayoPick from(Post post) {
     return new DayoPick(post.getId(),
         post.getThumbnailImage().getResizeFileName(220, 220),
         post.getMember().getId(),
@@ -33,22 +46,11 @@ public class DayoPick implements Serializable {
         post.getMember().getProfileImg().getResizeFileName(17, 17),
         post.getHeartCount(),
         post.getCommentCount(),
-        isHeart
+        post.getId(),
+        post.getCategory()
     );
   }
 
-  public static DayoPick fromDto(DayoPickDto dayoPickDto, boolean isHeart) {
-    return new DayoPick(
-        dayoPickDto.getId(),
-        dayoPickDto.getThumbnailImage(),
-        dayoPickDto.getMemberId(),
-        dayoPickDto.getNickname(),
-        dayoPickDto.getUserProfileImage(),
-        dayoPickDto.getHeartCount(),
-        dayoPickDto.getCommentCount(),
-        isHeart
-    );
+  protected DayoPick() {
   }
-
-
 }

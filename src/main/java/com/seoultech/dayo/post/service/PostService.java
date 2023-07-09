@@ -1,45 +1,50 @@
 package com.seoultech.dayo.post.service;
 
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
+
 import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.block.service.BlockService;
 import com.seoultech.dayo.bookmark.service.BookmarkService;
 import com.seoultech.dayo.exception.InvalidPostAccess;
 import com.seoultech.dayo.exception.NotExistPostException;
+import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.Privacy;
 import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.follow.service.FollowService;
+import com.seoultech.dayo.hashtag.Hashtag;
+import com.seoultech.dayo.hashtag.service.HashtagService;
 import com.seoultech.dayo.heart.service.HeartService;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
-import com.seoultech.dayo.folder.Folder;
-import com.seoultech.dayo.hashtag.Hashtag;
-import com.seoultech.dayo.hashtag.service.HashtagService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
-import com.seoultech.dayo.post.controller.dto.DayoPick;
+import com.seoultech.dayo.post.controller.dto.DayoPickDto;
 import com.seoultech.dayo.post.controller.dto.FeedDto;
 import com.seoultech.dayo.post.controller.dto.PostDto;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
 import com.seoultech.dayo.post.controller.dto.request.EditPostRequest;
-import com.seoultech.dayo.post.controller.dto.response.*;
+import com.seoultech.dayo.post.controller.dto.response.CreatePostResponse;
+import com.seoultech.dayo.post.controller.dto.response.DayoPickPostListResponse;
+import com.seoultech.dayo.post.controller.dto.response.DetailPostResponse;
+import com.seoultech.dayo.post.controller.dto.response.EditPostResponse;
+import com.seoultech.dayo.post.controller.dto.response.ListAllPostResponse;
+import com.seoultech.dayo.post.controller.dto.response.ListCategoryPostResponse;
+import com.seoultech.dayo.post.controller.dto.response.ListFeedResponse;
+import com.seoultech.dayo.post.repository.DayoPickRepository;
 import com.seoultech.dayo.post.repository.PostRepository;
 import com.seoultech.dayo.postHashtag.service.PostHashtagService;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 @Slf4j
 @Service
@@ -48,6 +53,7 @@ import static java.util.stream.Collectors.toSet;
 public class PostService {
 
   private final PostRepository postRepository;
+  private final DayoPickRepository dayoPickRepository;
   private final PostHashtagService postHashtagService;
   private final HashtagService hashtagService;
   private final HeartService heartService;
@@ -64,7 +70,7 @@ public class PostService {
 
     Set<Long> likePost = getLikePost(member);
 
-    List<DayoPick> collect = new ArrayList<>();
+    List<DayoPickDto> collect = new ArrayList<>();
     Set<String> blockList = getBlockList(member);
     Set<String> blockedMemberList = blockService.getBlockedMemberList(member);
 
@@ -77,21 +83,21 @@ public class PostService {
       }
       boolean isLike = likePost.contains(post.getId());
       if (isLike) {
-        collect.add(DayoPick.from(post, true));
+        collect.add(DayoPickDto.from(post, true));
       } else {
-        collect.add(DayoPick.from(post, false));
+        collect.add(DayoPickDto.from(post, false));
       }
     }
 
     collect.sort((a1, a2) -> a2.getHeartCount() - a1.getHeartCount());
 
-    List<DayoPick> collect1 = collect.stream().limit(30).collect(toList());
+    List<DayoPickDto> collect1 = collect.stream().limit(30).collect(toList());
 
     return DayoPickPostListResponse.from(collect1);
 
   }
 
-  @Cacheable(value = "dayoPick", key = "#category")
+  //  @Cacheable(value = "dayoPick", key = "#category")
   public List<Post> getDayoPickWithCategory(String category) {
     return postRepository.findAllByCategoryUsingJoinMember(
         Category.valueOf(category));
@@ -306,7 +312,7 @@ public class PostService {
     Set<String> blockList = getBlockList(member);
     Set<String> blockedMemberList = blockService.getBlockedMemberList(member);
 
-    List<DayoPick> collect = new ArrayList<>();
+    List<DayoPickDto> collect = new ArrayList<>();
 
     for (Post post : postList) {
       if (blockList.contains(post.getMember().getId())) {
@@ -317,20 +323,20 @@ public class PostService {
       }
       boolean like = likePost.contains(post.getId());
       if (like) {
-        collect.add(DayoPick.from(post, true));
+        collect.add(DayoPickDto.from(post, true));
       } else {
-        collect.add(DayoPick.from(post, false));
+        collect.add(DayoPickDto.from(post, false));
       }
     }
 
     collect.sort((a1, a2) -> a2.getHeartCount() - a1.getHeartCount());
 
-    List<DayoPick> collect1 = collect.stream().limit(30).collect(toList());
+    List<DayoPickDto> collect1 = collect.stream().limit(30).collect(toList());
 
     return DayoPickPostListResponse.from(collect1);
   }
 
-  @Cacheable(value = "dayoPick", key = "1")
+  //  @Cacheable(value = "dayoPick", key = "1")
   public List<Post> getDayoPickAll() {
     return postRepository.findAllUsingJoinMember();
   }

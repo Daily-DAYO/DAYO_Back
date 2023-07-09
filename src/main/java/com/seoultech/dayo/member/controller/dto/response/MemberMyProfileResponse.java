@@ -8,27 +8,27 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MemberMyProfileResponse {
 
-    private String nickname;
+  private String nickname;
 
-    private String profileImg;
+  private String profileImg;
 
-    private String email;
+  private String email;
 
-    private int followingCount;
+  private int followingCount;
 
-    private int followerCount;
+  private int followerCount;
 
-    private int postCount;
+  private int postCount;
 
-    public static MemberMyProfileResponse from(Member member) {
-        return new MemberMyProfileResponse(
-                member.getNickname(),
-                member.getProfileImg().getStoreFileName(),
-                member.getEmail(),
-                member.getFollowingCount(),
-                member.getFollowerCount(),
-                member.getPostCount()
-        );
-    }
+  public static MemberMyProfileResponse from(Member member) {
+    return new MemberMyProfileResponse(
+        member.getNickname(),
+        member.getProfileImg().getStoreFileName(),
+        member.getEmail(),
+        member.getFollowingCount(),
+        member.getFollowerCount(),
+        member.getPostCount()
+    );
+  }
 
 }
