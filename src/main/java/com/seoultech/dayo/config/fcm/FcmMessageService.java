@@ -37,7 +37,7 @@ public class FcmMessageService {
 
     Message message = Message.builder()
         .setToken(note.getDeviceToken())
-        .setNotification(notification)
+//        .setNotification(notification)
         .putAllData(note.getData())
 //        .setTopic(topic)
         .build();
