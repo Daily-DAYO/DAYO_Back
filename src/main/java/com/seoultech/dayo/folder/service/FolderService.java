@@ -117,7 +117,7 @@ public class FolderService {
     }
     if (StringUtils.hasText(request.getPrivacy())) {
       folder.setPrivacy(Privacy.valueOf(request.getPrivacy()));
-      if (request.getPrivacy().equals(ONLY_ME)) {
+      if (Privacy.valueOf(request.getPrivacy()).equals(ONLY_ME)) {
         List<Post> posts = folder.getPosts();
         for (Post post : posts) {
           post.setPrivacy(ONLY_ME);
