@@ -27,7 +27,6 @@ import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
-import com.seoultech.dayo.post.repository.PostRepository;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +42,6 @@ public class FolderService {
 
   private final FolderRepository folderRepository;
   private final ImageService imageService;
-  private final PostRepository postRepository;
 
   public CreateFolderResponse createFolder(Member member, CreateFolderRequest request)
       throws IOException {
@@ -121,7 +119,7 @@ public class FolderService {
       folder.setPrivacy(Privacy.valueOf(request.getPrivacy()));
       List<Post> posts = folder.getPosts();
       for (Post post : posts) {
-        postRepository.updatePostPrivacy(Privacy.valueOf(request.getPrivacy()), post.getId());
+        post.setPrivacy(Privacy.valueOf(request.getPrivacy()));
       }
     }
 
