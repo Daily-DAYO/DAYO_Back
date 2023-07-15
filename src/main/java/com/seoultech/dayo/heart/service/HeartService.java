@@ -49,7 +49,9 @@ public class HeartService {
     post.deleteHeart(heart);
     heartRepository.delete(heart);
     alarmService.deleteHeart(member, post);
-    return DeleteHeartResponse.from(post);
+    Long allCount = heartRepository.countHeartByPost(post);
+
+    return DeleteHeartResponse.from(allCount);
   }
 
   @Transactional(readOnly = true)

@@ -1,6 +1,5 @@
 package com.seoultech.dayo.heart.controller.dto.response;
 
-import com.seoultech.dayo.post.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,9 +7,9 @@ import lombok.Getter;
 @Getter
 public class DeleteHeartResponse {
 
-  private int allCount;
+  private Long allCount;
 
-  public static DeleteHeartResponse from(Post post) {
-    return new DeleteHeartResponse(post.getHeartCount());
+  public static DeleteHeartResponse from(Long allCount) {
+    return new DeleteHeartResponse(allCount);
   }
 }
