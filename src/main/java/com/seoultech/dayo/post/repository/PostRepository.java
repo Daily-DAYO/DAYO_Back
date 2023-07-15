@@ -1,11 +1,13 @@
 package com.seoultech.dayo.post.repository;
 
+import com.seoultech.dayo.folder.Privacy;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.Post;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -25,6 +27,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
   @Query("select p from Post p join fetch p.member where p.privacy = 'ALL'")
   List<Post> findAllUsingJoinMember();
+
+  @Modifying(clearAutomatically = true)
+  @Query("update Post p set p.privacy = :privacy where p.id = :id")
+  void updatePostPrivacy(@Param("privacy") Privacy privacy, @Param("id") Long id);
 
   void deleteAllByMember(Member member);
 
