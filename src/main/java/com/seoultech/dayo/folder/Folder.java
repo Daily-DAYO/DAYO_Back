@@ -4,14 +4,22 @@ import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
-import org.hibernate.annotations.Formula;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import lombok.Builder;
+import lombok.Getter;
+import org.hibernate.annotations.Formula;
 
 @Entity
 @Getter
@@ -38,7 +46,8 @@ public class Folder extends BaseTimeEntity {
 
   @OneToMany(
       mappedBy = "folder",
-      orphanRemoval = true
+      orphanRemoval = true,
+      cascade = CascadeType.ALL
   )
   private List<Post> posts = new ArrayList<>();
 
