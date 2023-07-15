@@ -30,7 +30,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
   @Modifying(clearAutomatically = true)
   @Query("update Post p set p.privacy = :privacy where p.id = :id")
-  void updatePostPrivacy(@Param("privacy") Privacy privacy, @Param("id") Long id);
+  int updatePostPrivacy(@Param("privacy") Privacy privacy, @Param("id") Long id);
 
   void deleteAllByMember(Member member);
 
