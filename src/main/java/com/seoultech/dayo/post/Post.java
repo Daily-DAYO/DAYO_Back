@@ -10,10 +10,8 @@ import com.seoultech.dayo.heart.Heart;
 import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.postHashtag.PostHashtag;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -29,11 +27,7 @@ import javax.persistence.OneToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.Hibernate;
 import org.hibernate.annotations.Formula;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.data.redis.core.RedisHash;
-import org.springframework.scheduling.annotation.Scheduled;
 
 @Entity
 @Getter
@@ -107,6 +101,7 @@ public class Post extends BaseTimeEntity {
 
   public void setFolder(Folder folder) {
     this.folder = folder;
+    this.setPrivacy(folder.getPrivacy());
   }
 
   public void deleteHeart(Heart heart) {
