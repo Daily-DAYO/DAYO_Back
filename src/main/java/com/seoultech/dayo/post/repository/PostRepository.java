@@ -23,7 +23,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
   @Query("select p from Post p join fetch p.member where p.category = :category and p.privacy = 'ALL'")
   List<Post> findAllByCategoryUsingJoinMember(@Param("category") Category category);
 
-  @Query("select p from Post p join fetch p.member")
+  @Query("select p from Post p join fetch p.member where p.privacy = 'ALL'")
   List<Post> findAllUsingJoinMember();
 
   void deleteAllByMember(Member member);
