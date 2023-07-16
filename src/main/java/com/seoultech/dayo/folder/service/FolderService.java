@@ -117,10 +117,6 @@ public class FolderService {
     }
     if (StringUtils.hasText(request.getPrivacy())) {
       folder.setPrivacy(Privacy.valueOf(request.getPrivacy()));
-      List<Post> posts = folder.getPosts();
-      for (Post post : posts) {
-        post.setPrivacy(Privacy.valueOf(request.getPrivacy()));
-      }
     }
 
     // 기본이미지

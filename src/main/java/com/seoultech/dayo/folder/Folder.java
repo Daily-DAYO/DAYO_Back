@@ -68,6 +68,9 @@ public class Folder extends BaseTimeEntity {
 
   public void setPrivacy(Privacy privacy) {
     this.privacy = privacy;
+    for (Post post : posts) {
+      post.setPrivacy(privacy);
+    }
   }
 
   public void setThumbnailImage(Image thumbnailImage) {
