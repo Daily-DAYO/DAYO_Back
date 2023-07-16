@@ -129,6 +129,7 @@ public class FolderService {
       Image image = imageService.storeFile(request.getThumbnailImage(), Category.FOLDER);
       folder.setThumbnailImage(image);
     }
+    folderRepository.flush();
 
     return EditFolderResponse.from(folder);
   }
