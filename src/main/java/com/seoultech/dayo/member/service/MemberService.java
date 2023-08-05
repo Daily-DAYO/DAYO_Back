@@ -166,7 +166,9 @@ public class MemberService {
     Member member = findMemberById(memberId);
 
     if (StringUtils.hasText(request.getNickname())) {
-      member.setNickname(request.getNickname());
+      if (!member.getNickname().equals(request.getNickname())) {
+        member.setNickname(request.getNickname());
+      }
     }
     if (request.getProfileImg() != null) {
       Image image = imageService.storeFile(request.getProfileImg(), Category.PROFILE);
