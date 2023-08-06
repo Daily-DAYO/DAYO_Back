@@ -8,6 +8,7 @@ import lombok.Getter;
 public class HeartMemberDto {
 
   private String memberId;
+  private String nickname;
   private boolean isFollow;
 
 }

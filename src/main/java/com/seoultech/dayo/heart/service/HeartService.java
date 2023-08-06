@@ -128,10 +128,11 @@ public class HeartService {
 
     for (Heart heart : hearts) {
       String memberId = heart.getMember().getId();
+      String nickname = heart.getMember().getNickname();
       if (followings.contains(memberId)) {
-        collect.add(new HeartMemberDto(memberId, true));
+        collect.add(new HeartMemberDto(memberId, nickname, true));
       } else {
-        collect.add(new HeartMemberDto(memberId, false));
+        collect.add(new HeartMemberDto(memberId, nickname, false));
       }
     }
 
