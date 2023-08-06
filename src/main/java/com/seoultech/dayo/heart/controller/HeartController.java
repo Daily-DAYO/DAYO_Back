@@ -6,6 +6,7 @@ import com.seoultech.dayo.heart.controller.dto.response.CreateHeartResponse;
 import com.seoultech.dayo.heart.controller.dto.response.DeleteHeartResponse;
 import com.seoultech.dayo.heart.controller.dto.response.ListAllHeartPostResponse;
 import com.seoultech.dayo.heart.controller.dto.response.ListAllMyHeartPostResponse;
+import com.seoultech.dayo.heart.controller.dto.response.PostMemberHeartListResponse;
 import com.seoultech.dayo.heart.service.HeartService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
@@ -74,6 +75,18 @@ public class HeartController {
 
     return ResponseEntity.ok()
         .body(heartService.listAllMyHeartPost(member, blockList, Long.valueOf(end)));
+  }
+
+  @GetMapping("/post/{postId}/list")
+  public ResponseEntity<PostMemberHeartListResponse> postMemberHeartList(
+      @ApiIgnore @LoginUser String memberId,
+      @RequestParam(value = "end") Long end,
+      @PathVariable Long postId) {
+    Member member = memberService.findMemberById(memberId);
+    Post post = postService.findPostById(postId);
+
+    return ResponseEntity.ok()
+        .body(heartService.postMemberHeartList(member, post, end));
   }
 
 }

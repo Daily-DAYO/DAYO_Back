@@ -5,7 +5,9 @@ import static java.util.stream.Collectors.toList;
 import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.block.service.BlockService;
 import com.seoultech.dayo.exception.NotExistHeartException;
+import com.seoultech.dayo.follow.service.FollowService;
 import com.seoultech.dayo.heart.Heart;
+import com.seoultech.dayo.heart.controller.dto.HeartMemberDto;
 import com.seoultech.dayo.heart.controller.dto.HeartPostDto;
 import com.seoultech.dayo.heart.controller.dto.MyHeartPostDto;
 import com.seoultech.dayo.heart.controller.dto.request.CreateHeartRequest;
@@ -13,12 +15,15 @@ import com.seoultech.dayo.heart.controller.dto.response.CreateHeartResponse;
 import com.seoultech.dayo.heart.controller.dto.response.DeleteHeartResponse;
 import com.seoultech.dayo.heart.controller.dto.response.ListAllHeartPostResponse;
 import com.seoultech.dayo.heart.controller.dto.response.ListAllMyHeartPostResponse;
+import com.seoultech.dayo.heart.controller.dto.response.PostMemberHeartListResponse;
 import com.seoultech.dayo.heart.repository.HeartRepository;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.utils.notification.Notification;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +37,7 @@ public class HeartService {
   private final AlarmService alarmService;
   private final Notification notification;
   private final BlockService blockService;
+  private final FollowService followService;
 
   public CreateHeartResponse createHeart(Member member, Post post, CreateHeartRequest request) {
     Heart heart = request.toEntity(member, post);
@@ -98,6 +104,38 @@ public class HeartService {
         .collect(toList());
 
     return ListAllMyHeartPostResponse.from(collect, last);
+  }
+
+  public PostMemberHeartListResponse postMemberHeartList(Member member, Post post, Long end) {
+
+    List<Heart> tempHearts = post.getHearts();
+
+    boolean last = false;
+    if (tempHearts.size() <= end + 10) {
+      last = true;
+    }
+
+    List<Heart> hearts = tempHearts.stream()
+        .skip(end)
+        .limit(10)
+        .collect(toList());
+
+    Set<String> followings = followService.findFollowings(member).stream()
+        .map((follow) -> follow.getFollower().getId())
+        .collect(Collectors.toSet());
+
+    List<HeartMemberDto> collect = new ArrayList<>();
+
+    for (Heart heart : hearts) {
+      String memberId = heart.getMember().getId();
+      if (followings.contains(memberId)) {
+        collect.add(new HeartMemberDto(memberId, true));
+      } else {
+        collect.add(new HeartMemberDto(memberId, false));
+      }
+    }
+
+    return PostMemberHeartListResponse.from(collect, last);
   }
 
   public List<Heart> listHeartsByMember(Member member) {
