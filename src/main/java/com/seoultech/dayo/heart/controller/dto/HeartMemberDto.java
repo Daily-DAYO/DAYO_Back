@@ -9,6 +9,7 @@ public class HeartMemberDto {
 
   private String memberId;
   private String nickname;
+  private String profileImg;
   private boolean isFollow;
 
 }

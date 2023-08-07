@@ -127,12 +127,14 @@ public class HeartService {
     List<HeartMemberDto> collect = new ArrayList<>();
 
     for (Heart heart : hearts) {
-      String memberId = heart.getMember().getId();
-      String nickname = heart.getMember().getNickname();
+      Member likedMember = heart.getMember();
+      String memberId = likedMember.getId();
+      String nickname = likedMember.getNickname();
+      String profileImg = likedMember.getProfileImg().getStoreFileName();
       if (followings.contains(memberId)) {
-        collect.add(new HeartMemberDto(memberId, nickname, true));
+        collect.add(new HeartMemberDto(memberId, nickname, profileImg, true));
       } else {
-        collect.add(new HeartMemberDto(memberId, nickname, false));
+        collect.add(new HeartMemberDto(memberId, nickname, profileImg, false));
       }
     }
 
