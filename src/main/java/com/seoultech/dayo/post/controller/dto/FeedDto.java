@@ -1,7 +1,7 @@
 package com.seoultech.dayo.post.controller.dto;
 
-import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.hashtag.Hashtag;
+import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.postHashtag.PostHashtag;
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ public class FeedDto {
 
   private Long id;
 
-  private String thumbnailImage;
+  private List<String> images;
 
   private String memberId;
 
@@ -47,8 +47,11 @@ public class FeedDto {
     List<String> hashtags = collect.stream()
         .map(Hashtag::getTag)
         .collect(Collectors.toList());
+    List<String> images = post.getImages().stream()
+        .map(Image::getStoreFileName)
+        .collect(Collectors.toList());
 
-    return new FeedDto(post.getId(), post.getImages().get(0).getStoreFileName(),
+    return new FeedDto(post.getId(), images,
         post.getMember().getId(), post.getMember().getNickname(),
         post.getMember().getProfileImg().getResizeFileName(37, 37),
         post.getHeartCount(),
