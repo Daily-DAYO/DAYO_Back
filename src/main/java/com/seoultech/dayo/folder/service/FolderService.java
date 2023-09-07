@@ -32,7 +32,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -109,15 +108,9 @@ public class FolderService {
 
     Folder folder = findFolderById(request.getFolderId());
 
-    if (StringUtils.hasText(request.getName())) {
-      folder.setName(request.getName());
-    }
-    if (StringUtils.hasText(request.getSubheading())) {
-      folder.setSubheading(request.getSubheading());
-    }
-    if (StringUtils.hasText(request.getPrivacy())) {
-      folder.setPrivacy(Privacy.valueOf(request.getPrivacy()));
-    }
+    folder.setName(request.getName());
+    folder.setSubheading(request.getSubheading());
+    folder.setPrivacy(Privacy.valueOf(request.getPrivacy()));
 
     // 기본이미지
     if (request.getThumbnailImage() == null && request.getIsFileChange()) {
