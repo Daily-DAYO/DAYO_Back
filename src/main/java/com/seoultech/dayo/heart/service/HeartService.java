@@ -44,7 +44,8 @@ public class HeartService {
     Heart savedHeart = heartRepository.save(heart);
 
     notification.sendHeartToPostOwner(member, post);
-    return CreateHeartResponse.from(savedHeart);
+    Long allCount = heartRepository.countHeartByPost(post);
+    return CreateHeartResponse.from(savedHeart, allCount);
   }
 
   public DeleteHeartResponse deleteHeart(Member member, Post post) {

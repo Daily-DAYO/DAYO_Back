@@ -12,11 +12,11 @@ public class CreateHeartResponse {
 
   private Long postId;
 
-  private int allCount;
+  private Long allCount;
 
-  public static CreateHeartResponse from(Heart heart) {
+  public static CreateHeartResponse from(Heart heart, Long allCount) {
     return new CreateHeartResponse(heart.getKey().getMemberId(), heart.getKey().getPostId(),
-        heart.getPost().getHeartCount());
+        allCount);
   }
 
 }
