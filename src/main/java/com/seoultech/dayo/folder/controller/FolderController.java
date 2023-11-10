@@ -1,6 +1,7 @@
 package com.seoultech.dayo.folder.controller;
 
 import com.seoultech.dayo.config.login.LoginUser;
+import com.seoultech.dayo.exception.dto.NotFoundFailResponse;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderInPostRequest;
 import com.seoultech.dayo.folder.controller.dto.request.CreateFolderRequest;
 import com.seoultech.dayo.folder.controller.dto.request.EditFolderRequest;
@@ -15,6 +16,12 @@ import com.seoultech.dayo.folder.controller.dto.response.ListAllMyFolderResponse
 import com.seoultech.dayo.folder.service.FolderService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+@Tag(name = "Folder", description = "폴더 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/folders")
@@ -40,6 +48,11 @@ public class FolderController {
   private final FolderService folderService;
   private final MemberService memberService;
 
+  @Tag(name = "Folder")
+  @Operation(summary = "폴더 생성")
+  @ApiResponses({
+      @ApiResponse(responseCode = "201", description = "폴더 생성 성공", content = @Content(schema = @Schema(implementation = CreateFolderResponse.class))),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = NotFoundFailResponse.class)))})
   @PostMapping
   public ResponseEntity<CreateFolderResponse> createFolder(@ApiIgnore @LoginUser String memberId,
       @ModelAttribute @Valid CreateFolderRequest request) throws IOException {
@@ -48,6 +61,11 @@ public class FolderController {
         .body(folderService.createFolder(member, request));
   }
 
+  @Tag(name = "Folder")
+  @Operation(summary = "폴더 생성", description = "게시글 만들 때 폴더를 생성합니다.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "201", description = "폴더 생성 성공", content = @Content(schema = @Schema(implementation = CreateFolderInPostResponse.class))),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = NotFoundFailResponse.class)))})
   @PostMapping("/inPost")
   public ResponseEntity<CreateFolderInPostResponse> createFolderInPost(
       @ApiIgnore @LoginUser String memberId,

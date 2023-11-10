@@ -58,6 +58,9 @@ server:
       rotate: true
       suffix: .log
 
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
 
 file:
   dir: /Users/jojaeyeong/Desktop/upload/
