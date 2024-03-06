@@ -3,6 +3,7 @@ package com.seoultech.dayo.search.service;
 import static java.util.stream.Collectors.toList;
 
 import com.seoultech.dayo.block.service.BlockService;
+import com.seoultech.dayo.follow.service.FollowService;
 import com.seoultech.dayo.hashtag.Hashtag;
 import com.seoultech.dayo.hashtag.service.HashtagService;
 import com.seoultech.dayo.member.Member;
@@ -35,6 +36,7 @@ public class SearchService {
   private final HashtagService hashtagService;
   private final PostHashtagService postHashtagService;
   private final BlockService blockService;
+  private final FollowService followService;
 
   public SearchResultResponse search(Member member, String tag, Long end) {
     Search search = new Search(member, tag);
@@ -78,6 +80,7 @@ public class SearchService {
 
     Set<String> blockedMemberList = blockService.getBlockedMemberList(member);
     Set<String> blockingMemberList = blockService.getBlockingMemberList(member);
+    Set<String> followingsToSet = followService.findFollowingsIdToSet(member);
 
     List<Member> userList = new ArrayList<>();
 
@@ -88,15 +91,14 @@ public class SearchService {
     }
 
     boolean last = false;
-    long allCount = 0L;
-    allCount = userList.size();
+    long allCount = userList.size();
     if (userList.size() <= end + 10) {
       last = true;
     }
     List<SearchMemberDto> collect = userList.stream()
         .skip(end)
         .limit(10)
-        .map(SearchMemberDto::from)
+        .map(m -> SearchMemberDto.from(m, followingsToSet.contains(m.getId())))
         .collect(toList());
 
     return SearchMemberResponse.from(collect, last, allCount);

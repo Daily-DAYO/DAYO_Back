@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+@Tag(name = "Search", description = "검색 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/search")
@@ -73,9 +74,12 @@ public class SearchController {
     List<Member> findMembers = memberService.findMemberListByNicknameLike(nickname);
     return ResponseEntity.ok()
         .body(searchService.searchMember(me, findMembers, nickname, Long.valueOf(end)));
-
   }
 
+  @Tag(name = "Search")
+  @Operation(summary = "검색 내역 삭제")
+  @ApiResponses(
+      @ApiResponse(responseCode = "204", description = "검색 내역 삭제 성공"))
   @PostMapping("/delete/history/{searchHistoryId}")
   public ResponseEntity<Void> deleteHistory(@ApiIgnore @LoginUser String memberId,
       @PathVariable Long searchHistoryId) {

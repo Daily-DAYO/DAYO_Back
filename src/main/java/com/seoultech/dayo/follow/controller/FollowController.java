@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+@Tag(name = "Follow", description = "팔로우 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/follow")

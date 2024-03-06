@@ -10,10 +10,13 @@ public class SearchMemberDto {
 
   private String memberId;
 
-  private String thumbnailImage;
+  private String profileImg;
 
-  public static SearchMemberDto from(Member member) {
-    return new SearchMemberDto(member.getId(), member.getProfileImg().getResizeFileName(17, 17));
+  private Boolean isFollow;
+
+  public static SearchMemberDto from(Member member, Boolean isFollow) {
+    return new SearchMemberDto(member.getId(), member.getProfileImg().getResizeFileName(17, 17),
+        isFollow);
   }
 
 }

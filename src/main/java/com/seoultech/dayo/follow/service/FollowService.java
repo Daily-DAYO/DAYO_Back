@@ -1,6 +1,9 @@
 package com.seoultech.dayo.follow.service;
 
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
+
 import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.exception.NotExistFollowException;
 import com.seoultech.dayo.follow.Follow;
@@ -10,20 +13,21 @@ import com.seoultech.dayo.follow.controller.dto.MyFollowerDto;
 import com.seoultech.dayo.follow.controller.dto.MyFollowingDto;
 import com.seoultech.dayo.follow.controller.dto.request.CreateFollowRequest;
 import com.seoultech.dayo.follow.controller.dto.request.CreateFollowUpRequest;
-import com.seoultech.dayo.follow.controller.dto.response.*;
+import com.seoultech.dayo.follow.controller.dto.response.CreateFollowResponse;
+import com.seoultech.dayo.follow.controller.dto.response.CreateFollowUpResponse;
+import com.seoultech.dayo.follow.controller.dto.response.ListAllFollowerResponse;
+import com.seoultech.dayo.follow.controller.dto.response.ListAllFollowingResponse;
+import com.seoultech.dayo.follow.controller.dto.response.ListAllMyFollowerResponse;
+import com.seoultech.dayo.follow.controller.dto.response.ListAllMyFollowingResponse;
 import com.seoultech.dayo.follow.repository.FollowRepository;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.utils.notification.Notification;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 @Service
 @RequiredArgsConstructor
@@ -129,6 +133,11 @@ public class FollowService {
 
   public List<Follow> findFollowings(Member member) {
     return followRepository.findFollowsByMember(member);
+  }
+
+  public Set<String> findFollowingsIdToSet(Member member) {
+    return findFollowings(member).stream().map(follow -> follow.getFollower().getId())
+        .collect(toSet());
   }
 
   public void deleteFollow(Member member, Member follower) {
