@@ -2,6 +2,7 @@ package com.seoultech.dayo.search.service;
 
 import static java.util.stream.Collectors.toList;
 
+import com.seoultech.dayo.block.service.BlockService;
 import com.seoultech.dayo.hashtag.Hashtag;
 import com.seoultech.dayo.hashtag.service.HashtagService;
 import com.seoultech.dayo.member.Member;
@@ -18,6 +19,7 @@ import com.seoultech.dayo.search.repository.SearchRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ public class SearchService {
   private final SearchRepository searchRepository;
   private final HashtagService hashtagService;
   private final PostHashtagService postHashtagService;
+  private final BlockService blockService;
 
   public SearchResultResponse search(Member member, String tag, Long end) {
     Search search = new Search(member, tag);
@@ -73,13 +76,24 @@ public class SearchService {
     Search search = new Search(member, nickname);
     searchRepository.save(search);
 
+    Set<String> blockedMemberList = blockService.getBlockedMemberList(member);
+    Set<String> blockingMemberList = blockService.getBlockingMemberList(member);
+
+    List<Member> userList = new ArrayList<>();
+
+    for (Member user : searchMembers) {
+      if (!blockedMemberList.contains(user.getId()) && !blockingMemberList.contains(user.getId())) {
+        userList.add(user);
+      }
+    }
+
     boolean last = false;
     long allCount = 0L;
-    allCount = searchMembers.size();
-    if (searchMembers.size() <= end + 10) {
+    allCount = userList.size();
+    if (userList.size() <= end + 10) {
       last = true;
     }
-    List<SearchMemberDto> collect = searchMembers.stream()
+    List<SearchMemberDto> collect = userList.stream()
         .skip(end)
         .limit(10)
         .map(SearchMemberDto::from)
