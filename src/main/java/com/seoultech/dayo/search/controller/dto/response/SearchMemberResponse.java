@@ -1,6 +1,5 @@
 package com.seoultech.dayo.search.controller.dto.response;
 
-import com.seoultech.dayo.search.controller.dto.SearchDto;
 import com.seoultech.dayo.search.controller.dto.SearchMemberDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SearchMemberResponse {
 
-  private List<SearchDto> data;
+  private List<SearchMemberDto> data;
 
   private boolean last;
 
