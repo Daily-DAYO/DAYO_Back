@@ -75,12 +75,21 @@ public class FolderController {
         .body(folderService.createFolderInPost(member, request));
   }
 
+  @Tag(name = "Folder")
+  @Operation(summary = "폴더 삭제", description = "폴더를 삭제합니다.")
+  @ApiResponses(
+      @ApiResponse(responseCode = "204", description = "폴더 삭제 성공"))
   @PostMapping("/delete/{folderId}")
   public ResponseEntity<Void> deleteFolder(@PathVariable @Valid Long folderId) {
     folderService.deleteFolder(folderId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
+  @Tag(name = "Folder")
+  @Operation(summary = "폴더 정렬", description = "폴더를 정렬합니다.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "폴더 생성 성공"),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = NotFoundFailResponse.class)))})
   @PostMapping("/order")
   public ResponseEntity<Void> orderFolder(@ApiIgnore @LoginUser String memberId,
       @RequestBody EditOrderFolderRequest.EditOrderDto[] request) {
@@ -89,6 +98,11 @@ public class FolderController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @Tag(name = "Folder")
+  @Operation(summary = "폴더 수정", description = "폴더를 수정합니다.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "폴더 수정 성공", content = @Content(schema = @Schema(implementation = EditFolderResponse.class))),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = NotFoundFailResponse.class)))})
   @PostMapping("/patch")
   public ResponseEntity<EditFolderResponse> editFolder(@ModelAttribute EditFolderRequest request)
       throws IOException {
@@ -96,6 +110,11 @@ public class FolderController {
         .body(folderService.editFolder(request));
   }
 
+  @Tag(name = "Folder")
+  @Operation(summary = "내 모든 폴더 조회", description = "내 모든 폴더를 조회합니다.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "내 모든 폴더 조회 성공", content = @Content(schema = @Schema(implementation = ListAllMyFolderResponse.class))),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = NotFoundFailResponse.class)))})
   @GetMapping("/my")
   public ResponseEntity<ListAllMyFolderResponse> listAllMyFolder(
       @ApiIgnore @LoginUser String memberId) {
@@ -104,6 +123,11 @@ public class FolderController {
         .body(folderService.listAllMyFolder(member));
   }
 
+  @Tag(name = "Folder")
+  @Operation(summary = "사용자 모든 폴더 조회", description = "사용자 모든 폴더를 조회합니다.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "사용자 모든 폴더 조회 성공", content = @Content(schema = @Schema(implementation = ListAllFolderResponse.class))),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = NotFoundFailResponse.class)))})
   @GetMapping("/list/{memberId}")
   public ResponseEntity<ListAllFolderResponse> listAllFolder(@PathVariable String memberId) {
     Member member = memberService.findMemberById(memberId);
@@ -111,6 +135,11 @@ public class FolderController {
         .body(folderService.listAllFolder(member));
   }
 
+  @Tag(name = "Folder")
+  @Operation(summary = "폴더 상세 조회", description = "폴더 내부의 게시글들을 조회합니다.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "폴더 상세 조회 성공", content = @Content(schema = @Schema(implementation = DetailFolderResponse.class))),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = NotFoundFailResponse.class)))})
   @GetMapping("/{folderId}")
   public ResponseEntity<DetailFolderResponse> detailListFolder(@PathVariable Long folderId,
       @RequestParam(value = "end") String end) {
@@ -118,6 +147,11 @@ public class FolderController {
         .body(folderService.detailFolder(folderId, Long.valueOf(end)));
   }
 
+  @Tag(name = "Folder")
+  @Operation(summary = "폴더 정보 조회", description = "폴더 정보(제목, 소제목 등)를 조회합니다.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "폴더 정보 조회 성공", content = @Content(schema = @Schema(implementation = FolderInfoResponse.class))),
+      @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = NotFoundFailResponse.class)))})
   @GetMapping("/{folderId}/info")
   public ResponseEntity<FolderInfoResponse> folderInfo(@PathVariable Long folderId) {
     return ResponseEntity.ok()
