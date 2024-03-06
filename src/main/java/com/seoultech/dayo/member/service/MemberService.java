@@ -298,6 +298,10 @@ public class MemberService {
     return MemberListResponse.from(collect);
   }
 
+  public List<Member> findMemberListByNicknameLike(String nickname) {
+    return memberRepository.findMembersByNicknameContaining(nickname);
+  }
+
   private String get(String apiUrl, String accessToken) {
 
     try {

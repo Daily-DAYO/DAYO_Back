@@ -10,7 +10,9 @@ import com.seoultech.dayo.postHashtag.service.PostHashtagService;
 import com.seoultech.dayo.search.Search;
 import com.seoultech.dayo.search.controller.dto.SearchDto;
 import com.seoultech.dayo.search.controller.dto.SearchHistoryDto;
+import com.seoultech.dayo.search.controller.dto.SearchMemberDto;
 import com.seoultech.dayo.search.controller.dto.response.SearchHistoryResponse;
+import com.seoultech.dayo.search.controller.dto.response.SearchMemberResponse;
 import com.seoultech.dayo.search.controller.dto.response.SearchResultResponse;
 import com.seoultech.dayo.search.repository.SearchRepository;
 import java.util.ArrayList;
@@ -64,6 +66,27 @@ public class SearchService {
         .collect(toList());
 
     return SearchHistoryResponse.from(collect);
+  }
+
+  public SearchMemberResponse searchMember(Member member, List<Member> searchMembers,
+      String nickname, Long end) {
+    Search search = new Search(member, nickname);
+    searchRepository.save(search);
+
+    boolean last = false;
+    long allCount = 0L;
+    allCount = searchMembers.size();
+    if (searchMembers.size() <= end + 10) {
+      last = true;
+    }
+    List<SearchMemberDto> collect = searchMembers.stream()
+        .skip(end)
+        .limit(10)
+        .map(SearchMemberDto::from)
+        .collect(toList());
+
+    return SearchMemberResponse.from(collect, last, allCount);
+
   }
 
   public void deleteSearchHistory(Long searchId) {

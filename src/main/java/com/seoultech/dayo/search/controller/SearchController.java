@@ -4,9 +4,10 @@ import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.search.controller.dto.response.SearchHistoryResponse;
+import com.seoultech.dayo.search.controller.dto.response.SearchMemberResponse;
 import com.seoultech.dayo.search.controller.dto.response.SearchResultResponse;
 import com.seoultech.dayo.search.service.SearchService;
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +44,18 @@ public class SearchController {
 
     return ResponseEntity.ok()
         .body(searchService.searchHistory(member));
+  }
+
+  @GetMapping("/member")
+  public ResponseEntity<SearchMemberResponse> searchMember(@RequestParam String nickname,
+      @ApiIgnore @LoginUser String memberId,
+      @RequestParam(value = "end") String end) {
+
+    Member me = memberService.findMemberById(memberId);
+    List<Member> findMembers = memberService.findMemberListByNicknameLike(nickname);
+    return ResponseEntity.ok()
+        .body(searchService.searchMember(me, findMembers, nickname, Long.valueOf(end)));
+
   }
 
   @PostMapping("/delete/history/{searchHistoryId}")

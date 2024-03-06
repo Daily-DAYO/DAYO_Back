@@ -2,11 +2,10 @@ package com.seoultech.dayo.member.repository;
 
 import com.seoultech.dayo.member.Member;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, String> {
 
@@ -23,5 +22,7 @@ public interface MemberRepository extends JpaRepository<Member, String> {
 
   @Query("select m from Member m join fetch m.blockList where m.id = :id")
   Optional<Member> findMemberByIdUsingJoinBlock(@Param("id") String id);
+
+  List<Member> findMembersByNicknameContaining(String nickname);
 
 }
