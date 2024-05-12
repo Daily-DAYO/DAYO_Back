@@ -285,6 +285,49 @@ public class PostService {
     return ListFeedResponse.from(feedDtos, last);
   }
 
+  @Transactional(readOnly = true)
+  public ListFeedResponse listFeedByCategory(Member member, Category category, Long end) {
+
+    List<Follow> follows = followService.findFollowings(member);
+    List<Member> members = follows.stream()
+        .map(Follow::getFollower)
+        .collect(toList());
+
+    List<Post> posts = new ArrayList<>();
+    for (Member m : members) {
+      posts.addAll(m.getPosts());
+    }
+
+    boolean last = false;
+    int size = posts.size();
+    if (size <= end + 10) {
+      last = true;
+    }
+
+    List<Post> postCollect = posts.stream()
+        .filter(post -> !post.getPrivacy().equals(Privacy.ONLY_ME))
+        .filter(post -> post.getCategory().equals(category))
+        .sorted((post1, post2) -> post2.getCreatedDate().compareTo(post1.getCreatedDate()))
+        .skip(end)
+        .limit(10)
+        .collect(toList());
+
+    Set<String> blockList = getBlockList(member);
+
+    List<FeedDto> feedDtos = new ArrayList<>();
+    for (Post post : postCollect) {
+      if (blockList.contains(post.getMember().getId())) {
+        continue;
+      }
+      boolean isHeart = heartService.isHeart(member.getId(), post.getId());
+      boolean isBookmark = bookmarkService.isBookmark(member.getId(), post.getId());
+
+      feedDtos.add(FeedDto.from(post, isHeart, isBookmark));
+    }
+
+    return ListFeedResponse.from(feedDtos, last);
+  }
+
   public void deletePost(String memberId, Long postId) {
 
     Post post = findPostById(postId);

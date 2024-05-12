@@ -12,11 +12,13 @@ public class SearchMemberDto {
 
   private String profileImg;
 
+  private String nickname;
+
   private Boolean isFollow;
 
   public static SearchMemberDto from(Member member, Boolean isFollow) {
     return new SearchMemberDto(member.getId(), member.getProfileImg().getResizeFileName(17, 17),
-        isFollow);
+        member.getNickname(), isFollow);
   }
 
 }

@@ -7,19 +7,31 @@ import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.service.FolderService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
+import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
 import com.seoultech.dayo.post.controller.dto.request.EditPostRequest;
-import com.seoultech.dayo.post.controller.dto.response.*;
+import com.seoultech.dayo.post.controller.dto.response.CreatePostResponse;
+import com.seoultech.dayo.post.controller.dto.response.DayoPickPostListResponse;
+import com.seoultech.dayo.post.controller.dto.response.DetailPostResponse;
+import com.seoultech.dayo.post.controller.dto.response.EditPostResponse;
+import com.seoultech.dayo.post.controller.dto.response.ListAllPostResponse;
+import com.seoultech.dayo.post.controller.dto.response.ListCategoryPostResponse;
+import com.seoultech.dayo.post.controller.dto.response.ListFeedResponse;
 import com.seoultech.dayo.post.service.PostService;
+import java.io.IOException;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.io.IOException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
@@ -115,6 +127,15 @@ public class PostController {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
         .body(postService.listFeed(member, Long.valueOf(end)));
+  }
+
+  @GetMapping("/feed/{category}")
+  public ResponseEntity<ListFeedResponse> listFeedByCategory(@ApiIgnore @LoginUser String memberId,
+      @PathVariable String category,
+      @RequestParam(value = "end") String end) {
+    Member member = memberService.findMemberById(memberId);
+    return ResponseEntity.ok()
+        .body(postService.listFeedByCategory(member, Category.valueOf(category), Long.valueOf(end)));
   }
 
 }
