@@ -5,5 +5,6 @@ public enum Topic {
   COMMENT,
   HEART,
   NOTICE,
-  FOLLOW
+  FOLLOW,
+  MENTION
 }

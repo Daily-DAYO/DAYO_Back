@@ -36,6 +36,21 @@ public class Notification {
     }
   }
 
+  public void sendMentionToPostOwner(Member sender, Post post, Member receiver) {
+
+    Map<String, String> data = makeMentionMessage(sender, post, receiver);
+    Note note = Note.makeNote(data);
+
+    alarmService.saveAlarmPost(note, receiver, post, sender,
+        Topic.MENTION);
+
+    if (canSendMessage(receiver)) {
+      JsonData jsonData = new JsonData();
+      String message = jsonData.make(data);
+      messageService.sendMessage(note, Topic.MENTION.toString());
+    }
+  }
+
   public void sendToFollower(Member member, Member follower) {
     Map<String, String> data = makeFollowMessage(member, follower);
     Note note = Note.makeNote(data);
@@ -75,6 +90,18 @@ public class Notification {
     data.put("deviceToken", post.getMember().getDeviceToken());
     data.put("postId", post.getId().toString());
     data.put("topic", Topic.COMMENT.toString());
+    data.put("image", post.getThumbnailImage().getStoreFileName());
+    return data;
+  }
+
+  private Map<String, String> makeMentionMessage(Member member, Post post, Member receiver) {
+    Map<String, String> data = new HashMap<>();
+    data.put("subject", "DAYO");
+    data.put("body", member.getNickname() + "님이 게시글에 언급을 했어요.");
+    data.put("content", "님이 게시글에 언급을 했어요.");
+    data.put("deviceToken", receiver.getDeviceToken());
+    data.put("postId", post.getId().toString());
+    data.put("topic", Topic.MENTION.toString());
     data.put("image", post.getThumbnailImage().getStoreFileName());
     return data;
   }

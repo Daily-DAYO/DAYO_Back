@@ -2,10 +2,18 @@ package com.seoultech.dayo.comment;
 
 import com.seoultech.dayo.BaseTimeEntity;
 import com.seoultech.dayo.member.Member;
+import com.seoultech.dayo.mention.Mention;
 import com.seoultech.dayo.post.Post;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.Getter;
-
-import javax.persistence.*;
 
 @Entity
 @Getter
@@ -20,6 +28,12 @@ public class Comment extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.EAGER)
   private Member member;
+
+  @OneToMany(
+      mappedBy = "comment",
+      orphanRemoval = true
+  )
+  private List<Mention> mentions = new ArrayList<>();
 
   private String contents;
 

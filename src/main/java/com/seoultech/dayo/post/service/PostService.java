@@ -400,8 +400,7 @@ public class PostService {
 
 
   public Set<String> getBlockList(Member member) {
-    Set<String> blockList = member.getBlockList().stream().map(block -> block.getTarget().getId())
+    return member.getBlockList().stream().map(block -> block.getTarget().getId())
         .collect(toSet());
-    return blockList;
   }
 }

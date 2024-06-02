@@ -220,6 +220,11 @@ public class MemberService {
         .orElseThrow(NotExistMemberException::new);
   }
 
+  public Member findMemberByNickname(String memberId) {
+    return memberRepository.findMemberByNickname(memberId)
+        .orElseThrow(NotExistMemberException::new);
+  }
+
   public Member findFollowerById(String memberId) {
     return memberRepository.findById(memberId)
         .orElseThrow(NotExistFollowerException::new);

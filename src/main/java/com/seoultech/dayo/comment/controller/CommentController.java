@@ -43,7 +43,7 @@ public class CommentController {
       @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = NotFoundFailResponse.class)))})
   @PostMapping
   public ResponseEntity<CreateCommentResponse> createComment(@ApiIgnore @LoginUser String memberId,
-      @RequestBody @Valid CreateCommentRequest request) {
+      @RequestBody CreateCommentRequest request) {
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.status(HttpStatus.CREATED)
