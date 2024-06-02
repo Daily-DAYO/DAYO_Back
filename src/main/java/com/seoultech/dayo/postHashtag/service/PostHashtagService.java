@@ -1,15 +1,14 @@
 package com.seoultech.dayo.postHashtag.service;
 
+import static java.util.stream.Collectors.toList;
+
 import com.seoultech.dayo.hashtag.Hashtag;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.postHashtag.PostHashtag;
 import com.seoultech.dayo.postHashtag.repository.PostHashtagRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +32,14 @@ public class PostHashtagService {
 
   public List<PostHashtag> findPostHashtags(Hashtag hashtag) {
     return postHashtagRepository.findPostHashtagsByHashtag(hashtag);
+  }
+
+  public List<PostHashtag> findPostHashtagsByPostCreatedAsc(Hashtag hashtag) {
+    return postHashtagRepository.findPostHashtagsByHashtagOrderByAsc(hashtag);
+  }
+
+  public List<PostHashtag> findPostHashtagsByPostCreatedDesc(Hashtag hashtag) {
+    return postHashtagRepository.findPostHashtagsByHashtagOrderByDesc(hashtag);
   }
 
   public void deletePostHashtag(Post post) {

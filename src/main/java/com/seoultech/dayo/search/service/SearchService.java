@@ -41,7 +41,7 @@ public class SearchService {
   private final BlockService blockService;
   private final FollowService followService;
 
-  public SearchResultResponse searchTag(Member member, String tag, Long end) {
+  public SearchResultResponse searchTag(Member member, String tag, String order, Long end) {
     Search search = new Search(member, tag);
     searchRepository.save(search);
 
@@ -52,7 +52,12 @@ public class SearchService {
     long allCount = 0L;
     if (hashtag.isPresent()) {
 
-      List<PostHashtag> postHashtags = postHashtagService.findPostHashtags(hashtag.get());
+      List<PostHashtag> postHashtags;
+      if (order.equals("new")) {
+        postHashtags = postHashtagService.findPostHashtagsByPostCreatedDesc(hashtag.get());
+      } else {
+        postHashtags = postHashtagService.findPostHashtagsByPostCreatedAsc(hashtag.get());
+      }
       allCount = postHashtags.size();
       if (postHashtags.size() <= end + 10) {
         last = true;

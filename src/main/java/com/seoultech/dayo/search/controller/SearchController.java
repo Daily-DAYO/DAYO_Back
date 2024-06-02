@@ -42,11 +42,12 @@ public class SearchController {
   @GetMapping
   public ResponseEntity<SearchResultResponse> search(@RequestParam(value = "tag") String tag,
       @ApiIgnore @LoginUser String memberId,
-      @RequestParam(value = "end") String end) {
+      @RequestParam(value = "end") String end,
+      @RequestParam(value = "order") String order) {
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()
-        .body(searchService.searchTag(member, tag, Long.valueOf(end)));
+        .body(searchService.searchTag(member, tag, order, Long.valueOf(end)));
   }
 
   @Tag(name = "Search")
