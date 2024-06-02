@@ -45,7 +45,7 @@ public class SearchController {
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()
-        .body(searchService.search(member, tag, Long.valueOf(end)));
+        .body(searchService.searchTag(member, tag, Long.valueOf(end)));
   }
 
   @Tag(name = "Search")

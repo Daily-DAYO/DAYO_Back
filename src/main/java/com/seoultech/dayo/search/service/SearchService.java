@@ -38,7 +38,7 @@ public class SearchService {
   private final BlockService blockService;
   private final FollowService followService;
 
-  public SearchResultResponse search(Member member, String tag, Long end) {
+  public SearchResultResponse searchTag(Member member, String tag, Long end) {
     Search search = new Search(member, tag);
     searchRepository.save(search);
 
