@@ -3,6 +3,7 @@ package com.seoultech.dayo.search.service;
 import static java.util.stream.Collectors.toList;
 
 import com.seoultech.dayo.block.service.BlockService;
+import com.seoultech.dayo.follow.Follow;
 import com.seoultech.dayo.follow.service.FollowService;
 import com.seoultech.dayo.hashtag.Hashtag;
 import com.seoultech.dayo.hashtag.service.HashtagService;
@@ -13,7 +14,9 @@ import com.seoultech.dayo.search.Search;
 import com.seoultech.dayo.search.controller.dto.SearchDto;
 import com.seoultech.dayo.search.controller.dto.SearchHistoryDto;
 import com.seoultech.dayo.search.controller.dto.SearchMemberDto;
+import com.seoultech.dayo.search.controller.dto.SearchMemberInCommentDto;
 import com.seoultech.dayo.search.controller.dto.response.SearchHistoryResponse;
+import com.seoultech.dayo.search.controller.dto.response.SearchMemberInCommentResponse;
 import com.seoultech.dayo.search.controller.dto.response.SearchMemberResponse;
 import com.seoultech.dayo.search.controller.dto.response.SearchResultResponse;
 import com.seoultech.dayo.search.repository.SearchRepository;
@@ -103,6 +106,26 @@ public class SearchService {
 
     return SearchMemberResponse.from(collect, last, allCount);
 
+  }
+
+  public SearchMemberInCommentResponse searchMemberInComment(Member member, String nickname,
+      Long end) {
+
+    List<Follow> followings = followService.findFollowingsByNickname(member, nickname);
+
+    boolean last = false;
+    long allCount = followings.size();
+    if (followings.size() <= end + 10) {
+      last = true;
+    }
+
+    List<SearchMemberInCommentDto> collect = followings.stream()
+        .skip(end)
+        .limit(10)
+        .map(follow -> SearchMemberInCommentDto.from(follow.getFollower()))
+        .collect(toList());
+
+    return SearchMemberInCommentResponse.from(collect, last, allCount);
   }
 
   public void deleteSearchHistory(Long searchId) {

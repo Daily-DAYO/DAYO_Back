@@ -4,6 +4,7 @@ import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.search.controller.dto.response.SearchHistoryResponse;
+import com.seoultech.dayo.search.controller.dto.response.SearchMemberInCommentResponse;
 import com.seoultech.dayo.search.controller.dto.response.SearchMemberResponse;
 import com.seoultech.dayo.search.controller.dto.response.SearchResultResponse;
 import com.seoultech.dayo.search.service.SearchService;
@@ -39,7 +40,7 @@ public class SearchController {
   @ApiResponses(
       @ApiResponse(responseCode = "200", description = "해시태그 게시글 검색 조회 성공", content = @Content(schema = @Schema(implementation = SearchResultResponse.class))))
   @GetMapping
-  public ResponseEntity<SearchResultResponse> search(@RequestParam String tag,
+  public ResponseEntity<SearchResultResponse> search(@RequestParam(value = "tag") String tag,
       @ApiIgnore @LoginUser String memberId,
       @RequestParam(value = "end") String end) {
     Member member = memberService.findMemberById(memberId);
@@ -66,7 +67,8 @@ public class SearchController {
   @ApiResponses(
       @ApiResponse(responseCode = "200", description = "사용자 검색 조회 성공", content = @Content(schema = @Schema(implementation = SearchMemberResponse.class))))
   @GetMapping("/member")
-  public ResponseEntity<SearchMemberResponse> searchMember(@RequestParam String nickname,
+  public ResponseEntity<SearchMemberResponse> searchMember(
+      @RequestParam(value = "nickname") String nickname,
       @ApiIgnore @LoginUser String memberId,
       @RequestParam(value = "end") String end) {
 
@@ -88,6 +90,21 @@ public class SearchController {
     searchService.deleteSearchHistory(searchHistoryId);
 
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  @Tag(name = "Search")
+  @Operation(summary = "팔로우한 사람 검색 (댓글 언급용)")
+  @ApiResponses(
+      @ApiResponse(responseCode = "200", description = "사용자 검색 조회 성공", content = @Content(schema = @Schema(implementation = SearchMemberInCommentResponse.class))))
+  @GetMapping("/comment/member")
+  public ResponseEntity<SearchMemberInCommentResponse> searchMemberInComment(
+      @RequestParam(value = "nickname") String nickname,
+      @ApiIgnore @LoginUser String memberId,
+      @RequestParam(value = "end") String end) {
+
+    Member me = memberService.findMemberById(memberId);
+    return ResponseEntity.ok()
+        .body(searchService.searchMemberInComment(me, nickname, Long.valueOf(end)));
   }
 
 }

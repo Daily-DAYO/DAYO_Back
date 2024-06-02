@@ -155,4 +155,8 @@ public class FollowService {
     followRepository.deleteAllByFollower(member);
   }
 
+  public List<Follow> findFollowingsByNickname(Member member, String nickname) {
+    return followRepository.findFollowsByMemberLikeNickname(member, nickname);
+  }
+
 }
