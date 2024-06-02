@@ -1,18 +1,23 @@
 package com.seoultech.dayo.post.controller.dto.response;
 
 import com.seoultech.dayo.post.controller.dto.PostDto;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.List;
 
 
 @Getter
 @AllArgsConstructor
 public class ListCategoryPostResponse {
 
-    private int count;
+  private int count;
 
-    private List<PostDto> data;
+  private boolean last;
+
+  private List<PostDto> data;
+
+  public static ListCategoryPostResponse from(List<PostDto> data, boolean last) {
+    return new ListCategoryPostResponse(data.size(), last, data);
+  }
 
 }

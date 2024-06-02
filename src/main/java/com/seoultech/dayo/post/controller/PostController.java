@@ -76,19 +76,21 @@ public class PostController {
   }
 
   @GetMapping
-  public ResponseEntity<ListAllPostResponse> listAllPost(@ApiIgnore @LoginUser String memberId) {
+  public ResponseEntity<ListAllPostResponse> listAllPost(@ApiIgnore @LoginUser String memberId,
+      @RequestParam(value = "end") String end) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
-        .body(postService.listPostAll(member));
+        .body(postService.listPostAll(member, Long.valueOf(end)));
   }
 
   @GetMapping("/category/{category}")
   public ResponseEntity<ListCategoryPostResponse> listPostByCategory(
       @ApiIgnore @LoginUser String memberId,
-      @PathVariable @Valid String category) {
+      @PathVariable @Valid String category,
+      @RequestParam(value = "end") String end) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
-        .body(postService.listPostByCategory(member, category));
+        .body(postService.listPostByCategory(member, category, Long.valueOf(end)));
   }
 
   @PostMapping

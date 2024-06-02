@@ -104,7 +104,7 @@ public class PostService {
   }
 
   @Transactional(readOnly = true)
-  public ListAllPostResponse listPostAll(Member member) {
+  public ListAllPostResponse listPostAll(Member member, Long end) {
 
     List<Post> postList = postRepository.findAllByUsingJoinMemberOrderByCreateDate();
 
@@ -140,11 +140,22 @@ public class PostService {
 
     collect.sort((a1, a2) -> a2.getCreateDate().compareTo(a1.getCreateDate()));
 
-    return new ListAllPostResponse(postList.size(), collect);
+    boolean last = false;
+    int size = collect.size();
+    if (size <= end + 10) {
+      last = true;
+    }
+
+    List<PostDto> pagingCollect = collect.stream()
+        .skip(end)
+        .limit(10)
+        .collect(toList());
+
+    return ListAllPostResponse.from(pagingCollect, last);
   }
 
   @Transactional(readOnly = true)
-  public ListCategoryPostResponse listPostByCategory(Member member, String category) {
+  public ListCategoryPostResponse listPostByCategory(Member member, String category, Long end) {
 
     List<Post> postList = postRepository.findAllByCategoryUsingJoinOrderByCreateDate(
         Category.valueOf(category));
@@ -180,7 +191,18 @@ public class PostService {
 
     }
 
-    return new ListCategoryPostResponse(postList.size(), collect);
+    boolean last = false;
+    int size = collect.size();
+    if (size <= end + 10) {
+      last = true;
+    }
+
+    List<PostDto> pagingCollect = collect.stream()
+        .skip(end)
+        .limit(10)
+        .collect(toList());
+
+    return ListCategoryPostResponse.from(pagingCollect, last);
   }
 
   public CreatePostResponse createPost(Member member, Folder folder, CreatePostRequest request)
@@ -256,17 +278,9 @@ public class PostService {
       posts.addAll(m.getPosts());
     }
 
-    boolean last = false;
-    int size = posts.size();
-    if (size <= end + 10) {
-      last = true;
-    }
-
     List<Post> postCollect = posts.stream()
         .filter(post -> post.getPrivacy() != Privacy.ONLY_ME)
         .sorted((post1, post2) -> post2.getCreatedDate().compareTo(post1.getCreatedDate()))
-        .skip(end)
-        .limit(10)
         .collect(toList());
 
     Set<String> blockList = getBlockList(member);
@@ -282,7 +296,18 @@ public class PostService {
       feedDtos.add(FeedDto.from(post, isHeart, isBookmark));
     }
 
-    return ListFeedResponse.from(feedDtos, last);
+    boolean last = false;
+    int size = posts.size();
+    if (size <= end + 10) {
+      last = true;
+    }
+
+    List<FeedDto> pagingCollect = feedDtos.stream()
+        .skip(end)
+        .limit(10)
+        .collect(toList());
+
+    return ListFeedResponse.from(pagingCollect, last);
   }
 
   @Transactional(readOnly = true)
@@ -298,18 +323,10 @@ public class PostService {
       posts.addAll(m.getPosts());
     }
 
-    boolean last = false;
-    int size = posts.size();
-    if (size <= end + 10) {
-      last = true;
-    }
-
     List<Post> postCollect = posts.stream()
         .filter(post -> !post.getPrivacy().equals(Privacy.ONLY_ME))
         .filter(post -> post.getCategory().equals(category))
         .sorted((post1, post2) -> post2.getCreatedDate().compareTo(post1.getCreatedDate()))
-        .skip(end)
-        .limit(10)
         .collect(toList());
 
     Set<String> blockList = getBlockList(member);
@@ -325,7 +342,18 @@ public class PostService {
       feedDtos.add(FeedDto.from(post, isHeart, isBookmark));
     }
 
-    return ListFeedResponse.from(feedDtos, last);
+    boolean last = false;
+    int size = posts.size();
+    if (size <= end + 10) {
+      last = true;
+    }
+
+    List<FeedDto> pagingCollect = feedDtos.stream()
+        .skip(end)
+        .limit(10)
+        .collect(toList());
+
+    return ListFeedResponse.from(pagingCollect, last);
   }
 
   public void deletePost(String memberId, Long postId) {
