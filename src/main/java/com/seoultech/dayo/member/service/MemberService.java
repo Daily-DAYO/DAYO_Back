@@ -129,7 +129,7 @@ public class MemberService {
       return MemberSignInResponse.from(token);
     }
 
-    throw new IncorrectPasswordException();
+    throw new NotExistMemberException();
   }
 
   public void setDeviceToken(String memberId, DeviceTokenRequest request) {
