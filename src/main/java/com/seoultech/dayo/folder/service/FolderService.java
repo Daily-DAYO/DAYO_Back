@@ -3,6 +3,8 @@ package com.seoultech.dayo.folder.service;
 import static com.seoultech.dayo.folder.Privacy.ONLY_ME;
 import static java.util.stream.Collectors.toList;
 
+import com.seoultech.dayo.comment.Comment;
+import com.seoultech.dayo.comment.service.CommentService;
 import com.seoultech.dayo.exception.NotExistFolderException;
 import com.seoultech.dayo.folder.Folder;
 import com.seoultech.dayo.folder.Privacy;
@@ -27,6 +29,7 @@ import com.seoultech.dayo.image.Image;
 import com.seoultech.dayo.image.service.ImageService;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
+import com.seoultech.dayo.post.service.PostService;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +44,8 @@ public class FolderService {
 
   private final FolderRepository folderRepository;
   private final ImageService imageService;
+  private final PostService postService;
+  private final CommentService commentService;
 
   public CreateFolderResponse createFolder(Member member, CreateFolderRequest request)
       throws IOException {
@@ -142,7 +147,18 @@ public class FolderService {
     }
   }
 
-  public void deleteFolder(Long folderId) {
+  public void deleteFolder(Member member, Long folderId) {
+    Folder folder = findFolderById(folderId);
+    List<Post> posts = folder.getPosts();
+
+    for (Post post : posts) {
+      List<Comment> comments = post.getComments();
+      for (Comment comment : comments) {
+        commentService.deleteComment(member, comment.getId());
+      }
+      postService.deletePost(member.getId(), post.getId());
+    }
+
     folderRepository.deleteById(folderId);
   }
 

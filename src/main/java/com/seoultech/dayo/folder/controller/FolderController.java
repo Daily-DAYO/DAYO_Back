@@ -80,8 +80,11 @@ public class FolderController {
   @ApiResponses(
       @ApiResponse(responseCode = "204", description = "폴더 삭제 성공"))
   @PostMapping("/delete/{folderId}")
-  public ResponseEntity<Void> deleteFolder(@PathVariable @Valid Long folderId) {
-    folderService.deleteFolder(folderId);
+  public ResponseEntity<Void> deleteFolder(@ApiIgnore @LoginUser String memberId,
+      @PathVariable @Valid Long folderId) {
+
+    Member member = memberService.findMemberById(memberId);
+    folderService.deleteFolder(member, folderId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
