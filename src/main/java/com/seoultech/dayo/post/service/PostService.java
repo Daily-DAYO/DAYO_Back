@@ -26,13 +26,7 @@ import com.seoultech.dayo.post.controller.dto.FeedDto;
 import com.seoultech.dayo.post.controller.dto.PostDto;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
 import com.seoultech.dayo.post.controller.dto.request.EditPostRequest;
-import com.seoultech.dayo.post.controller.dto.response.CreatePostResponse;
-import com.seoultech.dayo.post.controller.dto.response.DayoPickPostListResponse;
-import com.seoultech.dayo.post.controller.dto.response.DetailPostResponse;
-import com.seoultech.dayo.post.controller.dto.response.EditPostResponse;
-import com.seoultech.dayo.post.controller.dto.response.ListAllPostResponse;
-import com.seoultech.dayo.post.controller.dto.response.ListCategoryPostResponse;
-import com.seoultech.dayo.post.controller.dto.response.ListFeedResponse;
+import com.seoultech.dayo.post.controller.dto.response.*;
 import com.seoultech.dayo.post.repository.DayoPickRepository;
 import com.seoultech.dayo.post.repository.PostRepository;
 import com.seoultech.dayo.postHashtag.service.PostHashtagService;
@@ -155,6 +149,46 @@ public class PostService {
   }
 
   @Transactional(readOnly = true)
+  public ListAllPostResponseV1 listPostAll(Member member) {
+
+    List<Post> postList = postRepository.findAllByUsingJoinMemberOrderByCreateDate();
+
+    Set<Long> likePost = getLikePost(member);
+    Set<Long> bookmarkPost = getBookmarkPost(member);
+    Set<String> blockList = getBlockList(member);
+    Set<String> blockedMemberList = blockService.getBlockedMemberList(member);
+
+    List<PostDto> collect = new ArrayList<>();
+
+    for (Post post : postList) {
+      if (blockList.contains(post.getMember().getId())) {
+        continue;
+      }
+      if (blockedMemberList.contains(post.getMember().getId())) {
+        continue;
+      }
+
+      boolean isLike = likePost.contains(post.getId());
+      boolean isBookmark = bookmarkPost.contains(post.getId());
+
+      if (isLike && isBookmark) {
+        collect.add(PostDto.from(post, true, true));
+      } else if (isLike) {
+        collect.add(PostDto.from(post, true, false));
+      } else if (isBookmark) {
+        collect.add(PostDto.from(post, false, true));
+      } else {
+        collect.add(PostDto.from(post, false, false));
+      }
+
+    }
+
+    collect.sort((a1, a2) -> a2.getCreateDate().compareTo(a1.getCreateDate()));
+
+    return new ListAllPostResponseV1(postList.size(), collect);
+  }
+
+  @Transactional(readOnly = true)
   public ListCategoryPostResponse listPostByCategory(Member member, String category, Long end) {
 
     List<Post> postList = postRepository.findAllByCategoryUsingJoinOrderByCreateDate(
@@ -204,6 +238,47 @@ public class PostService {
 
     return ListCategoryPostResponse.from(pagingCollect, last);
   }
+
+  @Transactional(readOnly = true)
+  public ListCategoryPostResponseV1 listPostByCategory(Member member, String category) {
+
+    List<Post> postList = postRepository.findAllByCategoryUsingJoinOrderByCreateDate(
+            Category.valueOf(category));
+    Set<Long> likePost = getLikePost(member);
+
+    Set<Long> bookmarkPost = getBookmarkPost(member);
+    Set<String> blockList = getBlockList(member);
+    Set<String> blockedMemberList = blockService.getBlockedMemberList(member);
+
+    List<PostDto> collect = new ArrayList<>();
+
+    for (Post post : postList) {
+
+      if (blockList.contains(post.getMember().getId())) {
+        continue;
+      }
+      if (blockedMemberList.contains(post.getMember().getId())) {
+        continue;
+      }
+
+      boolean like = likePost.contains(post.getId());
+      boolean bookmark = bookmarkPost.contains(post.getId());
+
+      if (like && bookmark) {
+        collect.add(PostDto.from(post, true, true));
+      } else if (like) {
+        collect.add(PostDto.from(post, true, false));
+      } else if (bookmark) {
+        collect.add(PostDto.from(post, false, true));
+      } else {
+        collect.add(PostDto.from(post, false, false));
+      }
+
+    }
+
+    return new ListCategoryPostResponseV1(postList.size(), collect);
+  }
+
 
   public CreatePostResponse createPost(Member member, Folder folder, CreatePostRequest request)
       throws IOException {

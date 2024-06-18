@@ -10,13 +10,7 @@ import com.seoultech.dayo.member.service.MemberService;
 import com.seoultech.dayo.post.Category;
 import com.seoultech.dayo.post.controller.dto.request.CreatePostRequest;
 import com.seoultech.dayo.post.controller.dto.request.EditPostRequest;
-import com.seoultech.dayo.post.controller.dto.response.CreatePostResponse;
-import com.seoultech.dayo.post.controller.dto.response.DayoPickPostListResponse;
-import com.seoultech.dayo.post.controller.dto.response.DetailPostResponse;
-import com.seoultech.dayo.post.controller.dto.response.EditPostResponse;
-import com.seoultech.dayo.post.controller.dto.response.ListAllPostResponse;
-import com.seoultech.dayo.post.controller.dto.response.ListCategoryPostResponse;
-import com.seoultech.dayo.post.controller.dto.response.ListFeedResponse;
+import com.seoultech.dayo.post.controller.dto.response.*;
 import com.seoultech.dayo.post.service.PostService;
 import java.io.IOException;
 import javax.validation.Valid;
@@ -76,21 +70,19 @@ public class PostController {
   }
 
   @GetMapping
-  public ResponseEntity<ListAllPostResponse> listAllPost(@ApiIgnore @LoginUser String memberId,
-      @RequestParam(value = "end") String end) {
+  public ResponseEntity<ListAllPostResponseV1> listAllPost(@ApiIgnore @LoginUser String memberId) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
-        .body(postService.listPostAll(member, Long.valueOf(end)));
+            .body(postService.listPostAll(member));
   }
 
   @GetMapping("/category/{category}")
-  public ResponseEntity<ListCategoryPostResponse> listPostByCategory(
-      @ApiIgnore @LoginUser String memberId,
-      @PathVariable @Valid String category,
-      @RequestParam(value = "end") String end) {
+  public ResponseEntity<ListCategoryPostResponseV1> listPostByCategory(
+          @ApiIgnore @LoginUser String memberId,
+          @PathVariable @Valid String category) {
     Member member = memberService.findMemberById(memberId);
     return ResponseEntity.ok()
-        .body(postService.listPostByCategory(member, category, Long.valueOf(end)));
+            .body(postService.listPostByCategory(member, category));
   }
 
   @PostMapping

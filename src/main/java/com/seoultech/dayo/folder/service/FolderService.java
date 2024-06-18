@@ -3,7 +3,6 @@ package com.seoultech.dayo.folder.service;
 import static com.seoultech.dayo.folder.Privacy.ONLY_ME;
 import static java.util.stream.Collectors.toList;
 
-import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.comment.service.CommentService;
 import com.seoultech.dayo.exception.NotExistFolderException;
 import com.seoultech.dayo.folder.Folder;
@@ -152,14 +151,10 @@ public class FolderService {
     List<Post> posts = folder.getPosts();
 
     for (Post post : posts) {
-      List<Comment> comments = post.getComments();
-      for (Comment comment : comments) {
-        commentService.deleteComment(member, comment.getId());
-      }
       postService.deletePost(member.getId(), post.getId());
     }
 
-    folderRepository.deleteById(folderId);
+    folderRepository.delete(folder);
   }
 
   @Transactional(readOnly = true)
