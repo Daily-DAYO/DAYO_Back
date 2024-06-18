@@ -140,4 +140,30 @@ public class SearchService {
   public void deleteAllByMember(Member member) {
     searchRepository.deleteAllByMember(member);
   }
+
+  public SearchResultResponse search(Member member, String tag, Long end) {
+    Search search = new Search(member, tag);
+    searchRepository.save(search);
+
+    Optional<Hashtag> hashtag = hashtagService.findHashtag(tag);
+    List<SearchDto> collect = new ArrayList<>();
+
+    boolean last = false;
+    long allCount = 0L;
+    if (hashtag.isPresent()) {
+
+      List<PostHashtag> postHashtags = postHashtagService.findPostHashtags(hashtag.get());
+      allCount = postHashtags.size();
+      if (postHashtags.size() <= end + 10) {
+        last = true;
+      }
+      collect = postHashtags.stream()
+              .skip(end)
+              .limit(10)
+              .map(postHashtag -> SearchDto.from(postHashtag.getPost()))
+              .collect(toList());
+    }
+
+    return SearchResultResponse.from(collect, last, allCount);
+  }
 }

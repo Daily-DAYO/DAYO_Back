@@ -38,16 +38,15 @@ public class SearchController {
   @Tag(name = "Search")
   @Operation(summary = "해시태그 게시글 검색 조회(페이징)")
   @ApiResponses(
-      @ApiResponse(responseCode = "200", description = "해시태그 게시글 검색 조회 성공", content = @Content(schema = @Schema(implementation = SearchResultResponse.class))))
+          @ApiResponse(responseCode = "200", description = "해시태그 게시글 검색 조회 성공", content = @Content(schema = @Schema(implementation = SearchResultResponse.class))))
   @GetMapping
-  public ResponseEntity<SearchResultResponse> search(@RequestParam(value = "tag") String tag,
-      @ApiIgnore @LoginUser String memberId,
-      @RequestParam(value = "end") String end,
-      @RequestParam(value = "order") String order) {
+  public ResponseEntity<SearchResultResponse> search(@RequestParam String tag,
+                                                     @ApiIgnore @LoginUser String memberId,
+                                                     @RequestParam(value = "end") String end) {
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.ok()
-        .body(searchService.searchTag(member, tag, order, Long.valueOf(end)));
+            .body(searchService.search(member, tag, Long.valueOf(end)));
   }
 
   @Tag(name = "Search")
