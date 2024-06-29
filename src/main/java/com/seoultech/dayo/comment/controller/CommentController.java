@@ -1,7 +1,8 @@
 package com.seoultech.dayo.comment.controller;
 
 
-import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequest;
+import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequestV1;
+import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequestV2;
 import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
 import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponse;
 import com.seoultech.dayo.comment.service.CommentService;
@@ -9,6 +10,8 @@ import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.exception.dto.NotFoundFailResponse;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.member.service.MemberService;
+import com.seoultech.dayo.post.Post;
+import com.seoultech.dayo.post.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -35,6 +38,7 @@ public class CommentController {
 
   private final CommentService commentService;
   private final MemberService memberService;
+  private final PostService postService;
 
   @Tag(name = "Comments")
   @Operation(summary = "댓글 생성")
@@ -43,11 +47,12 @@ public class CommentController {
       @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = NotFoundFailResponse.class)))})
   @PostMapping
   public ResponseEntity<CreateCommentResponse> createComment(@ApiIgnore @LoginUser String memberId,
-      @RequestBody CreateCommentRequest request) {
+                                                             @RequestBody @Valid CreateCommentRequestV1 request) {
     Member member = memberService.findMemberById(memberId);
+    Post post = postService.findPostById(request.getPostId());
 
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(commentService.createComment(member, request));
+            .body(commentService.createCommentV1(member, post, request));
   }
 
   @Tag(name = "Comments")

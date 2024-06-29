@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateCommentRequest {
+public class CreateCommentRequestV2 {
 
   @NotBlank
   private String contents;

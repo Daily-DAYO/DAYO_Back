@@ -5,7 +5,8 @@ import static java.util.stream.Collectors.toList;
 
 import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.comment.Comment;
-import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequest;
+import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequestV1;
+import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequestV2;
 import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
 import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponse;
 import com.seoultech.dayo.comment.repository.CommentRepository;
@@ -32,7 +33,16 @@ public class CommentService {
   private final MentionService mentionService;
   private final Notification notification;
 
-  public CreateCommentResponse createComment(Member member, CreateCommentRequest request) {
+  public CreateCommentResponse createCommentV1(Member member, Post post, CreateCommentRequestV1 request) {
+    Comment comment = request.toEntity(member);
+    Comment savedComment = commentRepository.save(comment);
+    savedComment.addPost(post);
+    notification.sendCommentToPostOwner(member, post);
+
+    return new CreateCommentResponse(savedComment.getId());
+  }
+
+  public CreateCommentResponse createCommentV2(Member member, CreateCommentRequestV2 request) {
 
     Post post = postService.findPostById(request.getPostId());
 
