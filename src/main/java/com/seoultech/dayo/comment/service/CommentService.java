@@ -32,7 +32,16 @@ public class CommentService {
   private final MentionService mentionService;
   private final Notification notification;
 
-  public CreateCommentResponse createComment(Member member, CreateCommentRequest request) {
+  public CreateCommentResponse createCommentV1(Member member, Post post, CreateCommentRequest request) {
+    Comment comment = request.toEntity(member);
+    Comment savedComment = commentRepository.save(comment);
+    savedComment.addPost(post);
+    notification.sendCommentToPostOwner(member, post);
+
+    return new CreateCommentResponse(savedComment.getId());
+  }
+
+  public CreateCommentResponse createCommentV2(Member member, CreateCommentRequest request) {
 
     Post post = postService.findPostById(request.getPostId());
 

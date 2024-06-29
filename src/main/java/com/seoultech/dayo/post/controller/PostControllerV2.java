@@ -50,4 +50,12 @@ public class PostControllerV2 {
             .body(postService.listPostByCategory(member, category, Long.valueOf(end)));
   }
 
+  @GetMapping("/feed/list")
+  public ResponseEntity<ListFeedResponse> listFeed(@ApiIgnore @LoginUser String memberId,
+                                                   @RequestParam(value = "end") String end) {
+    Member member = memberService.findMemberById(memberId);
+    return ResponseEntity.ok()
+            .body(postService.listFeed(member, Long.valueOf(end)));
+  }
+
 }
