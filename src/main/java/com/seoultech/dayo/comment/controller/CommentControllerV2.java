@@ -1,7 +1,7 @@
 package com.seoultech.dayo.comment.controller;
 
 
-import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequest;
+import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequestV2;
 import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
 import com.seoultech.dayo.comment.service.CommentService;
 import com.seoultech.dayo.config.login.LoginUser;
@@ -36,7 +36,7 @@ public class CommentControllerV2 {
       @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = NotFoundFailResponse.class)))})
   @PostMapping
   public ResponseEntity<CreateCommentResponse> createComment(@ApiIgnore @LoginUser String memberId,
-      @RequestBody CreateCommentRequest request) {
+      @RequestBody CreateCommentRequestV2 request) {
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.status(HttpStatus.CREATED)
