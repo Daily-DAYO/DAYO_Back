@@ -19,4 +19,6 @@ public interface HeartRepository extends JpaRepository<Heart, Heart.Key> {
 
   Long countHeartByPost(Post post);
 
+  void deleteAllByPost(Post post);
+
 }

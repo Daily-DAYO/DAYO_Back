@@ -437,7 +437,9 @@ public class PostService {
     if (!post.getMember().getId().equals(memberId)) {
       throw new InvalidPostAccess();
     }
-
+    heartService.deleteAllByPost(post);
+    postHashtagService.deletePostHashtag(post);
+    bookmarkService.deleteAllByPost(post);
     alarmService.deleteByPost(post);
     postRepository.deleteById(postId);
   }
