@@ -154,5 +154,9 @@ public class HeartService {
     heartRepository.deleteAllByMember(member);
   }
 
+  public void deleteAllByPost(Post post) {
+    heartRepository.deleteAllByPost(post);
+  }
+
 
 }

@@ -109,4 +109,8 @@ public class BookmarkService {
     return bookmarkRepository.existsBookmarkByKey(new Bookmark.Key(memberId, postId));
   }
 
+  public void deleteAllByPost(Post post) {
+    bookmarkRepository.deleteAllByPost(post);
+  }
+
 }
