@@ -50,7 +50,7 @@ public class CommentControllerV2 {
   @ApiResponses({
           @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = CreateReplyResponse.class))),
           @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = NotFoundFailResponse.class)))})
-  @PostMapping
+  @PostMapping("/reply")
   public ResponseEntity<CreateReplyResponse> createReply(@ApiIgnore @LoginUser String memberId,
                                                          @RequestBody CreateReplyRequest request) {
     Member member = memberService.findMemberById(memberId);
