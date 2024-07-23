@@ -40,7 +40,6 @@ public class Comment extends BaseTimeEntity {
       mappedBy = "parent",
       fetch = FetchType.LAZY
   )
-  @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
   private List<Comment> children = new ArrayList<>();
 
   public void addPost(Post post) {
