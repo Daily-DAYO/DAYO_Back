@@ -1,16 +1,14 @@
 package com.seoultech.dayo.comment.service;
 
 
-import static java.util.stream.Collectors.toList;
-
 import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.comment.Comment;
-import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequestV1;
 import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequestV2;
 import com.seoultech.dayo.comment.controller.dto.request.CreateReplyRequest;
 import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
 import com.seoultech.dayo.comment.controller.dto.response.CreateReplyResponse;
 import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponse;
+import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponseV2;
 import com.seoultech.dayo.comment.repository.CommentRepository;
 import com.seoultech.dayo.exception.NotExistCommentException;
 import com.seoultech.dayo.member.Member;
@@ -18,16 +16,20 @@ import com.seoultech.dayo.mention.MentionService;
 import com.seoultech.dayo.post.Post;
 import com.seoultech.dayo.post.service.PostService;
 import com.seoultech.dayo.utils.notification.Notification;
-import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CommentService {
+public class CommentServiceV2 {
+
 
   private final CommentRepository commentRepository;
   private final PostService postService;
@@ -35,46 +37,48 @@ public class CommentService {
   private final MentionService mentionService;
   private final Notification notification;
 
-  public CreateCommentResponse createCommentV1(Member member, Post post, CreateCommentRequestV1 request) {
+  public CreateCommentResponse createComment(Member member, CreateCommentRequestV2 request) {
+
+    Post post = postService.findPostById(request.getPostId());
+
     Comment comment = request.toEntity(member);
     Comment savedComment = commentRepository.save(comment);
     savedComment.addPost(post);
+    mentionService.saveMention(member, savedComment, post, request.getMentionList());
     notification.sendCommentToPostOwner(member, post);
 
     return new CreateCommentResponse(savedComment.getId());
   }
 
   @Transactional(readOnly = true)
-  public ListAllCommentResponse listAllComment(Member member, Long postId) {
+  public ListAllCommentResponseV2 listAllComment(Member member, Long postId) {
 
     Post post = postService.findPostById(postId);
     Set<String> blockList = postService.getBlockList(member);
-    List<ListAllCommentResponse.CommentDto> collect = post.getComments().stream()
-        .filter(comment -> !blockList.contains(comment.getMember().getId()))
-        .map(ListAllCommentResponse.CommentDto::from)
-        .collect(toList());
+    List<ListAllCommentResponseV2.CommentDto> collect = post.getComments().stream()
+            .filter(comment -> !blockList.contains(comment.getMember().getId()))
+            .map(ListAllCommentResponseV2.CommentDto::from)
+            .collect(toList());
 
-    return ListAllCommentResponse.from(collect);
+    return ListAllCommentResponseV2.from(collect);
   }
 
-  public void deleteComment(Member member, Long commentId) {
 
-    Comment comment = commentRepository.findById(commentId)
-        .orElseThrow(NotExistCommentException::new);
+  public CreateReplyResponse createReply(Member member, CreateReplyRequest request) {
 
-    Post post = comment.getPost();
+    Post post = postService.findPostById(request.getPostId());
+    Comment parent = findById(request.getCommentId());
+    Comment comment = new Comment(member, request.getContents());
+    Comment savedComment = commentRepository.save(comment);
+    savedComment.addParent(parent);
+    savedComment.addPost(post);
+    mentionService.saveMention(member, savedComment, post, request.getMentionList());
+    notification.sendCommentToPostOwner(member, post);
 
-    comment.delete();
-    commentRepository.delete(comment);
-    alarmService.deleteComment(member, post);
-  }
-
-  public void deleteAllByMember(Member member) {
-    commentRepository.deleteAllByMember(member);
+    return new CreateReplyResponse(savedComment.getId());
   }
 
   public Comment findById(Long commentId) {
     return commentRepository.findById(commentId).orElseThrow(NotExistCommentException::new);
   }
-
 }

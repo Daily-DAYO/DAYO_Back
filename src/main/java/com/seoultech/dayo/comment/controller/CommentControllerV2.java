@@ -5,7 +5,9 @@ import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequestV2;
 import com.seoultech.dayo.comment.controller.dto.request.CreateReplyRequest;
 import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
 import com.seoultech.dayo.comment.controller.dto.response.CreateReplyResponse;
-import com.seoultech.dayo.comment.service.CommentService;
+import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponse;
+import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponseV2;
+import com.seoultech.dayo.comment.service.CommentServiceV2;
 import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.exception.dto.NotFoundFailResponse;
 import com.seoultech.dayo.member.Member;
@@ -22,13 +24,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
+
 @Tag(name = "Comments", description = "댓글 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v2/comments")
 public class CommentControllerV2 {
 
-  private final CommentService commentService;
+  private final CommentServiceV2 commentService;
   private final MemberService memberService;
 
   @Tag(name = "Comments")
@@ -42,7 +46,7 @@ public class CommentControllerV2 {
     Member member = memberService.findMemberById(memberId);
 
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(commentService.createCommentV2(member, request));
+        .body(commentService.createComment(member, request));
   }
 
   @Tag(name = "Comments")
@@ -57,6 +61,19 @@ public class CommentControllerV2 {
 
     return ResponseEntity.status(HttpStatus.CREATED)
             .body(commentService.createReply(member, request));
+  }
+
+  @Tag(name = "Comments")
+  @Operation(summary = "게시글 댓글 조회", description = "차단된 사용자의 댓글은 보이지 않습니다.")
+  @ApiResponses({
+          @ApiResponse(responseCode = "200", description = "댓글 조회 성공", content = @Content(schema = @Schema(implementation = ListAllCommentResponse.class))),
+          @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = NotFoundFailResponse.class)))})
+  @GetMapping("/{postId}")
+  public ResponseEntity<ListAllCommentResponseV2> listAllComment(
+          @ApiIgnore @LoginUser String memberId, @PathVariable @Valid Long postId) {
+    Member member = memberService.findMemberById(memberId);
+    return ResponseEntity.ok()
+            .body(commentService.listAllComment(member, postId));
   }
 
 }
