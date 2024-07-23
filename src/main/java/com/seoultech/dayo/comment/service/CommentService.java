@@ -7,7 +7,9 @@ import com.seoultech.dayo.alarm.service.AlarmService;
 import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequestV1;
 import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequestV2;
+import com.seoultech.dayo.comment.controller.dto.request.CreateReplyRequest;
 import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
+import com.seoultech.dayo.comment.controller.dto.response.CreateReplyResponse;
 import com.seoultech.dayo.comment.controller.dto.response.ListAllCommentResponse;
 import com.seoultech.dayo.comment.repository.CommentRepository;
 import com.seoultech.dayo.exception.NotExistCommentException;
@@ -55,6 +57,20 @@ public class CommentService {
     return new CreateCommentResponse(savedComment.getId());
   }
 
+  public CreateReplyResponse createReply(Member member, CreateReplyRequest request) {
+
+    Post post = postService.findPostById(request.getPostId());
+    Comment parent = findById(request.getCommentId());
+    Comment comment = new Comment(member, request.getContents());
+    Comment savedComment = commentRepository.save(comment);
+    savedComment.addParent(parent);
+    savedComment.addPost(post);
+    mentionService.saveMention(member, savedComment, post, request.getMentionList());
+    notification.sendCommentToPostOwner(member, post);
+
+    return new CreateReplyResponse(savedComment.getId());
+  }
+
   @Transactional(readOnly = true)
   public ListAllCommentResponse listAllComment(Member member, Long postId) {
 
@@ -84,5 +100,8 @@ public class CommentService {
     commentRepository.deleteAllByMember(member);
   }
 
+  public Comment findById(Long commentId) {
+    return commentRepository.findById(commentId).orElseThrow(NotExistCommentException::new);
+  }
 
 }

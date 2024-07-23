@@ -6,13 +6,8 @@ import com.seoultech.dayo.mention.Mention;
 import com.seoultech.dayo.post.Post;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+
 import lombok.Getter;
 
 @Entity
@@ -37,9 +32,25 @@ public class Comment extends BaseTimeEntity {
 
   private String contents;
 
+  @ManyToOne
+  @JoinColumn(name = "SUPER_COMMENT_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+  private Comment parent;
+
+  @OneToMany(
+      mappedBy = "parent",
+      fetch = FetchType.LAZY
+  )
+  @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+  private List<Comment> children = new ArrayList<>();
+
   public void addPost(Post post) {
     this.post = post;
     post.getComments().add(this);
+  }
+
+  public void addParent(Comment parent) {
+    this.parent = parent;
+    this.parent.children.add(this);
   }
 
   public void delete() {

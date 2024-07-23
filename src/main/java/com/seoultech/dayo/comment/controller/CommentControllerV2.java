@@ -2,7 +2,9 @@ package com.seoultech.dayo.comment.controller;
 
 
 import com.seoultech.dayo.comment.controller.dto.request.CreateCommentRequestV2;
+import com.seoultech.dayo.comment.controller.dto.request.CreateReplyRequest;
 import com.seoultech.dayo.comment.controller.dto.response.CreateCommentResponse;
+import com.seoultech.dayo.comment.controller.dto.response.CreateReplyResponse;
 import com.seoultech.dayo.comment.service.CommentService;
 import com.seoultech.dayo.config.login.LoginUser;
 import com.seoultech.dayo.exception.dto.NotFoundFailResponse;
@@ -43,5 +45,18 @@ public class CommentControllerV2 {
         .body(commentService.createCommentV2(member, request));
   }
 
+  @Tag(name = "Comments")
+  @Operation(summary = "답글 생성")
+  @ApiResponses({
+          @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = CreateReplyResponse.class))),
+          @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스 접근", content = @Content(schema = @Schema(implementation = NotFoundFailResponse.class)))})
+  @PostMapping
+  public ResponseEntity<CreateReplyResponse> createReply(@ApiIgnore @LoginUser String memberId,
+                                                         @RequestBody CreateReplyRequest request) {
+    Member member = memberService.findMemberById(memberId);
+
+    return ResponseEntity.status(HttpStatus.CREATED)
+            .body(commentService.createReply(member, request));
+  }
 
 }
