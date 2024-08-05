@@ -36,11 +36,11 @@ public class ListAllCommentResponseV2 {
 
     public static CommentDto from(Comment comment) {
 
-      List<CommentDto> replyList = comment.getChildren().stream().map(reply -> new CommentDto(comment.getId(), comment.getMember().getId(),
-                      comment.getMember().getNickname(), comment.getMember().getProfileImg().getStoreFileName(),
-                      comment.getContents(), comment.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")),
+      List<CommentDto> replyList = comment.getChildren().stream().map(reply -> new CommentDto(reply.getId(), reply.getMember().getId(),
+                      reply.getMember().getNickname(), reply.getMember().getProfileImg().getStoreFileName(),
+                      reply.getContents(), reply.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")),
                       new ArrayList<>(),
-                      MentionDto.from(comment.getMentions()))
+                      MentionDto.from(reply.getMentions()))
               )
               .collect(Collectors.toList());
 

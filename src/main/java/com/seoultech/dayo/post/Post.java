@@ -65,8 +65,7 @@ public class Post extends BaseTimeEntity {
   private List<Image> images;
 
   @OneToMany(
-      mappedBy = "post",
-      orphanRemoval = true
+      mappedBy = "post"
   )
   private List<Comment> comments = new ArrayList<>();
 

@@ -55,7 +55,9 @@ public class CommentServiceV2 {
 
     Post post = postService.findPostById(postId);
     Set<String> blockList = postService.getBlockList(member);
-    List<ListAllCommentResponseV2.CommentDto> collect = post.getComments().stream()
+
+    List<Comment> comments = commentRepository.findCommentsByPostIdWithoutReply(post.getId());
+    List<ListAllCommentResponseV2.CommentDto> collect = comments.stream()
             .filter(comment -> !blockList.contains(comment.getMember().getId()))
             .map(ListAllCommentResponseV2.CommentDto::from)
             .collect(toList());
