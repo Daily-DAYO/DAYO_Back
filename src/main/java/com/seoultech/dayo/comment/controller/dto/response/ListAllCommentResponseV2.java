@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,15 +31,22 @@ public class ListAllCommentResponseV2 {
     private String profileImg;
     private String contents;
     private String createTime;
-    private Long replyId;
+    private List<CommentDto> replyList;
     private List<MentionDto> mentionList;
 
     public static CommentDto from(Comment comment) {
 
+      List<CommentDto> replyList = comment.getChildren().stream().map(reply -> new CommentDto(comment.getId(), comment.getMember().getId(),
+                      comment.getMember().getNickname(), comment.getMember().getProfileImg().getStoreFileName(),
+                      comment.getContents(), comment.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")),
+                      new ArrayList<>(),
+                      MentionDto.from(comment.getMentions()))
+              )
+              .collect(Collectors.toList());
+
       return new CommentDto(comment.getId(), comment.getMember().getId(),
           comment.getMember().getNickname(), comment.getMember().getProfileImg().getStoreFileName(),
-          comment.getContents(), comment.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")),
-          comment.getParent().getId(),
+          comment.getContents(), comment.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")), replyList,
           MentionDto.from(comment.getMentions()));
     }
   }
