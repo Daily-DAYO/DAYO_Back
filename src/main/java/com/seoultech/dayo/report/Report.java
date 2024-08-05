@@ -1,15 +1,11 @@
 package com.seoultech.dayo.report;
 
+import com.seoultech.dayo.comment.Comment;
 import com.seoultech.dayo.member.Member;
 import com.seoultech.dayo.post.Post;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+
+import javax.persistence.*;
+
 import lombok.Getter;
 
 @Entity
@@ -34,6 +30,10 @@ public class Report {
   @Enumerated(EnumType.STRING)
   private Category category;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "comment_id")
+  private Comment entityComment;
+
   public Report(String comment, Member member, Post post, Category category) {
     this.comment = comment;
     this.member = member;
@@ -46,6 +46,13 @@ public class Report {
     this.member = member;
     this.reportedMember = reportedMember;
     this.category = category;
+  }
+
+  public Report(String comment, Member member, Comment entityComment, Category category) {
+    this.comment = comment;
+    this.member = member;
+    this.category = category;
+    this.entityComment = entityComment;
   }
 
   protected Report() {
