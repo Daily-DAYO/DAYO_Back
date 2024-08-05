@@ -12,7 +12,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
   void deleteAllByMember(Member member);
 
-  @Query("select c from Comment c join fetch c.children where c.parent = null and c.post.id = :postId")
+  @Query("select c from Comment c where c.parent = null and c.post.id = :postId")
   List<Comment> findCommentsByPostIdWithoutReply(@Param("postId") Long postId);
 
 }
